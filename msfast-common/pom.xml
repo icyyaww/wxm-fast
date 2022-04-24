@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>msf-parent</artifactId>
-        <groupId>com.wxm.msf</groupId>
+        <artifactId>msfast-parent</artifactId>
+        <groupId>com.wxm.msfast</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <description>角色管理</description>
-    <artifactId>msf-role</artifactId>
 
+    <artifactId>msfast-common</artifactId>
+    <description>每个模块类公共内容</description>
 
 </project>
