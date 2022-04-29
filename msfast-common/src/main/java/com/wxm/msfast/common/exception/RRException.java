@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.common.exception;
+package com.wxm.msfast.common.exception;
 
 /**
  * 自定义异常

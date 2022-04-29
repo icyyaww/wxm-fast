@@ -6,13 +6,13 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.common.utils;
+package com.wxm.msfast.common.utils;
 
 
 
-import com.wxm.common.validator.group.AliyunGroup;
-import com.wxm.common.validator.group.QcloudGroup;
-import com.wxm.common.validator.group.QiniuGroup;
+import com.wxm.msfast.common.validator.group.AliyunGroup;
+import com.wxm.msfast.common.validator.group.QcloudGroup;
+import com.wxm.msfast.common.validator.group.QiniuGroup;
 
 import java.util.Optional;
 import java.util.stream.Stream;

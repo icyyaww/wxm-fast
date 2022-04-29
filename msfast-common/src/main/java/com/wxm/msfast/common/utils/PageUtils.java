@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.common.utils;
+package com.wxm.msfast.common.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 

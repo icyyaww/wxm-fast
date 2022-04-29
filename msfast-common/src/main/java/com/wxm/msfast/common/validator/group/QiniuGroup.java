@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.common.validator.group;
+package com.wxm.msfast.common.validator.group;
 
 /**
  * 七牛

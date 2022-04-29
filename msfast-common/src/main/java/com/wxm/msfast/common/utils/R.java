@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.common.utils;
+package com.wxm.msfast.common.utils;
 
 import org.apache.http.HttpStatus;
 

@@ -1,7 +1,7 @@
 package com.wxm.msfast.role.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.common.utils.PageUtils;
+import com.wxm.msfast.common.utils.PageUtils;
 import com.wxm.msfast.role.entity.UserEntity;
 
 import java.util.Map;

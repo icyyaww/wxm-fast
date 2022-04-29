@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wxm.msfast.role.entity.UserEntity;
 import com.wxm.msfast.role.service.UserService;
-import com.wxm.common.utils.PageUtils;
-import com.wxm.common.utils.R;
+import com.wxm.msfast.common.utils.PageUtils;
+import com.wxm.msfast.common.utils.R;
 
 
 
