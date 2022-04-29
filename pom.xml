@@ -10,9 +10,9 @@
     <name>msfast</name>
     <description>聚合服务</description>
     <modules>
-        <module>msfast-role</module>
-        <module>msfast-common</module>
         <module>renren-generator</module>
+        <module>msfast-common</module>
+        <module>msfast-role</module>
     </modules>
 
 </project>
