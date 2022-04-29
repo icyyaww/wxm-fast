@@ -32,10 +32,16 @@ spring:
                 wall:
                     config:
                         multi-statement-allow: true
-
+    cloud:
+        nacos:
+            discovery:
+                #注册中心
+                server-addr: 127.0.0.1:8848
+    application:
+        name: msfast-role
 
 ##多数据源的配置
-#dynamic:
+#dynamic: spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848
 #  datasource:
 #    slave1:
 #      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
