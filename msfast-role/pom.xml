@@ -12,9 +12,12 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>msfast-role</name>
     <description>角色权限管理</description>
+
     <properties>
         <java.version>1.8</java.version>
+        <msfast.common.version>0.0.1-SNAPSHOT</msfast.common.version>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -28,7 +31,7 @@
         <dependency>
             <groupId>com.wxm.msfast</groupId>
             <artifactId>msfast-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${msfast.common.version}</version>
         </dependency>
     </dependencies>
 

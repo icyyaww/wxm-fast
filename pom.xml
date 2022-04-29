@@ -6,9 +6,10 @@
     <groupId>com.wxm.msfast</groupId>
     <artifactId>msfast-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>msfast</name>
     <description>聚合服务</description>
+
     <modules>
         <module>renren-generator</module>
         <module>msfast-common</module>
