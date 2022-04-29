@@ -1,4 +1,4 @@
-package com.wxm.msfast.common.xss;
+package com.wxm.msfast.base.common.xss;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

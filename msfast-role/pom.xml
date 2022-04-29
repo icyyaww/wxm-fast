@@ -15,7 +15,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <msfast.common.version>0.0.1-SNAPSHOT</msfast.common.version>
+        <msfast.base.common.version>0.0.1-SNAPSHOT</msfast.base.common.version>
     </properties>
 
     <dependencies>
@@ -30,8 +30,9 @@
         </dependency>
         <dependency>
             <groupId>com.wxm.msfast</groupId>
-            <artifactId>msfast-common</artifactId>
-            <version>${msfast.common.version}</version>
+            <artifactId>msfast-base-common</artifactId>
+            <version>${msfast.base.common.version}</version>
+
         </dependency>
     </dependencies>
 

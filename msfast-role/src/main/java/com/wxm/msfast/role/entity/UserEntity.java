@@ -12,7 +12,7 @@ import lombok.Data;
  * 
  * @author wanglei
  * @email 378526425@qq.com
- * @date 2022-04-28 16:24:57
+ * @date 2022-04-29 16:53:44
  */
 @Data
 @TableName("sys_user")

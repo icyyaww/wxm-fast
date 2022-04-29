@@ -12,7 +12,7 @@
 
     <modules>
         <module>renren-generator</module>
-        <module>msfast-common</module>
+        <module>msfast-base</module>
         <module>msfast-role</module>
     </modules>
 

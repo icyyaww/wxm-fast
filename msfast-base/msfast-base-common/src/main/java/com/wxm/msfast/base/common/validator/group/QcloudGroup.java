@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.msfast.common.validator.group;
+package com.wxm.msfast.base.common.validator.group;
 
 /**
  * 腾讯云

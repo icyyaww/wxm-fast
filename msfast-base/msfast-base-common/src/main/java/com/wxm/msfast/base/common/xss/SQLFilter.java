@@ -6,10 +6,10 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.msfast.common.xss;
+package com.wxm.msfast.base.common.xss;
 
 
-import com.wxm.msfast.common.exception.RRException;
+import com.wxm.msfast.base.common.exception.RRException;
 import org.apache.commons.lang.StringUtils;
 
 /**
