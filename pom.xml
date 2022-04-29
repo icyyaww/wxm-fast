@@ -14,6 +14,7 @@
         <module>renren-generator</module>
         <module>msfast-base</module>
         <module>msfast-role</module>
+        <module>msfast-test</module>
     </modules>
 
 </project>

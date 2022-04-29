@@ -6,18 +6,17 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.6.6</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wxm.msfast</groupId>
-    <artifactId>msfast-role</artifactId>
+    <artifactId>msfast-test</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>msfast-role</name>
-    <description>角色权限管理</description>
-
+    <name>msfast-test</name>
+    <description>服务调用测试</description>
     <properties>
         <java.version>1.8</java.version>
         <msfast.base.common.version>0.0.1-SNAPSHOT</msfast.base.common.version>
     </properties>
-
     <dependencies>
         <!--服务必要依赖-->
         <dependency>
