@@ -1,10 +1,7 @@
-package com.wxm.msfast.test.controller;
+package com.wxm.msfast.demo.controller;
 
-import com.wxm.msfast.base.common.utils.PageUtils;
 import com.wxm.msfast.base.common.utils.R;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * @program: msfast

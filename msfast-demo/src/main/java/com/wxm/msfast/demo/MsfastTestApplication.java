@@ -1,4 +1,4 @@
-package com.wxm.msfast.test;
+package com.wxm.msfast.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

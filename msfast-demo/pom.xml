@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wxm.msfast</groupId>
-    <artifactId>msfast-test</artifactId>
+    <artifactId>msfast-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>msfast-test</name>
+    <name>msfast-demo</name>
     <description>服务调用测试</description>
     <properties>
         <java.version>1.8</java.version>
