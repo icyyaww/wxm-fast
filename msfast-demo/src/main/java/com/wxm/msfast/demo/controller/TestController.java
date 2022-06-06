@@ -18,7 +18,7 @@ import java.util.Map;
  **/
 @RefreshScope
 @RestController
-@RequestMapping("demo")
+@RequestMapping("test")
 public class TestController {
 
     @Autowired
