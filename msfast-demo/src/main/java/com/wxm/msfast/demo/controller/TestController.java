@@ -1,12 +1,14 @@
 package com.wxm.msfast.demo.controller;
 
 import com.wxm.msfast.base.common.utils.R;
+import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.feign.RoleFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,5 +57,17 @@ public class TestController {
         result.put("userName", userName);
         result.put("age", age);
         return R.ok(result);
+    }
+
+    /**
+     * @Description: 数据校验测试
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/8 下午4:37
+     */
+    @PostMapping("/add")
+    public R addUser(@Valid @RequestBody UserAddRequest request) {
+        return R.ok();
     }
 }
