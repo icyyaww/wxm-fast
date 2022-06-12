@@ -13,7 +13,7 @@
     <name>msfast-gateway</name>
     <description>服务网关</description>
     <properties>
-        <msfast.base.common.version>0.0.1-SNAPSHOT</msfast.base.common.version>
+
     </properties>
     <dependencies>
         <!--服务必要依赖-->

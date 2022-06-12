@@ -14,7 +14,7 @@
     <description>角色权限管理</description>
 
     <properties>
-        <msfast.base.common.version>0.0.1-SNAPSHOT</msfast.base.common.version>
+
     </properties>
 
     <dependencies>
