@@ -1,10 +1,9 @@
 package com.wxm.msfast.base.common.aop;
 
-import com.wxm.msfast.base.common.exception.BizCodeEnum;
+import com.wxm.msfast.base.common.exception.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.R;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,19 +32,19 @@ public class ExceptionAdvice {
         bindingResult.getFieldErrors().forEach((fieldError -> {
             errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
         }));
-        return R.error(BizCodeEnum.VALID_EXCEPTION.getCode(), BizCodeEnum.VALID_EXCEPTION.getMsg()).put("data", errorMap);
+        return R.error(BaseExceptionEnum.VALID_EXCEPTION.getCode(), BaseExceptionEnum.VALID_EXCEPTION.getMessage()).put("data", errorMap);
     }
 
     @ExceptionHandler(value = JrsfException.class)
     public R handleJrsfException(JrsfException jrsfException) {
         log.error("业务处理异常:", jrsfException);
-        return R.error(BizCodeEnum.SERVICE_EXCEPTION.getCode(), BizCodeEnum.SERVICE_EXCEPTION.getMsg()).put("data",jrsfException.getMsg());
+        return R.error(jrsfException.getCode(), jrsfException.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)
     public R handleException(Throwable throwable) {
         log.error("错误:", throwable);
-        return R.error(BizCodeEnum.UNKNOWN_EXCEPTION.getCode(), BizCodeEnum.UNKNOWN_EXCEPTION.getMsg());
+        return R.error(BaseExceptionEnum.UNKNOWN_EXCEPTION.getCode(), BaseExceptionEnum.UNKNOWN_EXCEPTION.getMessage());
     }
 
 }

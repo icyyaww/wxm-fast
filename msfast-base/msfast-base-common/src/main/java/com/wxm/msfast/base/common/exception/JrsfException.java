@@ -1,8 +1,8 @@
 /**
  * Copyright (c) 2016-2019 人人开源 All rights reserved.
- *
+ * <p>
  * https://www.renren.io
- *
+ * <p>
  * 版权所有，侵权必究！
  */
 
@@ -14,48 +14,22 @@ package com.wxm.msfast.base.common.exception;
  * @author Mark sunlightcs@gmail.com
  */
 public class JrsfException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-    private String msg;
-    private int code = 500;
+    private Integer code;
+    private String message;
 
-    public JrsfException(String msg) {
-		super(msg);
-		this.msg = msg;
-	}
+    public JrsfException(BaseExceptionEnumInterface exceptionEnum) {
+        this.code = exceptionEnum.getCode();
+        this.message = exceptionEnum.getMessage();
+    }
 
-	public JrsfException(String msg, Throwable e) {
-		super(msg, e);
-		this.msg = msg;
-	}
-
-	public JrsfException(String msg, int code) {
-		super(msg);
-		this.msg = msg;
-		this.code = code;
-	}
-
-	public JrsfException(String msg, int code, Throwable e) {
-		super(msg, e);
-		this.msg = msg;
-		this.code = code;
-	}
-
-	public String getMsg() {
-		return msg;
-	}
-
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-
-	public int getCode() {
+	public Integer getCode() {
 		return code;
 	}
 
-	public void setCode(int code) {
-		this.code = code;
+	@Override
+	public String getMessage() {
+		return message;
 	}
-
-
 }
