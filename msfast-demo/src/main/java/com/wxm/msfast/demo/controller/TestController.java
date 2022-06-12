@@ -1,5 +1,6 @@
 package com.wxm.msfast.demo.controller;
 
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.feign.RoleFeignService;
@@ -68,6 +69,21 @@ public class TestController {
      */
     @PostMapping("/add")
     public R addUser(@Valid @RequestBody UserAddRequest request) {
+        return R.ok();
+    }
+
+    /**
+     * @Description: 异常处理测试
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/12 下午2:21
+     */
+    @PostMapping("/exception")
+    public R exception(@Valid @RequestBody UserAddRequest request) {
+        if (request.getAge().compareTo(18) < 0) {
+            throw new JrsfException("未满18周岁 请在父母陪同下观看");
+        }
         return R.ok();
     }
 }

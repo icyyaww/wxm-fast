@@ -9,7 +9,7 @@
 package com.wxm.msfast.base.common.xss;
 
 
-import com.wxm.msfast.base.common.exception.RRException;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -42,7 +42,7 @@ public class SQLFilter {
         //判断是否包含非法字符
         for(String keyword : keywords){
             if(str.indexOf(keyword) != -1){
-                throw new RRException("包含非法字符");
+                throw new JrsfException("包含非法字符");
             }
         }
 
