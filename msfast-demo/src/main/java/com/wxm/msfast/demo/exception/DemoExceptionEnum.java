@@ -1,6 +1,6 @@
 package com.wxm.msfast.demo.exception;
 
-import com.wxm.msfast.base.common.exception.BaseExceptionEnumInterface;
+import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
 
 public enum DemoExceptionEnum implements BaseExceptionEnumInterface {
     AGE_MIN(11001, "未满18周岁 请在父母陪同下观看");

@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.msfast.base.common.utils;
+package com.wxm.msfast.base.common.web.domain;
 
 import org.apache.http.HttpStatus;
 
@@ -15,8 +15,6 @@ import java.util.Map;
 
 /**
  * 返回数据
- *
- * @author Mark sunlightcs@gmail.com
  */
 public class R extends HashMap<String, Object> {
 	private static final long serialVersionUID = 1L;

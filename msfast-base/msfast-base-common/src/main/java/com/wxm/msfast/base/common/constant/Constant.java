@@ -6,7 +6,7 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.msfast.base.common.utils;
+package com.wxm.msfast.base.common.constant;
 
 
 

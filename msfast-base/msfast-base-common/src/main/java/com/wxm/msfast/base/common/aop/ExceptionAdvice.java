@@ -1,8 +1,8 @@
 package com.wxm.msfast.base.common.aop;
 
-import com.wxm.msfast.base.common.exception.BaseExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.R;
+import com.wxm.msfast.base.common.web.domain.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;

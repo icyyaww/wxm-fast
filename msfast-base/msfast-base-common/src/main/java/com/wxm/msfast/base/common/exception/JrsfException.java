@@ -8,10 +8,10 @@
 
 package com.wxm.msfast.base.common.exception;
 
+import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
+
 /**
  * 自定义异常
- *
- * @author Mark sunlightcs@gmail.com
  */
 public class JrsfException extends RuntimeException {
     private static final long serialVersionUID = 1L;
@@ -28,7 +28,6 @@ public class JrsfException extends RuntimeException {
 		return code;
 	}
 
-	@Override
 	public String getMessage() {
 		return message;
 	}

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.base.common.utils.PageUtils;
-import com.wxm.msfast.base.common.utils.Query;
+import com.wxm.msfast.base.common.web.page.Query;
 
 import com.wxm.msfast.role.dao.UserDao;
 import com.wxm.msfast.role.entity.UserEntity;

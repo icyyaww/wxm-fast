@@ -6,12 +6,13 @@
  * 版权所有，侵权必究！
  */
 
-package com.wxm.msfast.base.common.utils;
+package com.wxm.msfast.base.common.web.page;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wxm.msfast.base.common.constant.Constant;
 import com.wxm.msfast.base.common.xss.SQLFilter;
 
 import java.util.Map;

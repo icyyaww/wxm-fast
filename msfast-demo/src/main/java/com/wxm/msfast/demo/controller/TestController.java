@@ -1,7 +1,7 @@
 package com.wxm.msfast.demo.controller;
 
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.R;
+import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
 import com.wxm.msfast.demo.feign.RoleFeignService;

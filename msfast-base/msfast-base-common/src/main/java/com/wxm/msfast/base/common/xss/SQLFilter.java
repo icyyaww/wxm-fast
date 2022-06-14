@@ -9,7 +9,7 @@
 package com.wxm.msfast.base.common.xss;
 
 
-import com.wxm.msfast.base.common.exception.BaseExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import org.apache.commons.lang.StringUtils;
 

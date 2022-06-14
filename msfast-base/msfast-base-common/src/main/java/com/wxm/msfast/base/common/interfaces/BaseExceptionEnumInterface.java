@@ -1,4 +1,4 @@
-package com.wxm.msfast.base.common.exception;
+package com.wxm.msfast.base.common.interfaces;
 
 public interface BaseExceptionEnumInterface {
 
