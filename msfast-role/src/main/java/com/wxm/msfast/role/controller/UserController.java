@@ -39,7 +39,7 @@ public class UserController {
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = userService.queryPage(params);
 
-        return R.ok().put("page", page);
+        return R.ok(page);
     }
 
 
@@ -51,7 +51,7 @@ public class UserController {
     public R info(@PathVariable("userId") Long userId){
 		UserEntity user = userService.getById(userId);
 
-        return R.ok().put("user", user);
+        return R.ok(user);
     }
 
     /**

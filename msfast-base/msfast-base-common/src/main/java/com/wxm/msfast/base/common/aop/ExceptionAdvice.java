@@ -4,6 +4,7 @@ import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,19 +33,25 @@ public class ExceptionAdvice {
         bindingResult.getFieldErrors().forEach((fieldError -> {
             errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
         }));
-        return R.error(BaseExceptionEnum.VALID_EXCEPTION.getCode(), BaseExceptionEnum.VALID_EXCEPTION.getMessage()).put("data", errorMap);
+        return R.fail(BaseExceptionEnum.VALID_EXCEPTION.getCode(), BaseExceptionEnum.VALID_EXCEPTION.getMessage(), errorMap);
+    }
+
+    @ExceptionHandler(value = NoSuchBeanDefinitionException.class)
+    public R handleNoSuchException(NoSuchBeanDefinitionException e) {
+        log.error("没有实现相关接口,接口名：{}", e.getBeanType());
+        return R.fail(BaseExceptionEnum.NO_SERVICE_AVAILABLE_EXCEPTION.getCode(), BaseExceptionEnum.NO_SERVICE_AVAILABLE_EXCEPTION.getMessage(), e.getBeanType());
     }
 
     @ExceptionHandler(value = JrsfException.class)
     public R handleJrsfException(JrsfException jrsfException) {
         log.error("业务处理异常:", jrsfException);
-        return R.error(jrsfException.getCode(), jrsfException.getMessage());
+        return R.fail(jrsfException.getCode(), jrsfException.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)
     public R handleException(Throwable throwable) {
         log.error("错误:", throwable);
-        return R.error(BaseExceptionEnum.UNKNOWN_EXCEPTION.getCode(), BaseExceptionEnum.UNKNOWN_EXCEPTION.getMessage());
+        return R.fail(BaseExceptionEnum.UNKNOWN_EXCEPTION.getCode(), BaseExceptionEnum.UNKNOWN_EXCEPTION.getMessage(), throwable.getMessage());
     }
 
 }

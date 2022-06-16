@@ -7,7 +7,10 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     //错误状态码规范 两位业务场景+三位错误码 例如：10 通用场景 000 系统未知异常
     UNKNOWN_EXCEPTION(10000, "系统未知错误"),
     VALID_EXCEPTION(10001, "参数校验异常"),
-    ILLEGAL_CHARACTER_EXCEPTION(10002, "包含非法字符");
+    ILLEGAL_CHARACTER_EXCEPTION(10002, "包含非法字符"),
+    NO_SERVICE_AVAILABLE_EXCEPTION(10003, "没有可用的服务"),
+    LOGIN_FAIL_EXCEPTION(10004, "用户名密码错误"),
+    No_IAUTHORITY_EXCEPTION(10005, "未实现IAUTHORITY服务");
 
     private Integer code;
     private String msg;

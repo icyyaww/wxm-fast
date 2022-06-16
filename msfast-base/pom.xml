@@ -15,5 +15,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>msfast-base-common</module>
+        <module>msfast-base-auth</module>
     </modules>
 </project>

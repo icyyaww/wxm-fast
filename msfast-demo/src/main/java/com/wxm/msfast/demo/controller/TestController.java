@@ -1,6 +1,7 @@
 package com.wxm.msfast.demo.controller;
 
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
@@ -86,5 +87,12 @@ public class TestController {
             throw new JrsfException(DemoExceptionEnum.AGE_MIN);
         }
         return R.ok();
+    }
+
+    @PostMapping("/jwt")
+    public R jwt() {
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("username", "张三");
+        return R.ok(JwtUtils.createToken(paramMap));
     }
 }

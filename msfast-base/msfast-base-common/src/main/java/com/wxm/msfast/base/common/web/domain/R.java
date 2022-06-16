@@ -1,62 +1,82 @@
 /**
  * Copyright (c) 2016-2019 人人开源 All rights reserved.
- *
+ * <p>
  * https://www.renren.io
- *
+ * <p>
  * 版权所有，侵权必究！
  */
 
 package com.wxm.msfast.base.common.web.domain;
 
-import org.apache.http.HttpStatus;
+import com.wxm.msfast.base.common.constant.Constants;
+import lombok.Data;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
 /**
  * 返回数据
  */
-public class R extends HashMap<String, Object> {
-	private static final long serialVersionUID = 1L;
+@Data
+public class R<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-	public R() {
-		put("code", 0);
-		put("msg", "success");
-	}
+    /**
+     * 成功
+     */
+    public static final int SUCCESS = Constants.SUCCESS;
 
-	public static R error() {
-		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
-	}
+    /**
+     * 失败
+     */
+    public static final int FAIL = Constants.FAIL;
 
-	public static R error(String msg) {
-		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, msg);
-	}
+    private int code;
 
-	public static R error(int code, String msg) {
-		R r = new R();
-		r.put("code", code);
-		r.put("msg", msg);
-		return r;
-	}
+    private String msg;
 
-	public static R ok(String msg) {
-		R r = new R();
-		r.put("msg", msg);
-		return r;
-	}
+    private T data;
 
-	public static R ok(Map<String, Object> map) {
-		R r = new R();
-		r.putAll(map);
-		return r;
-	}
+    public static <T> R<T> ok() {
+        return restResult(null, SUCCESS, null);
+    }
 
-	public static R ok() {
-		return new R();
-	}
+    public static <T> R<T> ok(T data) {
+        return restResult(data, SUCCESS, null);
+    }
 
-	public R put(String key, Object value) {
-		super.put(key, value);
-		return this;
-	}
+    public static <T> R<T> ok(String msg, T data) {
+        return restResult(data, SUCCESS, msg);
+    }
+
+    public static <T> R<T> fail() {
+        return restResult(null, FAIL, null);
+    }
+
+    public static <T> R<T> fail(String msg) {
+        return restResult(null, FAIL, msg);
+    }
+
+    public static <T> R<T> fail(T data) {
+        return restResult(data, FAIL, null);
+    }
+
+    public static <T> R<T> fail(String msg, T data) {
+        return restResult(data, FAIL, msg);
+    }
+
+    public static <T> R<T> fail(int code, String msg) {
+        return restResult(null, code, msg);
+    }
+
+    public static <T> R<T> fail(int code, String msg, T data) {
+        return restResult(data, code, msg);
+    }
+
+    private static <T> R<T> restResult(T data, int code, String msg) {
+        R<T> apiResult = new R<>();
+        apiResult.setCode(code);
+        apiResult.setData(data);
+        apiResult.setMsg(msg);
+        return apiResult;
+    }
 }
