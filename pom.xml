@@ -15,6 +15,7 @@
         <module>msfast-role</module>
         <module>msfast-demo</module>
         <module>msfast-gateway</module>
+        <module>msfast-api</module>
     </modules>
 
     <properties>

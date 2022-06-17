@@ -1,8 +1,10 @@
 package com.wxm.msfast.base.auth.controller;
 
+import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
+import com.wxm.msfast.base.common.constant.ServiceNameConstants;
 import com.wxm.msfast.base.common.web.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +27,10 @@ public class TokenController {
     @Autowired
     TokenService tokenService;
 
+    //@AuthIgnore
     @PostMapping("/login")
     public R<LoginUserResponse> login(@Valid @RequestBody LoginRequest request) {
+
         return R.ok(tokenService.login(request));
     }
 }
