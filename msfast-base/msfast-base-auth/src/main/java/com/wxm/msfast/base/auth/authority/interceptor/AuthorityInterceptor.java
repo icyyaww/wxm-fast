@@ -1,11 +1,13 @@
 package com.wxm.msfast.base.auth.authority.interceptor;
 
 
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.web.domain.R;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
@@ -22,6 +24,7 @@ import java.io.PrintWriter;
  * @author: wuhb
  * @date: 2019/2/25
  */
+@Slf4j
 public class AuthorityInterceptor implements HandlerInterceptor {
 
     @Override
@@ -39,26 +42,24 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        responseError(response, BaseExceptionEnum.NO_PERMISSION_EXCEPTION);
         return false;
     }
 
-    private void responseError(HttpServletResponse response, HttpStatus status, String msg) {
-
-        R ret = R.fail(status.value(), msg);
-
-
-       /* response.setContentType("application/json; charset=utf-8");
+    private void responseError(HttpServletResponse response, BaseExceptionEnum baseExceptionEnum) {
+        R result = R.fail(baseExceptionEnum.getCode(), baseExceptionEnum.getMessage());
+        response.setContentType("application/json; charset=utf-8");
         PrintWriter out = null;
         try {
             out = response.getWriter();
-            out.append(json);
+            out.append(JSON.toJSONString(result));
             out.flush();
         } catch (IOException e) {
-            EvLog.error(e);
+            log.error(e.getMessage());
         } finally {
             if (out != null) {
                 out.close();
             }
-        }*/
+        }
     }
 }

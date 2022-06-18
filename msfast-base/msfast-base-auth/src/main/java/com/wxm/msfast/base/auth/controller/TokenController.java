@@ -27,7 +27,7 @@ public class TokenController {
     @Autowired
     TokenService tokenService;
 
-    //@AuthIgnore
+    @AuthIgnore
     @PostMapping("/login")
     public R<LoginUserResponse> login(@Valid @RequestBody LoginRequest request) {
 
