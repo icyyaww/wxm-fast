@@ -37,9 +37,7 @@ public class TokenServiceImpl implements TokenService {
 
         //用户登陆业务校验
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        if (ObjectUtil.isNull(authorityService)) {
-            throw new JrsfException(BaseExceptionEnum.NO_SERVICE_AVAILABLE_EXCEPTION);
-        }
+
         LoginUser loginUser = authorityService.login(request);
         if (ObjectUtil.isNull(loginUser) || !Boolean.TRUE.equals(loginUser.getSuccess())) {
             //登陆失败

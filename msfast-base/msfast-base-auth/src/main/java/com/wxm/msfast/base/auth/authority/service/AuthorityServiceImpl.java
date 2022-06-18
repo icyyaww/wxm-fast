@@ -2,6 +2,8 @@ package com.wxm.msfast.base.auth.authority.service;
 
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,5 +28,15 @@ public class AuthorityServiceImpl implements AuthorityService {
         loginUser.setSuccess(true);
         loginUser.setUsername(loginRequest.getUsername());
         return loginUser;
+    }
+
+    @Override
+    public Boolean hasPermission() {
+        return true;
+    }
+
+    @Override
+    public void logout() {
+
     }
 }

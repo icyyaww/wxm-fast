@@ -1,13 +1,20 @@
 package com.wxm.msfast.base.auth.authority.interceptor;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
+import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.SecurityUtils;
+import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
@@ -38,12 +45,25 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (annotation != null) {
+        if (ObjectUtil.isNotNull(annotation)) {
             return true;
         }
 
-        responseError(response, BaseExceptionEnum.NO_PERMISSION_EXCEPTION);
-        return false;
+        String token = SecurityUtils.getToken(request);
+
+        if (StringUtils.isBlank(token)) {
+            responseError(response, BaseExceptionEnum.NO_LOGIN_EXCEPTION);
+            return false;
+        }
+
+        //校验是否拥有相关权限
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+        if (!Boolean.TRUE.equals(authorityService.hasPermission())) {
+            responseError(response, BaseExceptionEnum.NO_PERMISSION_EXCEPTION);
+            return false;
+        }
+
+        return true;
     }
 
     private void responseError(HttpServletResponse response, BaseExceptionEnum baseExceptionEnum) {

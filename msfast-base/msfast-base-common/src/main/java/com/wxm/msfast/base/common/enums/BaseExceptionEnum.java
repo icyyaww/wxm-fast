@@ -10,7 +10,8 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     ILLEGAL_CHARACTER_EXCEPTION(10002, "包含非法字符"),
     NO_SERVICE_AVAILABLE_EXCEPTION(10003, "没有可用的服务"),
     LOGIN_FAIL_EXCEPTION(10004, "用户名密码错误"),
-    NO_PERMISSION_EXCEPTION(10005, "没有权限");
+    NO_PERMISSION_EXCEPTION(10005, "没有权限"),
+    NO_LOGIN_EXCEPTION(10006, "未登录");
 
     private Integer code;
     private String msg;
