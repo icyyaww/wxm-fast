@@ -7,6 +7,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import java.util.Calendar;
 import java.util.Map;
 
 /**
@@ -24,7 +25,9 @@ public class JwtUtils {
      * @return 令牌
      */
     public static String createToken(Map<String, Object> claims) {
-        String token = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, TokenConstants.EXPIRATION);
+        String token = Jwts.builder().setClaims(claims).setExpiration(calendar.getTime()).signWith(SignatureAlgorithm.HS512, secret).compact();
         return token;
     }
 
@@ -112,4 +115,8 @@ public class JwtUtils {
         return Convert.toStr(claims.get(key), "");
     }
 
+    public static void refresh(String token) {
+
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
 }

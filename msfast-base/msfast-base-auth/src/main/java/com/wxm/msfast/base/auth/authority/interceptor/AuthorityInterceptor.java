@@ -62,7 +62,6 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return false;
         }
 
-
         String userId = JwtUtils.getUserId(token);
 
         //校验是否拥有相关权限

@@ -5,8 +5,7 @@ package com.wxm.msfast.base.common.constant;
  *
  * @author ruoyi
  */
-public class TokenConstants
-{
+public class TokenConstants {
     /**
      * 令牌自定义标识
      */
@@ -21,5 +20,15 @@ public class TokenConstants
      * 令牌秘钥
      */
     public final static String SECRET = "abcdefghijklmnopqrstuvwxyz";
+
+    /**
+     * token有效期（分钟）
+     */
+    public final static Integer EXPIRATION = 3;
+
+    /**
+     * token刷新时间（分钟）
+     */
+    public final static Integer REFRESH_TIME = 1;
 
 }

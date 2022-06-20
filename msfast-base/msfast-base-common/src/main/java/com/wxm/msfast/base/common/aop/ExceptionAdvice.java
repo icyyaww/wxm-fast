@@ -3,6 +3,7 @@ package com.wxm.msfast.base.common.aop;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,12 @@ public class ExceptionAdvice {
     public R handleSignatureException(SignatureException e) {
         log.error("token 非法：{}", e.getMessage());
         return R.fail(BaseExceptionEnum.TOKEN_ILLEGAL_EXCEPTION.getCode(), BaseExceptionEnum.TOKEN_ILLEGAL_EXCEPTION.getMessage());
+    }
+
+    @ExceptionHandler(value = ExpiredJwtException.class)
+    public R handleExpiredJwtException(ExpiredJwtException e) {
+        log.error("token 过期：{}", e.getMessage());
+        return R.fail(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION.getCode(), BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)

@@ -2,6 +2,7 @@ package com.wxm.msfast.base.common.enums;
 
 
 import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
+import io.jsonwebtoken.ExpiredJwtException;
 
 public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     //错误状态码规范 两位业务场景+三位错误码 例如：10 通用场景 000 系统未知异常
@@ -13,7 +14,8 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     NO_PERMISSION_EXCEPTION(10005, "没有权限"),
     NO_LOGIN_EXCEPTION(10006, "未登录"),
     TOKEN_FORMAT_EXCEPTION(10007, "Token格式错误"),
-    TOKEN_ILLEGAL_EXCEPTION(10008, "Token非法");
+    TOKEN_ILLEGAL_EXCEPTION(10008, "Token非法"),
+    TOKEN_EXPIRED_EXCEPTION(10009, "Token过期");
 
     private Integer code;
     private String msg;
