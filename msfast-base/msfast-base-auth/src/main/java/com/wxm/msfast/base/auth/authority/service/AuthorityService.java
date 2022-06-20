@@ -12,7 +12,5 @@ public interface AuthorityService {
 
     LoginUser login(LoginRequest loginRequest);
 
-    Boolean hasPermission();
-
     void logout();
 }

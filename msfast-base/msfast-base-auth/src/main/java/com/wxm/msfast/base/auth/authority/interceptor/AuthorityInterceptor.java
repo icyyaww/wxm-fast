@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.authority.service.TokenValidService;
 import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
@@ -57,8 +58,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         //校验是否拥有相关权限
-        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        if (!Boolean.TRUE.equals(authorityService.hasPermission())) {
+        TokenValidService tokenValidService = SpringUtils.getBean(TokenValidService.class);
+        if (!Boolean.TRUE.equals(tokenValidService.hasPermission())) {
             responseError(response, BaseExceptionEnum.NO_PERMISSION_EXCEPTION);
             return false;
         }

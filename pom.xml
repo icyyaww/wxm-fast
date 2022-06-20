@@ -12,10 +12,9 @@
 
     <modules>
         <module>msfast-base</module>
-        <module>msfast-role</module>
-        <module>msfast-demo</module>
         <module>msfast-gateway</module>
         <module>msfast-api</module>
+        <module>msfast-modules</module>
     </modules>
 
     <properties>
