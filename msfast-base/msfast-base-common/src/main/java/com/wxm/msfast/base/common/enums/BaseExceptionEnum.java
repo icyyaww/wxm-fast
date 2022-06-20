@@ -11,7 +11,9 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     NO_SERVICE_AVAILABLE_EXCEPTION(10003, "没有可用的服务"),
     LOGIN_FAIL_EXCEPTION(10004, "用户名密码错误"),
     NO_PERMISSION_EXCEPTION(10005, "没有权限"),
-    NO_LOGIN_EXCEPTION(10006, "未登录");
+    NO_LOGIN_EXCEPTION(10006, "未登录"),
+    TOKEN_FORMAT_EXCEPTION(10007, "Token格式错误"),
+    TOKEN_ILLEGAL_EXCEPTION(10008, "Token非法");
 
     private Integer code;
     private String msg;

@@ -4,6 +4,8 @@ package com.wxm.msfast.base.auth.authority.interceptor;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import cn.hutool.jwt.JWTUtil;
+import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
@@ -11,6 +13,7 @@ import com.wxm.msfast.base.auth.authority.service.TokenValidService;
 import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.utils.SecurityUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.web.domain.R;
@@ -46,16 +49,21 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        //忽略校验
         if (ObjectUtil.isNotNull(annotation)) {
             return true;
         }
 
         String token = SecurityUtils.getToken(request);
 
+        //没有token
         if (StringUtils.isBlank(token)) {
             responseError(response, BaseExceptionEnum.NO_LOGIN_EXCEPTION);
             return false;
         }
+
+
+        String userId = JwtUtils.getUserId(token);
 
         //校验是否拥有相关权限
         TokenValidService tokenValidService = SpringUtils.getBean(TokenValidService.class);

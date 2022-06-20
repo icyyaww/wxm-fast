@@ -26,6 +26,7 @@ public class AuthorityServiceImpl implements AuthorityService {
         LoginUser loginUser = new LoginUser();
         loginUser.setSuccess(true);
         loginUser.setUsername(loginRequest.getUsername());
+        loginUser.setUserId(1l);
         return loginUser;
     }
 

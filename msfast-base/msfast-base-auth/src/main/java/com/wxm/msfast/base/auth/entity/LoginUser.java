@@ -15,4 +15,6 @@ public class LoginUser {
     private Boolean success;
 
     private String username;
+
+    private Long userId;
 }

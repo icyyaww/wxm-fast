@@ -3,6 +3,8 @@ package com.wxm.msfast.base.common.aop;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.validation.BindingResult;
@@ -43,9 +45,21 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(value = JrsfException.class)
-    public R handleJrsfException(JrsfException jrsfException) {
-        log.error("业务处理异常:", jrsfException);
-        return R.fail(jrsfException.getCode(), jrsfException.getMessage());
+    public R handleJrsfException(JrsfException e) {
+        log.error("业务处理异常:", e);
+        return R.fail(e.getCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(value = MalformedJwtException.class)
+    public R handleMalformedJwtException(MalformedJwtException e) {
+        log.error("token 格式错误：{}", e.getMessage());
+        return R.fail(BaseExceptionEnum.TOKEN_FORMAT_EXCEPTION.getCode(), BaseExceptionEnum.TOKEN_FORMAT_EXCEPTION.getMessage());
+    }
+
+    @ExceptionHandler(value = SignatureException.class)
+    public R handleSignatureException(SignatureException e) {
+        log.error("token 非法：{}", e.getMessage());
+        return R.fail(BaseExceptionEnum.TOKEN_ILLEGAL_EXCEPTION.getCode(), BaseExceptionEnum.TOKEN_ILLEGAL_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)

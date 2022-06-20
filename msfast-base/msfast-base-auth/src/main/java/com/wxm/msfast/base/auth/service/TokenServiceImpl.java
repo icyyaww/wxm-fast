@@ -49,7 +49,8 @@ public class TokenServiceImpl implements TokenService {
 
         // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<>();
-        claimsMap.put(SecurityConstants.DETAILS_USERNAME, authorityUserResponse.getUsername());
+        claimsMap.put(SecurityConstants.DETAILS_USER_ID, loginUser.getUserId());
+        claimsMap.put(SecurityConstants.DETAILS_USERNAME, loginUser.getUsername());
         loginUserResponse.setToken(JwtUtils.createToken(claimsMap));
 
         return loginUserResponse;
