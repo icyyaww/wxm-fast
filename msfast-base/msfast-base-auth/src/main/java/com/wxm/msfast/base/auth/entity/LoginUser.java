@@ -12,9 +12,8 @@ import lombok.Data;
 @Data
 public class LoginUser {
 
-    private Boolean success;
+    private Long id;
 
     private String username;
 
-    private Long userId;
 }

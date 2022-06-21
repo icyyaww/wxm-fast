@@ -27,7 +27,7 @@ public class TokenConstants {
     public final static Integer EXPIRATION = 3;
 
     /**
-     * token刷新时间（分钟）
+     * token失效刷新时间（分钟）
      */
     public final static Integer REFRESH_TIME = 1;
 

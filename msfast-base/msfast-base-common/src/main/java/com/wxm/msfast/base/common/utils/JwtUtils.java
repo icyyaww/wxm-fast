@@ -8,6 +8,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -115,8 +116,19 @@ public class JwtUtils {
         return Convert.toStr(claims.get(key), "");
     }
 
-    public static void refresh(String token) {
+    public static void refreshToken(String token) {
 
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        Date expiration = claims.getExpiration();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, TokenConstants.REFRESH_TIME);
+        if (calendar.getTime().compareTo(expiration) > 0) {
+            //刷新token
+            Calendar calendarExpir = Calendar.getInstance();
+            calendarExpir.add(Calendar.MINUTE, TokenConstants.EXPIRATION);
+            String refreshToken = Jwts.builder().setClaims(claims).setExpiration(calendarExpir.getTime()).signWith(SignatureAlgorithm.HS512, secret).compact();
+            //保存token信息到前台中
+            ServletUtils.setCookie(TokenConstants.AUTHENTICATION, refreshToken);
+        }
     }
 }

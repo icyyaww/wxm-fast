@@ -20,6 +20,9 @@ public class SecurityUtils {
     public static String getToken(HttpServletRequest request) {
         // 从header获取token标识
         String token = request.getHeader(TokenConstants.AUTHENTICATION);
+        if (StringUtils.isBlank(token)) {
+            token = ServletUtils.getCookieValueByName(TokenConstants.AUTHENTICATION);
+        }
         return replaceTokenPrefix(token);
     }
 
