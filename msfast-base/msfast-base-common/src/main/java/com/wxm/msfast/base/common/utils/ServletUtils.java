@@ -95,6 +95,10 @@ public class ServletUtils {
         response.addCookie(cookie);
     }
 
+    public static void removeCookie(String name) {
+
+    }
+
     public static String getCookieValueByName(String name) {
         Cookie[] cookies = getRequest().getCookies();
         if (ObjectUtil.isNotNull(cookies)) {

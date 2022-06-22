@@ -6,4 +6,6 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 public interface TokenService {
 
     LoginUserResponse login(LoginRequest request);
+
+    void logout();
 }

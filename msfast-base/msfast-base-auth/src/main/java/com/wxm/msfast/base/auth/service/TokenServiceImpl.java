@@ -58,4 +58,9 @@ public class TokenServiceImpl implements TokenService {
 
         return loginUserResponse;
     }
+
+    @Override
+    public void logout() {
+
+    }
 }
