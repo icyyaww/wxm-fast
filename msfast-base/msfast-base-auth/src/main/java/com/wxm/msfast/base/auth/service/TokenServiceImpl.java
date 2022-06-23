@@ -61,6 +61,8 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void logout() {
-
+        //用户退出登陆
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+        authorityService.logout();
     }
 }
