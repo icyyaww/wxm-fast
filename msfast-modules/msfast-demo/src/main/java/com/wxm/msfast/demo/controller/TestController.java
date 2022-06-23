@@ -35,6 +35,8 @@ public class TestController {
     @Value("${ms.user.age}")
     int age;
 
+    @Value("${spring.redis.open:false}")
+    private Boolean redisOpen;
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
      * @Param:
@@ -59,6 +61,7 @@ public class TestController {
         Map<String, Object> result = new HashMap<>();
         result.put("userName", userName);
         result.put("age", age);
+        result.put("redisOpen", redisOpen);
         return R.ok(result);
     }
 

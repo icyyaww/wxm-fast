@@ -1,7 +1,10 @@
 package com.wxm.msfast.base.common.utils;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.common.constant.Constants;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.web.domain.R;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.LinkedCaseInsensitiveMap;
 import org.springframework.web.context.request.RequestAttributes;
@@ -11,6 +14,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -21,6 +26,7 @@ import java.util.Map;
  *
  * @author ruoyi
  */
+
 public class ServletUtils {
 
     /**
@@ -96,7 +102,10 @@ public class ServletUtils {
     }
 
     public static void removeCookie(String name) {
-
+        Cookie cookie = new Cookie(name, null);
+        cookie.setMaxAge(0);
+        HttpServletResponse response = getResponse();
+        response.addCookie(cookie);
     }
 
     public static String getCookieValueByName(String name) {
@@ -109,5 +118,23 @@ public class ServletUtils {
             }
         }
         return null;
+    }
+
+    public static void responseError(BaseExceptionEnum baseExceptionEnum) {
+        HttpServletResponse response = getResponse();
+        R result = R.fail(baseExceptionEnum.getCode(), baseExceptionEnum.getMessage());
+        response.setContentType("application/json; charset=utf-8");
+        PrintWriter out = null;
+        try {
+            out = response.getWriter();
+            out.append(JSON.toJSONString(result));
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 }

@@ -25,11 +25,8 @@ public class JwtUtils {
      * @param claims 数据声明
      * @return 令牌
      */
-    public static String createToken(Map<String, Object> claims) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, TokenConstants.EXPIRATION);
-        String token = Jwts.builder().setClaims(claims).setExpiration(calendar.getTime()).signWith(SignatureAlgorithm.HS512, secret).compact();
-        return token;
+    public static String createToken(Map<String, Object> claims, Date expiration) {
+        return Jwts.builder().setClaims(claims).setExpiration(expiration).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     /**
@@ -40,7 +37,6 @@ public class JwtUtils {
      */
     public static Claims parseToken(String token) {
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        refreshToken(token);
         return claims;
     }
 
@@ -118,19 +114,8 @@ public class JwtUtils {
         return Convert.toStr(claims.get(key), "");
     }
 
-    public static void refreshToken(String token) {
-
-        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-        Date expiration = claims.getExpiration();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, TokenConstants.REFRESH_TIME);
-        if (calendar.getTime().compareTo(expiration) > 0) {
-            //刷新token
-            Calendar calendarExpir = Calendar.getInstance();
-            calendarExpir.add(Calendar.MINUTE, TokenConstants.EXPIRATION);
-            String refreshToken = Jwts.builder().setClaims(claims).setExpiration(calendarExpir.getTime()).signWith(SignatureAlgorithm.HS512, secret).compact();
-            //保存token信息到前台中
-            ServletUtils.setCookie(TokenConstants.AUTHENTICATION, refreshToken);
-        }
+    public static String getUserRedisToken(String token) {
+        Claims claims = parseToken(token);
+        return getValue(claims, SecurityConstants.REDIS_TOKEN);
     }
 }

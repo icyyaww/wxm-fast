@@ -5,8 +5,7 @@ package com.wxm.msfast.base.common.constant;
  *
  * @author ruoyi
  */
-public class SecurityConstants
-{
+public class SecurityConstants {
     /**
      * 用户ID字段
      */
@@ -41,4 +40,14 @@ public class SecurityConstants
      * 登录用户
      */
     public static final String LOGIN_USER = "login_user";
+
+    /**
+     * @Description: redis存放token
+     */
+    public static final String REDIS_TOKEN = "token";
+
+    /**
+     * @Description: redis 用户标识
+     */
+    public static final String REDIS_USER_KEY = "redis_user_key_";
 }

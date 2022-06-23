@@ -14,4 +14,5 @@ public class LoginUserResponse {
     private AuthorityUserResponse authorityUserResponse;
 
     private String token;
+
 }
