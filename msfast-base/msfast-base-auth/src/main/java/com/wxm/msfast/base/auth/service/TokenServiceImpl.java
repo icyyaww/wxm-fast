@@ -79,6 +79,9 @@ public class TokenServiceImpl implements TokenService {
             String token = SecurityUtils.getToken();
             if (StringUtils.isNotBlank(token)) {
                 redisService.deleteObject(JwtUtils.getUserRedisToken(token));
+                if (!manyOnline) {
+                    redisService.deleteObject(SecurityConstants.MANY_ONLINE_USER_KEY + JwtUtils.getUserId(token));
+                }
             }
         }
 
