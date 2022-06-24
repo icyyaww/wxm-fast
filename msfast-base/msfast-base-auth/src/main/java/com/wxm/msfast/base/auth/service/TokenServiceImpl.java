@@ -7,6 +7,7 @@ import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.response.AuthorityUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
 import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
@@ -40,10 +41,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    @Value("${wxmfast.config.auth.redis-enable:false}")
+    @Value("${" + ConfigConstants.AUTH_REDIS_ENABLE + ":false}")
     private Boolean redisEnable;
 
-    @Value("${wxmfast.config.auth.many-online:false}")
+    @Value("${" + ConfigConstants.AUTH_MANY_ONLINE + ":false}")
     private Boolean manyOnline;
 
     @Resource

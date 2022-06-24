@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.TokenValidService;
 import com.wxm.msfast.base.auth.service.TokenService;
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.service.RedisService;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -32,10 +34,10 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class AuthorityInterceptor implements HandlerInterceptor {
 
-    @Value("${wxmfast.config.auth.redis-enable:false}")
+    @Value("${" + ConfigConstants.AUTH_REDIS_ENABLE + ":false}")
     private Boolean redisEnable;
 
-    @Value("${wxmfast.config.auth.many-online:false}")
+    @Value("${" + ConfigConstants.AUTH_MANY_ONLINE + ":false}")
     private Boolean manyOnline;
 
     @Resource

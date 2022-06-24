@@ -1,5 +1,6 @@
 package com.wxm.msfast.demo.controller;
 
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.web.domain.R;
@@ -36,8 +37,8 @@ public class TestController {
     @Value("${ms.user.age}")
     int age;
 
-    @Value("${wxmfast.config.auth.redis-enable:false}")
-    private Boolean redisOpen;
+    @Value("${" + ConfigConstants.AUTH_REDIS_ENABLE + ":false}")
+    private Boolean redisEnable;
 
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
@@ -63,7 +64,7 @@ public class TestController {
         Map<String, Object> result = new HashMap<>();
         result.put("userName", userName);
         result.put("age", age);
-        result.put("redisOpen", redisOpen);
+        result.put("redisOpen", redisEnable);
         return R.ok(result);
     }
 
