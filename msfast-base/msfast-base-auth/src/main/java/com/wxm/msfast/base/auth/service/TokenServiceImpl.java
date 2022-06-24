@@ -40,8 +40,11 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class TokenServiceImpl implements TokenService {
 
-    @Value("${spring.redis.open:false}")
-    private Boolean redisOpen;
+    @Value("${wxmfast.config.auth.redis-enable:false}")
+    private Boolean redisEnable;
+
+    @Value("${wxmfast.config.auth.many-online:false}")
+    private Boolean manyOnline;
 
     @Resource
     private RedisService redisService;
@@ -63,7 +66,7 @@ public class TokenServiceImpl implements TokenService {
         BeanUtils.copyProperties(loginUser, authorityUserResponse);
         loginUserResponse.setAuthorityUserResponse(authorityUserResponse);
 
-        loginUserResponse.setToken(createToken(loginUser));
+        loginUserResponse.setToken(createToken(loginUser, null));
 
         //保存token信息到前台中
         ServletUtils.setCookie(TokenConstants.AUTHENTICATION, loginUserResponse.getToken());
@@ -72,10 +75,10 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void logout() {
-        if (redisOpen) {
+        if (redisEnable) {
             String token = SecurityUtils.getToken();
             if (StringUtils.isNotBlank(token)) {
-                redisService.deleteObject(SecurityConstants.REDIS_USER_KEY + JwtUtils.getUserId(token));
+                redisService.deleteObject(JwtUtils.getUserRedisToken(token));
             }
         }
 
@@ -95,24 +98,36 @@ public class TokenServiceImpl implements TokenService {
         if (calendar.getTime().compareTo(expiration) > 0) {
             //刷新token
             LoginUser loginUser = claims.get(SecurityConstants.LOGIN_USER, LoginUser.class);
-            String refreshToken = createToken(loginUser);
+            String refreshToken = createToken(loginUser, token);
             //保存token信息到前台中
             ServletUtils.setCookie(TokenConstants.AUTHENTICATION, refreshToken);
             redisService.deleteObject(JwtUtils.getUserRedisToken(token));
         }
     }
 
-    private String createToken(LoginUser loginUser) {
+    private String createToken(LoginUser loginUser, String token) {
         // Jwt存储信息
+
         Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put(SecurityConstants.LOGIN_USER, loginUser);
         claimsMap.put(SecurityConstants.DETAILS_USER_ID, loginUser.getId());
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, TokenConstants.EXPIRATION);
-        if (redisOpen) {
-            String redistToken = IdUtils.fastSimpleUUID();
-            claimsMap.put(SecurityConstants.REDIS_TOKEN, redistToken);
-            redisService.setCacheObject(redistToken, loginUser.getId(), Long.parseLong(String.valueOf(TokenConstants.EXPIRATION)), TimeUnit.MINUTES);
+        if (redisEnable) {
+            String redisToken = IdUtils.fastSimpleUUID();
+            claimsMap.put(SecurityConstants.REDIS_TOKEN, redisToken);
+            redisService.setCacheObject(redisToken, loginUser.getId(), Long.parseLong(String.valueOf(TokenConstants.EXPIRATION)), TimeUnit.MINUTES);
+            if (Boolean.FALSE.equals(manyOnline)) {
+                String onlineToken = "";
+                if (StringUtils.isBlank(token)) {
+                    //登陆
+                    onlineToken = redisToken;
+                    claimsMap.put(SecurityConstants.MANY_ONLINE_USER_TOKEN, onlineToken);
+                } else {
+                    onlineToken = JwtUtils.getOnlineUSerToken(token);
+                }
+                redisService.setCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + loginUser.getId(), onlineToken, Long.parseLong(String.valueOf(TokenConstants.EXPIRATION)), TimeUnit.MINUTES);
+            }
         }
         return JwtUtils.createToken(claimsMap, calendar.getTime());
     }

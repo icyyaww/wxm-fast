@@ -114,8 +114,27 @@ public class JwtUtils {
         return Convert.toStr(claims.get(key), "");
     }
 
+    /**
+     * @Description: 用户token
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/24 下午2:53
+     */
     public static String getUserRedisToken(String token) {
         Claims claims = parseToken(token);
         return getValue(claims, SecurityConstants.REDIS_TOKEN);
+    }
+
+    /**
+     * @Description: 此刻在线用户token
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/24 下午2:53
+     */
+    public static String getOnlineUSerToken(String token) {
+        Claims claims = parseToken(token);
+        return getValue(claims, SecurityConstants.MANY_ONLINE_USER_TOKEN);
     }
 }

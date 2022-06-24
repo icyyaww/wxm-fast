@@ -12,6 +12,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,8 +36,9 @@ public class TestController {
     @Value("${ms.user.age}")
     int age;
 
-    @Value("${spring.redis.open:false}")
+    @Value("${wxmfast.config.auth.redis-enable:false}")
     private Boolean redisOpen;
+
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
      * @Param:
@@ -96,6 +98,6 @@ public class TestController {
     public R jwt() {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("username", "张三");
-        return R.ok(JwtUtils.createToken(paramMap));
+        return R.ok(JwtUtils.createToken(paramMap, new Date()));
     }
 }

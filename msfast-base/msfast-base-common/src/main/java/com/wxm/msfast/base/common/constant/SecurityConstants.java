@@ -49,5 +49,10 @@ public class SecurityConstants {
     /**
      * @Description: redis 用户标识
      */
-    public static final String REDIS_USER_KEY = "redis_user_key_";
+    public static final String MANY_ONLINE_USER_KEY = "many_online_user_key_";
+
+    /**
+     * @Description: 当前登陆用户token
+     */
+    public static final String MANY_ONLINE_USER_TOKEN = "many_online_user_token";
 }

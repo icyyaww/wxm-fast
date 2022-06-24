@@ -2,38 +2,26 @@ package com.wxm.msfast.base.auth.authority.interceptor;
 
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import cn.hutool.jwt.JWTUtil;
-import cn.hutool.jwt.signers.JWTSignerUtil;
-import com.alibaba.fastjson2.JSON;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
-import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.authority.service.TokenValidService;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
-import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
-import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.utils.SecurityUtils;
 import com.wxm.msfast.base.common.utils.ServletUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
-import com.wxm.msfast.base.common.web.domain.R;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * 用户安全验证拦截类
@@ -44,8 +32,11 @@ import java.io.PrintWriter;
 @Slf4j
 public class AuthorityInterceptor implements HandlerInterceptor {
 
-    @Value("${spring.redis.open:false}")
-    private Boolean redisOpen;
+    @Value("${wxmfast.config.auth.redis-enable:false}")
+    private Boolean redisEnable;
+
+    @Value("${wxmfast.config.auth.many-online:false}")
+    private Boolean manyOnline;
 
     @Resource
     private RedisService redisService;
@@ -74,11 +65,22 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (redisOpen) {
+        if (redisEnable) {
             Long expire = redisService.getExpire(JwtUtils.getUserRedisToken(token));
             if (expire <= 0) {
                 ServletUtils.responseError(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION);
                 return false;
+            }
+
+            //不能同时在线
+            if (!manyOnline) {
+                String onlineToken = redisService.getCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + JwtUtils.getUserId(token));
+                if (StringUtils.isNotBlank(onlineToken)) {
+                    if (!onlineToken.equals(JwtUtils.getOnlineUSerToken(token))) {
+                        ServletUtils.responseError(BaseExceptionEnum.OTHER_LOGIN_EXCEPTION);
+                        return false;
+                    }
+                }
             }
         }
 
