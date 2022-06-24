@@ -98,6 +98,7 @@ public class TokenServiceImpl implements TokenService {
             String refreshToken = createToken(loginUser);
             //保存token信息到前台中
             ServletUtils.setCookie(TokenConstants.AUTHENTICATION, refreshToken);
+            redisService.deleteObject(JwtUtils.getUserRedisToken(token));
         }
     }
 
@@ -111,7 +112,7 @@ public class TokenServiceImpl implements TokenService {
         if (redisOpen) {
             String redistToken = IdUtils.fastSimpleUUID();
             claimsMap.put(SecurityConstants.REDIS_TOKEN, redistToken);
-            redisService.setCacheObject(SecurityConstants.REDIS_USER_KEY + loginUser.getId(), redistToken, Long.parseLong(String.valueOf(TokenConstants.EXPIRATION)), TimeUnit.MINUTES);
+            redisService.setCacheObject(redistToken, loginUser.getId(), Long.parseLong(String.valueOf(TokenConstants.EXPIRATION)), TimeUnit.MINUTES);
         }
         return JwtUtils.createToken(claimsMap, calendar.getTime());
     }

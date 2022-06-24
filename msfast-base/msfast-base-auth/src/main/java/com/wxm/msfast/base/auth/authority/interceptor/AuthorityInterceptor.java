@@ -75,14 +75,8 @@ public class AuthorityInterceptor implements HandlerInterceptor {
         }
 
         if (redisOpen) {
-            String redisKey = SecurityConstants.REDIS_USER_KEY + JwtUtils.getUserId(token);
-            String redisToken = redisService.getCacheObject(redisKey);
-            if (StringUtils.isBlank(redisToken)) {
-                ServletUtils.responseError(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION);
-                return false;
-            }
-
-            if (!redisToken.equals(JwtUtils.getUserRedisToken(token))) {
+            Long expire = redisService.getExpire(JwtUtils.getUserRedisToken(token));
+            if (expire <= 0) {
                 ServletUtils.responseError(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION);
                 return false;
             }
