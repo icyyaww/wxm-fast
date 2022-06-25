@@ -1,5 +1,6 @@
 package com.wxm.msfast.demo.controller;
 
+import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.JwtUtils;
@@ -37,8 +38,6 @@ public class TestController {
     @Value("${ms.user.age}")
     int age;
 
-    @Value("${" + ConfigConstants.AUTH_REDIS_ENABLE + ":false}")
-    private Boolean redisEnable;
 
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
@@ -64,7 +63,7 @@ public class TestController {
         Map<String, Object> result = new HashMap<>();
         result.put("userName", userName);
         result.put("age", age);
-        result.put("redisOpen", redisEnable);
+        result.put("redisOpen", ConfigConstants.AUTH_REDIS_ENABLE());
         return R.ok(result);
     }
 
@@ -95,10 +94,29 @@ public class TestController {
         return R.ok();
     }
 
+    /**
+     * @Description: 创建jwt
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/25 上午10:55
+     */
     @PostMapping("/jwt")
     public R jwt() {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("username", "张三");
         return R.ok(JwtUtils.createToken(paramMap, new Date()));
+    }
+
+    /**
+     * @Description: 获取静态变量文件
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/6/25 上午10:55
+     */
+    @GetMapping("/properties")
+    public R getProperties() {
+        return R.ok(ConfigConstants.AUTHENTICATION());
     }
 }

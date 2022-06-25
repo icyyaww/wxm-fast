@@ -1,13 +1,12 @@
 package com.wxm.msfast.base.common.utils;
 
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
-import com.wxm.msfast.base.common.constant.TokenConstants;
 import com.wxm.msfast.base.common.text.Convert;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -17,7 +16,8 @@ import java.util.Map;
  * @author
  */
 public class JwtUtils {
-    public static String secret = TokenConstants.SECRET;
+
+    public static String secret = ConfigConstants.SECRET();
 
     /**
      * 从数据声明生成令牌

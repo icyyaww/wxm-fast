@@ -34,11 +34,6 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 public class AuthorityInterceptor implements HandlerInterceptor {
 
-    @Value("${" + ConfigConstants.AUTH_REDIS_ENABLE + ":false}")
-    private Boolean redisEnable;
-
-    @Value("${" + ConfigConstants.AUTH_MANY_ONLINE + ":false}")
-    private Boolean manyOnline;
 
     @Resource
     private RedisService redisService;
@@ -67,7 +62,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        if (redisEnable) {
+        if (ConfigConstants.AUTH_REDIS_ENABLE()) {
             Long expire = redisService.getExpire(JwtUtils.getUserRedisToken(token));
             if (expire <= 0) {
                 ServletUtils.responseError(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION);
@@ -75,7 +70,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
             }
 
             //不能同时在线
-            if (!manyOnline) {
+            if (!ConfigConstants.AUTH_MANY_ONLINE()) {
                 String onlineToken = redisService.getCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + JwtUtils.getUserId(token));
                 if (StringUtils.isNotBlank(onlineToken)) {
                     if (!onlineToken.equals(JwtUtils.getOnlineUSerToken(token))) {

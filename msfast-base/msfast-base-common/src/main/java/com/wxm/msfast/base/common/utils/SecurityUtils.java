@@ -1,6 +1,6 @@
 package com.wxm.msfast.base.common.utils;
 
-import com.wxm.msfast.base.common.constant.TokenConstants;
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +19,9 @@ public class SecurityUtils {
      */
     public static String getToken(HttpServletRequest request) {
         // 从header获取token标识
-        String token = request.getHeader(TokenConstants.AUTHENTICATION);
+        String token = request.getHeader(ConfigConstants.AUTHENTICATION());
         if (StringUtils.isBlank(token)) {
-            token = ServletUtils.getCookieValueByName(TokenConstants.AUTHENTICATION);
+            token = ServletUtils.getCookieValueByName(ConfigConstants.AUTHENTICATION());
         }
         return replaceTokenPrefix(token);
     }
@@ -31,8 +31,8 @@ public class SecurityUtils {
      */
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
-        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)) {
-            token = token.replaceFirst(TokenConstants.PREFIX, "");
+        if (StringUtils.isNotEmpty(token) && token.startsWith(ConfigConstants.PREFIX())) {
+            token = token.replaceFirst(ConfigConstants.PREFIX(), "");
         }
         return token;
     }
