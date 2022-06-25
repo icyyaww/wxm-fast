@@ -20,15 +20,6 @@
             <artifactId>msfast-base-common</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.wxm.msfast</groupId>
-            <artifactId>msfast-api-auth</artifactId>
-            <version>${msfast.api.auth.version}</version>
-        </dependency>
     </dependencies>
 
 </project>

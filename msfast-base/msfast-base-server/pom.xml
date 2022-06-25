@@ -3,17 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>msfast-parent</artifactId>
+        <artifactId>msfast-base</artifactId>
         <groupId>com.wxm.msfast</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>msfast-base</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>msfast-base-common</module>
-        <module>msfast-base-auth</module>
-        <module>msfast-base-server</module>
-    </modules>
+    <artifactId>msfast-base-server</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wxm.msfast</groupId>
+            <artifactId>msfast-base-common</artifactId>
+            <version>${msfast.base.common.version}</version>
+        </dependency>
+    </dependencies>
 </project>

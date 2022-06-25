@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableFeignClients(basePackages="com.wxm.msfast.demo.feign")
+@MapperScan("com.wxm.msfast.demo.mapper")
 public class MsfastDemoApplication {
 
     public static void main(String[] args) {
