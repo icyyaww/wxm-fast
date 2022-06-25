@@ -33,7 +33,7 @@ public class JrsfService<T, M extends BaseModel> implements IJrsfService<T, M> {
 
     private M getObjectOfM() {
         ParameterizedType superClass = (ParameterizedType) getClass().getGenericSuperclass();
-        Class<M> type = (Class<M>) superClass.getActualTypeArguments()[0];
+        Class<M> type = (Class<M>) superClass.getActualTypeArguments()[1];
         try {
             return type.newInstance();
         } catch (InstantiationException e) {

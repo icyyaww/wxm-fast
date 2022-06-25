@@ -1,5 +1,6 @@
 package com.wxm.msfast.demo.entity;
 
+import com.wxm.msfast.base.server.entity.BaseModel;
 import lombok.Data;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Data;
  * @create: 2022-06-25 15:50
  **/
 @Data
-public class User {
+public class User extends BaseModel {
     private Long id;
     private String name;
     private Integer age;

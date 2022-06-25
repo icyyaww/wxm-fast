@@ -15,9 +15,8 @@ import javax.validation.constraints.NotNull;
 @Data
 public class UserAddRequest {
 
-    @NotBlank
+    private Long id;
     private String name;
-
-    @NotNull
     private Integer age;
+    private String email;
 }
