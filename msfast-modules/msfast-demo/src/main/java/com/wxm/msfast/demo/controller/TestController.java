@@ -41,7 +41,6 @@ public class TestController {
     int age;
 
 
-
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
      * @Param:
@@ -124,4 +123,5 @@ public class TestController {
     public R getProperties() {
         return R.ok(ConfigConstants.AUTHENTICATION());
     }
+
 }
