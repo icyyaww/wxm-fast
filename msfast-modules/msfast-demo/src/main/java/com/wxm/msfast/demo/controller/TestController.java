@@ -6,10 +6,8 @@ import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
-import com.wxm.msfast.demo.entity.User;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
 import com.wxm.msfast.demo.feign.RoleFeignService;
-import com.wxm.msfast.demo.mapper.UserMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,8 +40,6 @@ public class TestController {
     @Value("${ms.user.age}")
     int age;
 
-    @Autowired
-    UserMapper userMapper;
 
 
     /**
@@ -85,9 +81,6 @@ public class TestController {
     @Transactional
     @AuthIgnore
     public R addUser(@Valid @RequestBody UserAddRequest request) {
-        User user = new User();
-        BeanUtils.copyProperties(request, user);
-        userMapper.insert(user);
         return R.ok();
     }
 
