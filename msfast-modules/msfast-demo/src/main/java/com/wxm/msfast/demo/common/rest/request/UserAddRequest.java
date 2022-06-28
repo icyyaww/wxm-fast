@@ -1,5 +1,6 @@
 package com.wxm.msfast.demo.common.rest.request;
 
+import com.wxm.msfast.base.server.rest.request.BaseRequest;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -19,4 +20,5 @@ public class UserAddRequest {
     private String name;
     private Integer age;
     private String email;
+
 }

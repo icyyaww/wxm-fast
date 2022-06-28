@@ -45,6 +45,7 @@ public class TestController {
     @Autowired
     UserMapper userMapper;
 
+
     /**
      * @Description: 测试openFeign 远程调用角色权限服务
      * @Param:
@@ -82,6 +83,7 @@ public class TestController {
      */
     @PostMapping("/add")
     @Transactional
+    @AuthIgnore
     public R addUser(@Valid @RequestBody UserAddRequest request) {
         User user = new User();
         BeanUtils.copyProperties(request, user);

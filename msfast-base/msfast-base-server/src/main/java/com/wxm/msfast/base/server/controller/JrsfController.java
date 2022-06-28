@@ -3,6 +3,7 @@ package com.wxm.msfast.base.server.controller;
 import cn.hutool.core.lang.reflect.MethodHandleUtil;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.base.server.rest.request.BaseRequest;
 import com.wxm.msfast.base.server.service.JrsfService;
 import org.springframework.web.bind.annotation.*;
 

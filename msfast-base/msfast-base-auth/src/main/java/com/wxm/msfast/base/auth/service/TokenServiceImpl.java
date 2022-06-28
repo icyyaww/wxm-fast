@@ -19,10 +19,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -89,7 +86,9 @@ public class TokenServiceImpl implements TokenService {
         calendar.add(Calendar.MINUTE, ConfigConstants.REFRESH());
         if (calendar.getTime().compareTo(expiration) > 0) {
             //刷新token
-            LoginUser loginUser = claims.get(SecurityConstants.LOGIN_USER, LoginUser.class);
+            Map<String, Object> map = claims.get(SecurityConstants.LOGIN_USER, Map.class);
+            LoginUser loginUser = new LoginUser();
+            MapUtils.copyPropertiesInclude(map, loginUser);
             String refreshToken = createToken(loginUser, token);
             //保存token信息到前台中
             ServletUtils.setCookie(ConfigConstants.AUTHENTICATION(), refreshToken);

@@ -1,12 +1,14 @@
 package com.wxm.msfast.base.server.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.base.common.utils.MapUtils;
 import com.wxm.msfast.base.server.entity.BaseModel;
 import com.wxm.msfast.base.server.mapper.JrsfMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.Map;
 
 /**
  * @program: wxm-fast
@@ -19,16 +21,17 @@ public class JrsfService<T, M extends BaseModel> implements IJrsfService<T, M> {
     @Autowired
     private JrsfMapper<M> jrsfMapper;
 
+
     @Transactional
     @Override
     public void add(T request) {
         M model = getObjectOfM();
-        BeanUtils.copyProperties(request, model);
+        MapUtils.copyPropertiesInclude((Map<String, Object>) request, model);
         save(model);
     }
 
     private void save(M m) {
-        jrsfMapper.insert(m);
+       // iService.save(m);
     }
 
     private M getObjectOfM() {
