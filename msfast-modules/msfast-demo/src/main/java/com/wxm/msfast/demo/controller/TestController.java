@@ -8,7 +8,6 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
 import com.wxm.msfast.demo.feign.RoleFeignService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
