@@ -86,4 +86,9 @@ public class UserController {
         return R.ok();
     }
 
+    @RequestMapping("/wrapper")
+    public R wrapper() {
+        userService.wrapper();
+        return R.ok();
+    }
 }

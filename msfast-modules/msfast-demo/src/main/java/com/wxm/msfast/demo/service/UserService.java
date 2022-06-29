@@ -7,7 +7,7 @@ import com.wxm.msfast.demo.entity.UserEntity;
 import java.util.Map;
 
 /**
- * 
+ *
  *
  * @author wanglei
  * @email 378526425@qq.com
@@ -16,5 +16,7 @@ import java.util.Map;
 public interface UserService extends IService<UserEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void wrapper();
 }
 
