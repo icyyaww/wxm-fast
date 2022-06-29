@@ -2,7 +2,6 @@ package com.wxm.msfast;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.wxm.msfast.base.common.handler.ServiceBlockExceptionHandler;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
