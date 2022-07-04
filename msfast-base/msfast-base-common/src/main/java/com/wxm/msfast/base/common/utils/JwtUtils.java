@@ -25,8 +25,8 @@ public class JwtUtils {
      * @param claims 数据声明
      * @return 令牌
      */
-    public static String createToken(Map<String, Object> claims, Date expiration) {
-        return Jwts.builder().setClaims(claims).setExpiration(expiration).signWith(SignatureAlgorithm.HS512, secret).compact();
+    public static String createToken(Map<String, Object> claims) {
+        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     /**

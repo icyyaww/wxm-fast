@@ -33,10 +33,10 @@ public class ConfigConstants {
     private String secret;
 
     @Value("${wxmfast.config.auth.expiration:30}")
-    private Integer expiration;
+    private Long expiration;
 
     @Value("${wxmfast.config.auth.refresh:5}")
-    private Integer refresh;
+    private Long refresh;
 
     /**
      * @Description: 是否启用redis 默认false
@@ -77,14 +77,14 @@ public class ConfigConstants {
     /**
      * token有效期（分钟）
      */
-    public static Integer EXPIRATION() {
+    public static Long EXPIRATION() {
         return SpringUtils.getBean(ConfigConstants.class).getExpiration();
     }
 
     /**
      * token失效刷新时间（分钟）
      */
-    public static Integer REFRESH() {
+    public static Long REFRESH() {
         return SpringUtils.getBean(ConfigConstants.class).getRefresh();
     }
 

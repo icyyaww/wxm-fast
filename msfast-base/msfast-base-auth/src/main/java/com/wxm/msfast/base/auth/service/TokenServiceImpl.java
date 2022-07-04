@@ -52,10 +52,8 @@ public class TokenServiceImpl implements TokenService {
         BeanUtils.copyProperties(loginUser, authorityUserResponse);
         loginUserResponse.setAuthorityUserResponse(authorityUserResponse);
 
-        loginUserResponse.setToken(createToken(loginUser, null));
+        loginUserResponse.setToken(createToken(loginUser));
 
-        //保存token信息到前台中
-        ServletUtils.setCookie(ConfigConstants.AUTHENTICATION(), loginUserResponse.getToken());
         return loginUserResponse;
     }
 
@@ -71,7 +69,6 @@ public class TokenServiceImpl implements TokenService {
             }
         }
 
-        ServletUtils.removeCookie(ConfigConstants.AUTHENTICATION());
         //用户退出登陆
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
         authorityService.logout();
@@ -80,46 +77,35 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void refreshToken(String token) {
 
-        Claims claims = JwtUtils.parseToken(token);
-        Date expiration = claims.getExpiration();
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, ConfigConstants.REFRESH());
-        if (calendar.getTime().compareTo(expiration) > 0) {
-            //刷新token
-            Map<String, Object> map = claims.get(SecurityConstants.LOGIN_USER, Map.class);
-            LoginUser loginUser = new LoginUser();
-            MapUtils.copyPropertiesInclude(map, loginUser);
-            String refreshToken = createToken(loginUser, token);
-            //保存token信息到前台中
-            ServletUtils.setCookie(ConfigConstants.AUTHENTICATION(), refreshToken);
-            redisService.deleteObject(JwtUtils.getUserRedisToken(token));
+        String redisToken = JwtUtils.getUserRedisToken(token);
+
+        if (ConfigConstants.AUTH_REDIS_ENABLE()) {
+            Long expire = redisService.getExpire(redisToken, TimeUnit.MINUTES);
+            if (expire.compareTo(0l) > 0 && expire.compareTo(ConfigConstants.REFRESH()) <=0) {
+                redisService.setCacheObject(JwtUtils.getUserRedisToken(token), JwtUtils.getUserId(token), ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);
+                if (Boolean.FALSE.equals(ConfigConstants.AUTH_MANY_ONLINE())) {
+                    redisService.setCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + JwtUtils.getUserId(token), JwtUtils.getUserRedisToken(token), ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);
+                }
+            }
         }
+
     }
 
-    private String createToken(LoginUser loginUser, String token) {
-        // Jwt存储信息
+    private String createToken(LoginUser loginUser) {
 
+        // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put(SecurityConstants.LOGIN_USER, loginUser);
         claimsMap.put(SecurityConstants.DETAILS_USER_ID, loginUser.getId());
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, ConfigConstants.EXPIRATION());
+
         if (ConfigConstants.AUTH_REDIS_ENABLE()) {
             String redisToken = IdUtils.fastSimpleUUID();
             claimsMap.put(SecurityConstants.REDIS_TOKEN, redisToken);
-            redisService.setCacheObject(redisToken, loginUser.getId(), Long.parseLong(String.valueOf(ConfigConstants.EXPIRATION())), TimeUnit.MINUTES);
+            redisService.setCacheObject(redisToken, loginUser.getId(), ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);
             if (Boolean.FALSE.equals(ConfigConstants.AUTH_MANY_ONLINE())) {
-                String onlineToken = "";
-                if (StringUtils.isBlank(token)) {
-                    //登陆
-                    onlineToken = redisToken;
-                    claimsMap.put(SecurityConstants.MANY_ONLINE_USER_TOKEN, onlineToken);
-                } else {
-                    onlineToken = JwtUtils.getOnlineUSerToken(token);
-                }
-                redisService.setCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + loginUser.getId(), onlineToken, Long.parseLong(String.valueOf(ConfigConstants.EXPIRATION())), TimeUnit.MINUTES);
+                redisService.setCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + loginUser.getId(), redisToken, ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);
             }
         }
-        return JwtUtils.createToken(claimsMap, calendar.getTime());
+        return JwtUtils.createToken(claimsMap);
     }
 }
