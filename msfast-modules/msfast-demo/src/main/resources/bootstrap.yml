@@ -12,4 +12,3 @@ spring:
           data-id: datasource.yaml
           group: dev
           refresh: true
-

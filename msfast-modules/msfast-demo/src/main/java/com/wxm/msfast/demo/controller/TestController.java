@@ -108,7 +108,7 @@ public class TestController {
     public R jwt() {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("username", "张三");
-        return R.ok(JwtUtils.createToken(paramMap, new Date()));
+        return R.ok(JwtUtils.createToken(paramMap));
     }
 
     /**
