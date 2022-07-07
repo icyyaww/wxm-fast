@@ -7,8 +7,6 @@ import com.wxm.msfast.demo.entity.FrontUserEntity;
 import java.util.Map;
 
 /**
- *
- *
  * @author wanglei
  * @email 378526425@qq.com
  * @date 2022-07-06 18:07:55
@@ -16,6 +14,8 @@ import java.util.Map;
 public interface FrontUserService extends IService<FrontUserEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    void versionLock(Long id);
 }
 
 
