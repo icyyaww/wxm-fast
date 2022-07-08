@@ -17,7 +17,8 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     TOKEN_ILLEGAL_EXCEPTION(10008, "Token非法"),
     TOKEN_EXPIRED_EXCEPTION(10009, "Token过期"),
     OTHER_LOGIN_EXCEPTION(10010, "其他地方登陆"),
-    SERVICE_BUSY_EXCEPTION(10011, "服务繁忙");
+    SERVICE_BUSY_EXCEPTION(10011, "服务繁忙"),
+    OPTIMISTICLOCKER_EXCEPTION(10012, "乐观锁更新失败");
 
     private Integer code;
     private String msg;

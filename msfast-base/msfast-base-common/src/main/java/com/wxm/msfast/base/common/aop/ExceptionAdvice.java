@@ -2,6 +2,7 @@ package com.wxm.msfast.base.common.aop;
 
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.exception.OptimisticLockerException;
 import com.wxm.msfast.base.common.web.domain.R;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -67,6 +68,12 @@ public class ExceptionAdvice {
     public R handleExpiredJwtException(ExpiredJwtException e) {
         log.error("token 过期：{}", e.getMessage());
         return R.fail(BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION.getCode(), BaseExceptionEnum.TOKEN_EXPIRED_EXCEPTION.getMessage());
+    }
+
+    @ExceptionHandler(value = OptimisticLockerException.class)
+    public R handleOptimisticLockerException(OptimisticLockerException e) {
+        log.error("乐观锁更新失败：{}", e.getMessage());
+        return R.fail(BaseExceptionEnum.OPTIMISTICLOCKER_EXCEPTION.getCode(), BaseExceptionEnum.OPTIMISTICLOCKER_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)
