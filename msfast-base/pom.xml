@@ -15,5 +15,6 @@
         <module>msfast-base-common</module>
         <module>msfast-base-auth</module>
         <module>msfast-base-server</module>
+        <module>msfast-base-role</module>
     </modules>
 </project>
