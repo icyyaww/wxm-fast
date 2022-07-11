@@ -13,13 +13,12 @@ CREATE TABLE wxm_role (
   role_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
   role_key varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null  COMMENT '角色标识',
   description varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色描述',
-  is_admin bool not null default true COMMENT '是否管理员',
-  is_preset bool not null default true COMMENT '是否预置（预置角色不允许编辑与修改）',
-  enable bool not null default true COMMENT '是否启用',
+  is_preset bit(1) not null default true COMMENT '是否预置（预置角色不允许编辑与修改）',
+  enable bit(1) not null default true COMMENT '是否启用',
   sort varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '排序号',
   PRIMARY KEY (id) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-INSERT INTO wxm_role(creator, create_time, modifyer, modify_time, del_flag, version, role_name,role_key,description, is_admin, is_preset, enable, sort) VALUES(NULL, now(), NULL, NULL, 0, 0, '管理员','admin','系统内置管理员', 1, 1, 1, '0');
+INSERT INTO wxm_role(creator, create_time, modifyer, modify_time, del_flag, version, role_name,role_key,description, is_preset, enable, sort) VALUES(NULL, now(), NULL, NULL, 0, 0, '管理员','admin','系统内置管理员',1, 1, '0');

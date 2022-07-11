@@ -27,17 +27,13 @@ public class RoleEntity extends BaseEntity {
      */
     private String description;
     /**
-     * 是否管理员
-     */
-    private Integer isAdmin;
-    /**
      * 是否预置（预置角色不允许编辑与修改）
      */
-    private Integer isPreset;
+    private Boolean isPreset;
     /**
      * 是否启用
      */
-    private Integer enable;
+    private Boolean enable;
     /**
      * 排序号
      */

@@ -6,16 +6,14 @@ import java.util.Map;
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.wxm.msfast.base.role.rest.request.RoleAddRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wxm.msfast.base.role.entity.RoleEntity;
 import com.wxm.msfast.base.role.service.RoleService;
 import com.wxm.msfast.base.common.utils.PageUtils;
 import com.wxm.msfast.base.common.web.domain.R;
+
+import javax.validation.Valid;
 
 
 /**
@@ -88,8 +86,8 @@ public class RoleController {
     /**
      * 保存
      */
-    @RequestMapping("/add")
-    public R add(@RequestBody RoleAddRequest request) {
+    @PostMapping("/add")
+    public R add(@RequestBody @Valid RoleAddRequest request) {
         roleService.add(request);
         return R.ok();
     }
