@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.wxm.msfast.base.role.rest.request.RoleAddRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,6 @@ import com.wxm.msfast.base.common.web.domain.R;
 
 
 /**
- *
- *
  * @author wanglei
  * @email 378526425@qq.com
  * @date 2022-07-11 10:59:21
@@ -35,7 +34,7 @@ public class RoleController {
      */
     @RequestMapping("/list")
     //@RequiresPermissions("role:role:list")
-    public R list(@RequestParam Map<String, Object> params){
+    public R list(@RequestParam Map<String, Object> params) {
         PageUtils page = roleService.queryPage(params);
 
         return R.ok(page);
@@ -47,8 +46,8 @@ public class RoleController {
      */
     @RequestMapping("/info/{id}")
     //@RequiresPermissions("role:role:info")
-    public R info(@PathVariable("id") Integer id){
-		RoleEntity role = roleService.getById(id);
+    public R info(@PathVariable("id") Integer id) {
+        RoleEntity role = roleService.getById(id);
 
         return R.ok(role);
     }
@@ -58,8 +57,8 @@ public class RoleController {
      */
     @RequestMapping("/save")
     //@RequiresPermissions("role:role:save")
-    public R save(@RequestBody RoleEntity role){
-		roleService.save(role);
+    public R save(@RequestBody RoleEntity role) {
+        roleService.save(role);
 
         return R.ok();
     }
@@ -69,8 +68,8 @@ public class RoleController {
      */
     @RequestMapping("/update")
     //@RequiresPermissions("role:role:update")
-    public R update(@RequestBody RoleEntity role){
-		roleService.updateById(role);
+    public R update(@RequestBody RoleEntity role) {
+        roleService.updateById(role);
 
         return R.ok();
     }
@@ -80,10 +79,18 @@ public class RoleController {
      */
     @RequestMapping("/delete")
     //@RequiresPermissions("role:role:delete")
-    public R delete(@RequestBody Integer[] ids){
-		roleService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Integer[] ids) {
+        roleService.removeByIds(Arrays.asList(ids));
 
         return R.ok();
     }
 
+    /**
+     * 保存
+     */
+    @RequestMapping("/add")
+    public R add(@RequestBody RoleAddRequest request) {
+        roleService.add(request);
+        return R.ok();
+    }
 }

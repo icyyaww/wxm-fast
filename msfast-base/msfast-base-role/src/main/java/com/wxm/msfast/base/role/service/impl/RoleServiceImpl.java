@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.role.service.impl;
 
+import com.wxm.msfast.base.role.rest.request.RoleAddRequest;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,6 +25,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, RoleEntity> implements
         );
 
         return new PageUtils(page);
+    }
+
+    @Override
+    public void add(RoleAddRequest request) {
+
     }
 
 }

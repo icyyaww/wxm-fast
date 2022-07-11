@@ -11,6 +11,7 @@ CREATE TABLE wxm_role (
   del_flag int(1) NOT NULL DEFAULT 0 COMMENT '删除标志（0代表存在 1代表删除）',
   version int(8)  NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
   role_name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '角色名称',
+  role_key varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci not null  COMMENT '角色标识',
   description varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '角色描述',
   is_admin bool not null default true COMMENT '是否管理员',
   is_preset bool not null default true COMMENT '是否预置（预置角色不允许编辑与修改）',
@@ -21,4 +22,4 @@ CREATE TABLE wxm_role (
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-INSERT INTO wxm_role(creator, create_time, modifyer, modify_time, del_flag, version, role_name, description, is_admin, is_preset, enable, sort) VALUES(NULL, now(), NULL, NULL, 0, 0, '管理员', '系统内置管理员', 1, 1, 1, '0');
+INSERT INTO wxm_role(creator, create_time, modifyer, modify_time, del_flag, version, role_name,role_key,description, is_admin, is_preset, enable, sort) VALUES(NULL, now(), NULL, NULL, 0, 0, '管理员','admin','系统内置管理员', 1, 1, 1, '0');

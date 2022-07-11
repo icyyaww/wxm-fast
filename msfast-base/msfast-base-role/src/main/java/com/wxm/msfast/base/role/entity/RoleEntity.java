@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * @author wanglei
  * @email 378526425@qq.com
- * @date 2022-07-11 10:59:21
+ * @date 2022-07-11 11:36:42
  */
 @Data
 @TableName("wxm_role")
@@ -18,6 +18,10 @@ public class RoleEntity extends BaseEntity {
      * 角色名称
      */
     private String roleName;
+    /**
+     * 角色标识
+     */
+    private String roleKey;
     /**
      * 角色描述
      */
