@@ -1,10 +1,7 @@
 package com.wxm.msfast.demo.common.rest.request;
 
-import com.wxm.msfast.base.server.rest.request.BaseRequest;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * @program: msfast

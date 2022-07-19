@@ -36,16 +36,6 @@
             <artifactId>msfast-base-auth</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.wxm.msfast</groupId>
-            <artifactId>msfast-base-server</artifactId>
-            <version>${msfast.base.common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.wxm.msfast</groupId>
-            <artifactId>msfast-base-role</artifactId>
-            <version>${msfast.base.common.version}</version>
-        </dependency>
     </dependencies>
 
     <build>
