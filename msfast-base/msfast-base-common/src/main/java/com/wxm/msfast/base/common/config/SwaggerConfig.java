@@ -1,12 +1,9 @@
-package com.wxm.msfast.demo.config;
+package com.wxm.msfast.base.common.config;
 
-import com.google.common.collect.Sets;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -17,8 +14,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static springfox.documentation.builders.PathSelectors.any;
@@ -57,7 +54,7 @@ public class SwaggerConfig {
 
     private List<SecurityScheme> security() {
         return newArrayList(
-                new ApiKey(ConfigConstants.AUTHENTICATION(), "token", "header")
+                new ApiKey("token", "token", "header")
         );
     }
 }
