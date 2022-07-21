@@ -9,6 +9,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
 import com.wxm.msfast.demo.feign.RoleFeignService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -121,6 +122,7 @@ public class TestController {
      * @Date: 2022/6/25 上午10:55
      */
     @GetMapping("/properties")
+    @ApiOperation("获取静态变量文件")
     public R getProperties() {
         return R.ok(ConfigConstants.AUTHENTICATION());
     }

@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.retry.annotation.EnableRetry;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication(scanBasePackages = "com.wxm.msfast")
+@SpringBootApplication(scanBasePackages = {"com.wxm.msfast"})
 @EnableFeignClients(basePackages = "com.wxm.msfast.demo.feign")
 @EnableRetry
 @EnableSwagger2

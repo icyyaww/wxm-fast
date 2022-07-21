@@ -23,6 +23,7 @@ public class AuthorityInterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getUserInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(getUserInterceptor()).addPathPatterns("/**")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
     }
 }

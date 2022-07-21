@@ -36,6 +36,17 @@
             <artifactId>msfast-base-auth</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
+        <!--接口文档-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.6</version>
+        </dependency>
     </dependencies>
 
     <build>
