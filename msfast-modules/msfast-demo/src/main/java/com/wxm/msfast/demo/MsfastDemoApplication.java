@@ -11,6 +11,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableRetry
 public class MsfastDemoApplication {
 
+
     public static void main(String[] args) {
         SpringApplication.run(MsfastDemoApplication.class, args);
     }
