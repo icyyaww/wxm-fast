@@ -1,6 +1,7 @@
 package com.wxm.msfast.demo.config;
 
 import com.google.common.collect.Sets;
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,31 +31,33 @@ import static springfox.documentation.builders.PathSelectors.any;
  **/
 @Configuration
 @EnableSwagger2
-public class SwaggerConfig  {
-
-    protected Set<String> jsonProduces = Sets.newHashSet(new String[]{"application/json"});
+public class SwaggerConfig {
 
     @Bean
-    public Docket docket() {
+    public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("用户")
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(any())
+                //加了ApiOperation注解的类，才生成接口文档
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
+                //包下的类，才生成接口文档
+                .paths(PathSelectors.any())
                 .build()
-                .genericModelSubstitutes(ResponseEntity.class)
-                .useDefaultResponseMessages(false)
-                .enableUrlTemplating(false)
-                .produces(jsonProduces);
+                .securitySchemes(security());
     }
 
-    public ApiInfo apiInfo() {
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("利用swagger2构建的API文档")
-                .description("用restful风格写接口")
-                .termsOfServiceUrl("")
-                .version("1.0")
+                .title("msfast微服务开源")
+                .description("msfast文档")
+                .termsOfServiceUrl("https://www.wxmblog.com/")
+                .version("3.0.0")
                 .build();
+    }
+
+    private List<SecurityScheme> security() {
+        return newArrayList(
+                new ApiKey(ConfigConstants.AUTHENTICATION(), "token", "header")
+        );
     }
 }
