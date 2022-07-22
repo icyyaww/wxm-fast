@@ -37,4 +37,6 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     public String getMessage() {
         return msg;
     }
+
+
 }

@@ -2,7 +2,9 @@ package com.wxm.msfast.demo.authority;
 
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.demo.common.rest.request.user.UserLoginRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,20 +14,18 @@ import org.springframework.stereotype.Service;
  * @create: 2022-06-16 18:05
  **/
 @Service
-public class AuthorityServiceImpl implements AuthorityService {
+public class AuthorityServiceImpl implements AuthorityService<UserLoginRequest, RegisterRequest> {
 
-    /**
-     * @Description: 用户登陆业务业务
-     * @Param:
-     * @return:
-     * @Author: Mr.Wang
-     * @Date: 2022/6/17 上午10:12
-     */
     @Override
-    public LoginUser login(LoginRequest loginRequest) {
+    public void register(RegisterRequest registerRequest) {
+
+    }
+
+    @Override
+    public LoginUser login(UserLoginRequest loginRequest) {
         LoginUser loginUser = new LoginUser();
-        loginUser.setUsername(loginRequest.getUsername());
         loginUser.setId(1l);
+        loginUser.setUsername(loginRequest.getUsername());
         return loginUser;
     }
 

@@ -49,7 +49,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(value = JrsfException.class)
     public R handleJrsfException(JrsfException e) {
         log.error("业务处理异常:", e);
-        return R.fail(e.getCode(), e.getMessage());
+        return R.fail(e.getCode(), e.getMessage(), e.getData());
     }
 
     @ExceptionHandler(value = MalformedJwtException.class)

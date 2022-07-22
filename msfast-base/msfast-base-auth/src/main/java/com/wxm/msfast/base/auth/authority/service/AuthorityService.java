@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.auth.authority.service;
 
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 
 /*
@@ -8,9 +9,12 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
  * @Description  有关权限相关的业务代码实现
  * @Date 21:45 2022/6/18
  **/
-public interface AuthorityService {
+public interface AuthorityService<T extends LoginRequest,R extends RegisterRequest> {
 
-    LoginUser login(LoginRequest loginRequest);
+    void register(R registerRequest);
+
+    LoginUser login(T loginRequest);
 
     void logout();
+
 }

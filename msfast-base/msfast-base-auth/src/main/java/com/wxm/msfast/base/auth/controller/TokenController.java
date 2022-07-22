@@ -1,19 +1,29 @@
 package com.wxm.msfast.base.auth.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
+import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
+import com.wxm.msfast.base.auth.utils.ReflexUtils;
 import com.wxm.msfast.base.common.constant.ServiceNameConstants;
+import com.wxm.msfast.base.common.utils.SpringUtils;
+import com.wxm.msfast.base.common.utils.ViolationUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.ValidationException;
+import java.util.Set;
 
 /**
  * @program: msfast-parent
@@ -32,9 +42,17 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/login")
     @ApiOperation(value = "登陆")
-    public R<LoginUserResponse> login(@Valid @RequestBody LoginRequest request) {
+    public R<LoginUserResponse> login(@RequestBody @Valid String viewmodelJson) {
 
-        return R.ok(tokenService.login(request));
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+
+        Class<? extends LoginRequest> clsViewModel = ReflexUtils.getServiceViewModel(authorityService);
+
+        LoginRequest viewModel = JSONObject.parseObject(viewmodelJson, clsViewModel);
+
+        //数据校验
+        ViolationUtils.violation(viewModel);
+        return R.ok(tokenService.login(viewModel));
     }
 
     @AuthIgnore

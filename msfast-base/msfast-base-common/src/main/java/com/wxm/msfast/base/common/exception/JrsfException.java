@@ -18,17 +18,27 @@ public class JrsfException extends RuntimeException {
 
     private Integer code;
     private String message;
+    private Object data;
 
     public JrsfException(BaseExceptionEnumInterface exceptionEnum) {
         this.code = exceptionEnum.getCode();
         this.message = exceptionEnum.getMessage();
     }
 
-	public Integer getCode() {
-		return code;
-	}
+    public Integer getCode() {
+        return code;
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
+
+    public JrsfException setData(Object data) {
+        this.data = data;
+        return this;
+    }
+
+    public Object getData() {
+        return data;
+    }
 }
