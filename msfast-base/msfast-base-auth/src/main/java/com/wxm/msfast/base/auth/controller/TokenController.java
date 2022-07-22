@@ -6,6 +6,7 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.common.constant.ServiceNameConstants;
 import com.wxm.msfast.base.common.web.domain.R;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import javax.validation.Valid;
  **/
 @RestController
 @RequestMapping("/token")
+@Api(value = "用户信息")
 public class TokenController {
 
     @Autowired
