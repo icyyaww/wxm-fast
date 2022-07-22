@@ -33,7 +33,7 @@ import java.util.Set;
  **/
 @RestController
 @RequestMapping("/token")
-@Api(value = "用户信息")
+@Api(tags = "用户信息")
 public class TokenController {
 
     @Autowired
