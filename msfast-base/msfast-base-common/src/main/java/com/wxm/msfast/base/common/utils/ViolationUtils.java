@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.common.utils;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,7 +22,7 @@ public class ViolationUtils {
 
     public static void violation(Object object) {
         Set<ConstraintViolation<Object>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(object);
-        if (validate != null) {
+        if (CollectionUtil.isNotEmpty(validate)) {
             Map<String, String> errorMap = new HashMap<>();
             validate.forEach(model -> {
                 errorMap.put(model.getPropertyPath().toString(), model.getMessage());
