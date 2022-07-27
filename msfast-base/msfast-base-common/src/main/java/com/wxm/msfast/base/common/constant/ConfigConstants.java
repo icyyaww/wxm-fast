@@ -38,6 +38,13 @@ public class ConfigConstants {
     @Value("${wxmfast.config.auth.refresh:5}")
     private Long refresh;
 
+    @Value("${wxmfast.config.file.max-size:50}")
+    private Long fileMaxSize;
+
+    @Value("${wxmfast.config.file.name-length:100}")
+    private int fileNameLength;
+
+
     /**
      * @Description: 是否启用redis 默认false
      */
@@ -88,4 +95,14 @@ public class ConfigConstants {
         return SpringUtils.getBean(ConfigConstants.class).getRefresh();
     }
 
+    /**
+     * 文件上传最大大小
+     */
+    public static Long FILE_MAX_SIZE() {
+        return SpringUtils.getBean(ConfigConstants.class).getFileMaxSize();
+    }
+
+    public static int FILE_NAME_LENGTH() {
+        return SpringUtils.getBean(ConfigConstants.class).getFileNameLength();
+    }
 }

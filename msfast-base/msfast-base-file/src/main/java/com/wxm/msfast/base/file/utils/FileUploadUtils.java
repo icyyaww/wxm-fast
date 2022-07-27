@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.file.utils;
 
 
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.common.utils.IdUtils;
@@ -22,12 +23,12 @@ public class FileUploadUtils {
     /**
      * 默认大小 50M
      */
-    public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024;
+    public static final long DEFAULT_MAX_SIZE = ConfigConstants.FILE_MAX_SIZE() * 1024 * 1024;
 
     /**
      * 默认的文件名最大长度 100
      */
-    public static final int DEFAULT_FILE_NAME_LENGTH = 100;
+    public static final int DEFAULT_FILE_NAME_LENGTH = ConfigConstants.FILE_NAME_LENGTH();
 
     /**
      * 根据文件路径上传
