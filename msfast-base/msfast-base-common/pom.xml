@@ -24,7 +24,8 @@
         <hutool.all.version>5.8.3</hutool.all.version>
         <fastjson2.version>2.0.7</fastjson2.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version>
-
+        <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
+        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
     </properties>
 
     <dependencies>
@@ -127,12 +128,12 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
-            <version>3.0.0</version>
+            <version>${springfox.swagger2.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>swagger-bootstrap-ui</artifactId>
-            <version>1.9.6</version>
+            <version>${swagger.bootstrap.ui.version}</version>
         </dependency>
 
     </dependencies>
