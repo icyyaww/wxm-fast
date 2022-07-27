@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
  *
  * @author ruoyi
  */
-public interface ISysFileService
+public interface IFileService
 {
     /**
      * 文件上传接口

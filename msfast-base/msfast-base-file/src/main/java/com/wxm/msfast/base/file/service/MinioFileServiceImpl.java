@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author ruoyi
  */
 @Service
-public class MinioSysFileServiceImpl implements ISysFileService {
+public class MinioFileServiceImpl implements IFileService {
     @Autowired
     private MinioConfig minioConfig;
 
