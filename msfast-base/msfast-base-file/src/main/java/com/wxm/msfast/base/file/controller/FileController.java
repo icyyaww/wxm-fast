@@ -4,16 +4,22 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.file.rest.response.FileResponse;
 import com.wxm.msfast.base.file.service.IFileService;
 import com.wxm.msfast.base.file.utils.FileUtils;
+import io.minio.GetObjectArgs;
+import io.minio.StatObjectArgs;
+import io.minio.StatObjectResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 
 /**
  * 文件请求处理
@@ -34,7 +40,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     @ApiOperation(value = "文件上传")
-    public R<FileResponse> upload(@RequestPart MultipartFile file) {
+    public R<FileResponse> upload(@RequestPart MultipartFile file) throws Exception {
         try {
             // 上传并返回访问地址
             String url = sysFileService.uploadFile(file);
@@ -44,7 +50,26 @@ public class FileController {
             return R.ok(sysFile);
         } catch (Exception e) {
             log.error("上传文件失败", e);
-            return R.fail(e.getMessage());
+            throw e;
         }
     }
+
+    /**
+     * 下载文件
+     *
+     * @param filename
+     * @param response
+     */
+    @GetMapping("/download")
+    @ApiOperation(value = "文件下载")
+    public void download(@RequestParam String filename, HttpServletResponse response) throws Exception {
+        try {
+            // 上传并返回访问地址
+            this.sysFileService.download(filename, response);
+        } catch (Exception e) {
+            log.error("下载文件失败", e);
+            throw e;
+        }
+    }
+
 }

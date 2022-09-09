@@ -8,6 +8,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.demo.common.rest.request.UserAddRequest;
 import com.wxm.msfast.demo.exception.DemoExceptionEnum;
 import com.wxm.msfast.demo.feign.RoleFeignService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @program: msfast
@@ -28,6 +31,7 @@ import java.util.Map;
 @RefreshScope
 @RestController
 @RequestMapping("test")
+@Api(tags = "演示程序")
 public class TestController {
 
     @Autowired
@@ -121,6 +125,8 @@ public class TestController {
     @GetMapping("/properties")
     @ApiOperation("获取静态变量文件")
     public R getProperties() {
+        Set<String> set = new LinkedHashSet<>();
+
         return R.ok(ConfigConstants.AUTHENTICATION());
     }
 
