@@ -69,7 +69,7 @@ public class MinioFileServiceImpl implements IFileService {
             //文件下载
             in = client.getObject(GetObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filename).build());
             IOUtils.copy(in, response.getOutputStream());
-        }  finally {
+        } finally {
             if (in != null) {
                 try {
                     in.close();
@@ -78,5 +78,19 @@ public class MinioFileServiceImpl implements IFileService {
                 }
             }
         }
+    }
+
+    /**
+     * @param filename
+     * @Description: 删除文件
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/9/9 下午3:39
+     */
+    @Override
+    public void deleteFile(String filename) throws Exception {
+        client.removeObject(
+                RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filename).build());
     }
 }

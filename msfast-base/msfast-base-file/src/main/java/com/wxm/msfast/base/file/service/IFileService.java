@@ -31,4 +31,13 @@ public interface IFileService {
      * @Date: 2022/9/9 上午11:08
      */
     void download(String filename, HttpServletResponse response) throws Exception;
+
+    /**
+     * @Description: 删除文件
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/9/9 下午3:39
+     */
+    void deleteFile(String filename) throws Exception;
 }

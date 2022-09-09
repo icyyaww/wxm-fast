@@ -9,6 +9,7 @@ import io.minio.StatObjectArgs;
 import io.minio.StatObjectResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ import java.net.URLEncoder;
 @RestController
 @RequestMapping("file")
 @Api(tags = "文件系统")
+@Slf4j
 public class FileController {
-    private static final Logger log = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
     private IFileService sysFileService;
@@ -41,6 +42,7 @@ public class FileController {
     @PostMapping("/upload")
     @ApiOperation(value = "文件上传")
     public R<FileResponse> upload(@RequestPart MultipartFile file) throws Exception {
+
         try {
             // 上传并返回访问地址
             String url = sysFileService.uploadFile(file);
@@ -63,11 +65,24 @@ public class FileController {
     @GetMapping("/download")
     @ApiOperation(value = "文件下载")
     public void download(@RequestParam String filename, HttpServletResponse response) throws Exception {
+
         try {
-            // 上传并返回访问地址
             this.sysFileService.download(filename, response);
         } catch (Exception e) {
             log.error("下载文件失败", e);
+            throw e;
+        }
+    }
+
+    @DeleteMapping("/delete")
+    @ApiOperation(value = "文件删除")
+    public R delete(@RequestParam String filename) throws Exception {
+
+        try {
+            this.sysFileService.deleteFile(filename);
+            return R.ok();
+        } catch (Exception e) {
+            log.error("文件删除失败", e);
             throw e;
         }
     }
