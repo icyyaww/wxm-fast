@@ -5,26 +5,19 @@ import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
+import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
-import com.wxm.msfast.base.common.constant.ServiceNameConstants;
+import com.wxm.msfast.base.common.service.ISendSmsService;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.ViolationUtils;
 import com.wxm.msfast.base.common.web.domain.R;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.ValidationException;
-import java.util.Set;
 
 /**
  * @program: msfast-parent
@@ -40,9 +33,13 @@ public class TokenController {
     @Autowired
     TokenService tokenService;
 
+    @Autowired
+    ISendSmsService sendSmsService;
+
     @AuthIgnore
     @PostMapping("/register")
     @ApiOperation(value = "注册")
+    @ApiOperationSupport(order = 1)
     public R<Void> register(@RequestBody @Valid String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
@@ -60,6 +57,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/login")
     @ApiOperation(value = "登陆")
+    @ApiOperationSupport(order = 2)
     public R<LoginUserResponse> login(@RequestBody @Valid String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
@@ -76,12 +74,20 @@ public class TokenController {
     @AuthIgnore
     @DeleteMapping("/logout")
     @ApiOperation(value = "退出登陆")
+    @ApiOperationSupport(order = 3)
     public R<Void> logout() {
         tokenService.logout();
         return R.ok();
     }
 
-
+    @AuthIgnore
+    @ApiOperation(value = "发送短信")
+    @PostMapping("/sendsms")
+    @ApiOperationSupport(order = 4)
+    public R<Void> sendSms(@RequestBody @Valid SendSmsRequest sendSmsRequest) {
+        sendSmsService.sendSms(sendSmsRequest.getPhone(),"123456","SMS_193232937");
+        return R.ok();
+    }
 }
 
 
