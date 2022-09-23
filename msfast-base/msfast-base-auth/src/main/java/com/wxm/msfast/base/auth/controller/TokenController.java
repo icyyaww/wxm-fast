@@ -57,7 +57,6 @@ public class TokenController {
         return R.ok();
     }
 
-
     @AuthIgnore
     @PostMapping("/login")
     @ApiOperation(value = "登陆")
@@ -81,6 +80,8 @@ public class TokenController {
         tokenService.logout();
         return R.ok();
     }
+
+
 }
 
 
