@@ -3,7 +3,7 @@ spring:
     nacos:
       config:
         server-addr: 81.69.247.192:8848
-        namespace: cda7c646-3255-4488-964d-da69fc34478e
+        namespace: b2c1fadf-f517-4e11-b6d6-d756f6996646
         extension-configs[0]:
           data-id: application.yml
           group: dev

@@ -2,6 +2,7 @@ package com.wxm.msfast.base.auth.utils;
 
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -29,6 +30,17 @@ public class ReflexUtils {
         return clsViewModel;
     }
 
+    public static Class<? extends RegisterRequest> getServiceView(AuthorityService service) {
+        Class clazz = service.getClass();
+        while (clazz.getSimpleName().contains("$")) {
+            clazz = (Class) clazz.getGenericSuperclass();
+        }
+
+        Class<? extends RegisterRequest> clsViewModel = getParameterizedType(clazz, AuthorityService.class, RegisterRequest.class);
+
+        return clsViewModel;
+    }
+
     public static <T, S> Class<T> getParameterizedType(Class<? extends S> clazz, Class<S> superClass, Class<T> argType) {
         Class<T> result = null;
         result = getInterfaceParameterizedType(clazz, superClass, argType);
@@ -36,7 +48,7 @@ public class ReflexUtils {
 
         result = getSuperClassParameterizedType(clazz, superClass, argType);
 
-        if (result == null) throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
+        if (result == null) throw new JrsfException(BaseExceptionEnum.UNKNOWN_EXCEPTION);
 
         return result;
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
@@ -38,6 +39,24 @@ public class TokenController {
 
     @Autowired
     TokenService tokenService;
+
+    @AuthIgnore
+    @PostMapping("/register")
+    @ApiOperation(value = "登陆")
+    public R<Void> register(@RequestBody @Valid String viewmodelJson) {
+
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+
+        Class<? extends RegisterRequest> clsViewModel = ReflexUtils.getServiceView(authorityService);
+
+        RegisterRequest viewModel = JSONObject.parseObject(viewmodelJson, clsViewModel);
+
+        //数据校验
+        ViolationUtils.violation(viewModel);
+        tokenService.register(viewModel);
+        return R.ok();
+    }
+
 
     @AuthIgnore
     @PostMapping("/login")

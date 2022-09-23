@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.auth.common.rest.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -10,4 +11,6 @@ import lombok.Data;
 @Data
 public class RegisterRequest extends LoginRequest {
 
+    @ApiModelProperty(value = "验证码")
+    private String verificationCode;
 }

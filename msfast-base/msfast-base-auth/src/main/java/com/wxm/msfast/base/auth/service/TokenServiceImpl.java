@@ -3,6 +3,7 @@ package com.wxm.msfast.base.auth.service;
 import cn.hutool.core.util.ObjectUtil;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.response.AuthorityUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
@@ -34,6 +35,14 @@ public class TokenServiceImpl implements TokenService {
 
     @Resource
     private RedisService redisService;
+
+    @Override
+    public void register(RegisterRequest request) {
+
+        //用户退出登陆
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+        authorityService.register(request);
+    }
 
     @Override
     public LoginUserResponse login(LoginRequest request) {
@@ -81,7 +90,7 @@ public class TokenServiceImpl implements TokenService {
 
         if (ConfigConstants.AUTH_REDIS_ENABLE()) {
             Long expire = redisService.getExpire(redisToken, TimeUnit.MINUTES);
-            if (expire.compareTo(0l) > 0 && expire.compareTo(ConfigConstants.REFRESH()) <=0) {
+            if (expire.compareTo(0l) > 0 && expire.compareTo(ConfigConstants.REFRESH()) <= 0) {
                 redisService.setCacheObject(JwtUtils.getUserRedisToken(token), JwtUtils.getUserId(token), ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);
                 if (Boolean.FALSE.equals(ConfigConstants.AUTH_MANY_ONLINE())) {
                     redisService.setCacheObject(SecurityConstants.MANY_ONLINE_USER_KEY + JwtUtils.getUserId(token), JwtUtils.getUserRedisToken(token), ConfigConstants.EXPIRATION(), TimeUnit.MINUTES);

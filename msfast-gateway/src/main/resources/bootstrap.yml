@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 1.14.110.117:8848
+        server-addr: 81.69.247.192:8848
         namespace: 63ec2d50-debe-40fd-903c-cb573e8f1dfd
         extension-configs[0]:
           data-id: msfast-gateway.yml

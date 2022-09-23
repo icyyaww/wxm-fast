@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 1.14.110.117:8848
+        server-addr: 81.69.247.192:8848
         namespace: c961d69b-da6d-4a3b-a00b-c8a0dc2fc1e3
         extension-configs[0]:
           data-id: application.yml
