@@ -38,8 +38,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void register(RegisterRequest request) {
-
-        //用户退出登陆
+        //用户注册
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
         authorityService.register(request);
     }

@@ -30,7 +30,7 @@ public class ReflexUtils {
         return clsViewModel;
     }
 
-    public static Class<? extends RegisterRequest> getServiceView(AuthorityService service) {
+    public static <T> Class<? extends RegisterRequest> getServiceView(AuthorityService service) {
         Class clazz = service.getClass();
         while (clazz.getSimpleName().contains("$")) {
             clazz = (Class) clazz.getGenericSuperclass();

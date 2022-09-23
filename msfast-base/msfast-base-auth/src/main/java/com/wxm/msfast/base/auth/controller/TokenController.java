@@ -42,7 +42,7 @@ public class TokenController {
 
     @AuthIgnore
     @PostMapping("/register")
-    @ApiOperation(value = "登陆")
+    @ApiOperation(value = "注册")
     public R<Void> register(@RequestBody @Valid String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
