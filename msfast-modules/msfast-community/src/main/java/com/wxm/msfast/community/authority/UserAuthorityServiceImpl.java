@@ -12,8 +12,10 @@ import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @program: wxm-fast
@@ -28,9 +30,11 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
     FrUserService frUserService;
 
     @Override
+    @Transactional
     public void register(UserRegisterRequest registerRequest) {
-        super.register(registerRequest);
-        System.out.println(registerRequest);
+        FrUserEntity frUserEntity = new FrUserEntity();
+        BeanUtils.copyProperties(registerRequest, frUserEntity);
+        this.frUserService.save(frUserEntity);
     }
 
     @Override

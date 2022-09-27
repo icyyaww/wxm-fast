@@ -2,6 +2,7 @@ package com.wxm.msfast.base.auth.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
@@ -52,6 +53,17 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void register(RegisterRequest request) {
+
+        //校验验证码
+        CheckSmsRequest checkSmsRequest = new CheckSmsRequest();
+        checkSmsRequest.setCode(request.getVerificationCode());
+        checkSmsRequest.setPhone(request.getPhone());
+        checkSmsRequest.setMessageType(MessageType.REGISTER);
+        checkSms(checkSmsRequest);
+
+        if (!request.getPassword().equals(request.getTruePassword())) {
+            throw new JrsfException(BaseExceptionEnum.PWD_NOT_SAME_EXCEPTION);
+        }
         //用户注册
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
         authorityService.register(request);

@@ -36,7 +36,8 @@ public class AuthorityServiceImpl implements AuthorityService<UserLoginRequest, 
     }
 
     @Override
-    public void sendSms(SendSmsRequest sendSmsRequest) {
+    public void sendSmsBefore(SendSmsRequest sendSmsRequest) {
 
     }
+
 }
