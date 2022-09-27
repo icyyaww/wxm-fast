@@ -3,6 +3,7 @@ package com.wxm.msfast.base.auth.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
@@ -83,6 +84,15 @@ public class TokenController {
     @ApiOperationSort(4)
     public R<Void> sendSms(@RequestBody @Valid SendSmsRequest sendSmsRequest) {
         tokenService.sendSms(sendSmsRequest);
+        return R.ok();
+    }
+
+    @AuthIgnore
+    @ApiOperation(value = "校验短信验证码")
+    @PostMapping("/checksms")
+    @ApiOperationSort(5)
+    public R<Void> checkSms(@RequestBody @Valid CheckSmsRequest checkSmsRequest) {
+        tokenService.checkSms(checkSmsRequest);
         return R.ok();
     }
 }

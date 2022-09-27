@@ -1,10 +1,8 @@
 package com.wxm.msfast.base.auth.service;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.CommonResponse;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
-import com.wxm.msfast.base.auth.common.enums.MessageType;
+import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
@@ -14,12 +12,14 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.config.AliSmsConfig;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
-import com.wxm.msfast.base.common.enums.AliMsgErrCode;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.ISendSmsService;
 import com.wxm.msfast.base.common.service.RedisService;
-import com.wxm.msfast.base.common.utils.*;
+import com.wxm.msfast.base.common.utils.IdUtils;
+import com.wxm.msfast.base.common.utils.JwtUtils;
+import com.wxm.msfast.base.common.utils.SecurityUtils;
+import com.wxm.msfast.base.common.utils.SpringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,9 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-
-import static com.wxm.msfast.base.auth.common.enums.MessageType.REGISTER;
 
 /**
  * @program: wxm-fast
@@ -147,6 +145,21 @@ public class TokenServiceImpl implements TokenService {
         }
 
 
+    }
+
+    @Override
+    public void checkSms(CheckSmsRequest checkSmsRequest) {
+        long times = redisService.getExpire(checkSmsRequest.getMessageType().name() + checkSmsRequest.getPhone(), TimeUnit.MILLISECONDS);
+        if (times > 0) {
+            String oldCode = redisService.getCacheObject(checkSmsRequest.getMessageType().name() + checkSmsRequest.getPhone());
+            if (checkSmsRequest.getCode().equals(oldCode)) {
+                redisService.expire(checkSmsRequest.getMessageType().name() + checkSmsRequest.getPhone(), aliSmsConfig.getTimeout() * 5, TimeUnit.SECONDS);
+            } else {
+                throw new JrsfException(BaseExceptionEnum.SMS_CODE_ERROR_EXCEPTION);
+            }
+        } else {
+            throw new JrsfException(BaseExceptionEnum.SMS_CODE_NOT_EXIST_EXCEPTION);
+        }
     }
 
     private String createToken(LoginUser loginUser) {
