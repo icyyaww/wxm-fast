@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.common.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,4 +21,15 @@ public class AliSmsConfig {
 
     private String signName;
 
+    private String loginTemplateCode;
+
+    private String registerTemplateCode;
+
+    private String resetPasswordTemplateCode;
+
+    /**
+     * @Description: 默认60s 过期
+     */
+    @Value("${alisms.timeout:60}")
+    private Long timeout;
 }

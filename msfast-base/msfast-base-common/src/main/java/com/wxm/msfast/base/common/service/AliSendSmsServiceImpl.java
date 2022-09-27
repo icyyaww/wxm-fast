@@ -59,20 +59,20 @@ public class AliSendSmsServiceImpl implements ISendSmsService {
         try {
             response = client.getCommonResponse(request);
         } catch (ClientException e) {
-            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION).setData(e.getErrMsg());
+            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(e.getErrMsg());
         }
         if (response == null)
-            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION);
+            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION);
         JSONObject jsonObject = JSONObject.parseObject(response.getData());
         String resultCode = jsonObject.getString("Code");
         if (!"OK".equalsIgnoreCase(resultCode)) {
             AliMsgErrCode[] aliMsgErrCodes = AliMsgErrCode.values();
             for (AliMsgErrCode aliMsgErrCode : aliMsgErrCodes) {
                 if (aliMsgErrCode.getMsg().equalsIgnoreCase(code)) {
-                    throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION).setData(aliMsgErrCode.name());
+                    throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(aliMsgErrCode.name());
                 }
             }
-            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION).setData(jsonObject.getString("Message"));
+            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(jsonObject.getString("Message"));
         }
 
 

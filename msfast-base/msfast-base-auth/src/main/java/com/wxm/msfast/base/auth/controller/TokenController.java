@@ -33,9 +33,6 @@ public class TokenController {
     @Autowired
     TokenService tokenService;
 
-    @Autowired
-    ISendSmsService sendSmsService;
-
     @AuthIgnore
     @PostMapping("/register")
     @ApiOperation(value = "注册")
@@ -81,11 +78,11 @@ public class TokenController {
     }
 
     @AuthIgnore
-    @ApiOperation(value = "发送短信")
+    @ApiOperation(value = "发送短信验证码")
     @PostMapping("/sendsms")
     @ApiOperationSupport(order = 4)
     public R<Void> sendSms(@RequestBody @Valid SendSmsRequest sendSmsRequest) {
-        sendSmsService.sendSms(sendSmsRequest.getPhone(),"123456","SMS_193232937");
+        tokenService.sendSms(sendSmsRequest);
         return R.ok();
     }
 }

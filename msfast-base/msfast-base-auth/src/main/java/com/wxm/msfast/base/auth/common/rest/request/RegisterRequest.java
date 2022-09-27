@@ -9,8 +9,11 @@ import lombok.Data;
  * @author ruoyi
  */
 @Data
-public class RegisterRequest extends LoginRequest {
+public class RegisterRequest {
 
+    @ApiModelProperty(value = "手机号码")
+    private String phone;
+    
     @ApiModelProperty(value = "验证码")
     private String verificationCode;
 }

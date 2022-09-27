@@ -2,8 +2,8 @@ package com.wxm.msfast.base.auth.authority.service;
 
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
+import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
-import com.wxm.msfast.base.common.web.domain.R;
 
 /**
  * @program: wxm-fast
@@ -29,6 +29,11 @@ public class AuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequ
 
     @Override
     public void logout() {
+
+    }
+
+    @Override
+    public void sendSms(SendSmsRequest sendSmsRequest) {
 
     }
 }

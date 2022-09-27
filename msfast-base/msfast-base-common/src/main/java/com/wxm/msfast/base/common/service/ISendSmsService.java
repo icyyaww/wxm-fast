@@ -1,8 +1,5 @@
 package com.wxm.msfast.base.common.service;
 
-
-import com.aliyuncs.exceptions.ClientException;
-
 public interface ISendSmsService {
 
 

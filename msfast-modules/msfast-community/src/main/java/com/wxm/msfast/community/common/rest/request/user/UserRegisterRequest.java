@@ -13,7 +13,4 @@ import lombok.Data;
 
 @Data
 public class UserRegisterRequest extends RegisterRequest {
-
-    @ApiModelProperty(value = "手机号码")
-    private String phone;
 }

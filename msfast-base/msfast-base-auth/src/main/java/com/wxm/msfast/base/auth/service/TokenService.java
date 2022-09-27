@@ -19,4 +19,6 @@ public interface TokenService<T extends LoginRequest, R extends RegisterRequest>
 
     void refreshToken(String token);
 
+    void sendSms(SendSmsRequest sendSmsRequest);
+
 }

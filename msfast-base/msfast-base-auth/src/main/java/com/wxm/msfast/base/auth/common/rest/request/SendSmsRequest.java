@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.auth.common.rest.request;
 
 import com.wxm.msfast.base.auth.common.enums.MessageType;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -19,8 +20,12 @@ public class SendSmsRequest {
 
     @NotBlank
     @Pattern(regexp = "^[0-9]{11}$", message = "手机号格式不正确")
+    @ApiModelProperty("手机号")
     private String phone;
 
     @NotNull
+    @ApiModelProperty("短信类型 LOGIN(\"登陆\"),\n" +
+            "    REGISTER(\"注册\"),\n" +
+            "    RESETPWD(\"重置密码\")")
     private MessageType messageType;
 }

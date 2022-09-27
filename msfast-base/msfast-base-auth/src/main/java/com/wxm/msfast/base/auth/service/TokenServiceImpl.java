@@ -1,28 +1,37 @@
 package com.wxm.msfast.base.auth.service;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.aliyuncs.CommonResponse;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.AuthorityUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.config.AliSmsConfig;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
+import com.wxm.msfast.base.common.enums.AliMsgErrCode;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.service.ISendSmsService;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.*;
-import io.jsonwebtoken.Claims;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+
+import static com.wxm.msfast.base.auth.common.enums.MessageType.REGISTER;
 
 /**
  * @program: wxm-fast
@@ -36,6 +45,12 @@ public class TokenServiceImpl implements TokenService {
 
     @Resource
     private RedisService redisService;
+
+    @Autowired
+    ISendSmsService sendSmsService;
+
+    @Autowired
+    AliSmsConfig aliSmsConfig;
 
     @Override
     public void register(RegisterRequest request) {
@@ -100,6 +115,40 @@ public class TokenServiceImpl implements TokenService {
 
     }
 
+    @Override
+    public void sendSms(SendSmsRequest sendSmsRequest) {
+        //用户发送短信前相关校验或是其他逻辑
+        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
+        authorityService.sendSms(sendSmsRequest);
+
+        long times = redisService.getExpire(sendSmsRequest.getMessageType().name() + sendSmsRequest.getPhone(), TimeUnit.MILLISECONDS);
+        if (times > 0) {
+            throw new JrsfException(BaseExceptionEnum.SMS_SENDED_EXCEPTION);
+        }
+        String templateCode = "";
+        switch (sendSmsRequest.getMessageType()) {
+            case LOGIN:
+                templateCode = aliSmsConfig.getLoginTemplateCode();
+                break;
+            case REGISTER:
+                templateCode = aliSmsConfig.getRegisterTemplateCode();
+                break;
+            case RESETPWD:
+                templateCode = aliSmsConfig.getResetPasswordTemplateCode();
+                break;
+            default:
+                break;
+        }
+
+        if (StringUtils.isNotBlank(templateCode)) {
+            String code = getCode();
+            sendSmsService.sendSms(sendSmsRequest.getPhone(), code, templateCode);
+            redisService.setCacheObject(sendSmsRequest.getMessageType().name() + sendSmsRequest.getPhone(), code, aliSmsConfig.getTimeout(), TimeUnit.SECONDS);
+        }
+
+
+    }
+
     private String createToken(LoginUser loginUser) {
 
         // Jwt存储信息
@@ -116,5 +165,21 @@ public class TokenServiceImpl implements TokenService {
             }
         }
         return JwtUtils.createToken(claimsMap);
+    }
+
+    /**
+     * @description:
+     * @return: 获取验证码
+     * @author: wanglei
+     * @time: 2020/6/29 20:36
+     */
+
+    private String getCode() {
+        String message = "";
+        for (int i = 0; i < 4; i++) {
+            int random = (int) (Math.random() * 10);
+            message += String.valueOf(random);
+        }
+        return message;
     }
 }
