@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
  **/
 
 @Configuration
-//@MapperScan("com.wxm.msfast.demo.dao")
 public class MybatisPlusConfig {
 
     @Bean
