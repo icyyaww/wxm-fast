@@ -3,6 +3,7 @@ package com.wxm.msfast.demo.authority;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
+import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.demo.common.rest.request.user.UserLoginRequest;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,11 @@ public class AuthorityServiceImpl implements AuthorityService<UserLoginRequest, 
 
     @Override
     public void logout() {
+
+    }
+
+    @Override
+    public void sendSms(SendSmsRequest sendSmsRequest) {
 
     }
 }
