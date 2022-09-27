@@ -24,8 +24,10 @@
         <hutool.all.version>5.8.3</hutool.all.version>
         <fastjson2.version>2.0.7</fastjson2.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version>
-        <springfox.swagger2.version>3.0.0</springfox.swagger2.version>
-        <swagger.bootstrap.ui.version>1.9.6</swagger.bootstrap.ui.version>
+        <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
+        <swagger.bootstrap.ui.version>1.9.1</swagger.bootstrap.ui.version>
+        <aliyun.java.sdk.sms.version>3.0.0-rc1</aliyun.java.sdk.sms.version>
+        <aliyun.java.sdk.core.version>4.5.0</aliyun.java.sdk.core.version>
     </properties>
 
     <dependencies>
@@ -124,7 +126,6 @@
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
         </dependency>
-        <!--接口文档-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
@@ -135,17 +136,16 @@
             <artifactId>swagger-bootstrap-ui</artifactId>
             <version>${swagger.bootstrap.ui.version}</version>
         </dependency>
-
         <!--阿里短信接口-->
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-sms</artifactId>
-            <version>3.0.0-rc1</version>
+            <version>${aliyun.java.sdk.sms.version}</version>
         </dependency>
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>4.5.0</version>
+            <version>${aliyun.java.sdk.core.version}</version>
         </dependency>
 
     </dependencies>

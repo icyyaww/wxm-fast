@@ -1,27 +1,21 @@
 package com.wxm.msfast.base.common.config;
 
+import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.builders.RequestParameterBuilder;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.ParameterType;
-import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import static com.google.common.collect.Lists.newArrayList;
-import static springfox.documentation.builders.PathSelectors.any;
 
 /**
  * @program: wxm-fast
@@ -31,6 +25,7 @@ import static springfox.documentation.builders.PathSelectors.any;
  **/
 @Configuration
 @EnableSwagger2
+@EnableSwaggerBootstrapUI
 public class SwaggerConfig {
 
     @Bean
@@ -44,13 +39,13 @@ public class SwaggerConfig {
                 //包下的类，才生成接口文档
                 .paths(PathSelectors.any())
                 .build()
-                .globalRequestParameters(
-                        Collections.singletonList(new RequestParameterBuilder()
-                                .name(ConfigConstants.AUTHENTICATION())
-                                .description("token")
-                                .in(ParameterType.HEADER)
-                                .required(false)
-                                .build()));
+                .globalOperationParameters(newArrayList(new ParameterBuilder()
+                        .name(ConfigConstants.AUTHENTICATION())
+                        .description("token")
+                        .modelRef(new ModelRef("string"))
+                        .parameterType("header")
+                        .required(false)
+                        .build()));
     }
 
     private ApiInfo apiInfo() {

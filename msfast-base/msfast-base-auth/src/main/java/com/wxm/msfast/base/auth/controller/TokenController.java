@@ -36,7 +36,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/register")
     @ApiOperation(value = "注册")
-    @ApiOperationSupport(order = 1)
+    @ApiOperationSort(1)
     public R<Void> register(@RequestBody @Valid String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
@@ -54,7 +54,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/login")
     @ApiOperation(value = "登陆")
-    @ApiOperationSupport(order = 2)
+    @ApiOperationSort(2)
     public R<LoginUserResponse> login(@RequestBody @Valid String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
@@ -71,7 +71,7 @@ public class TokenController {
     @AuthIgnore
     @DeleteMapping("/logout")
     @ApiOperation(value = "退出登陆")
-    @ApiOperationSupport(order = 3)
+    @ApiOperationSort(3)
     public R<Void> logout() {
         tokenService.logout();
         return R.ok();
@@ -80,7 +80,7 @@ public class TokenController {
     @AuthIgnore
     @ApiOperation(value = "发送短信验证码")
     @PostMapping("/sendsms")
-    @ApiOperationSupport(order = 4)
+    @ApiOperationSort(4)
     public R<Void> sendSms(@RequestBody @Valid SendSmsRequest sendSmsRequest) {
         tokenService.sendSms(sendSmsRequest);
         return R.ok();
