@@ -119,7 +119,7 @@ public class TokenServiceImpl implements TokenService {
     public void sendSms(SendSmsRequest sendSmsRequest) {
         //用户发送短信前相关校验或是其他逻辑
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        authorityService.sendSms(sendSmsRequest);
+        authorityService.sendSmsBefore(sendSmsRequest);
 
         long times = redisService.getExpire(sendSmsRequest.getMessageType().name() + sendSmsRequest.getPhone(), TimeUnit.MILLISECONDS);
         if (times > 0) {

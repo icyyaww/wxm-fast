@@ -18,5 +18,5 @@ public interface AuthorityService<T extends LoginRequest, R extends RegisterRequ
 
     void logout();
 
-    void sendSms(SendSmsRequest sendSmsRequest);
+    void sendSmsBefore(SendSmsRequest sendSmsRequest);
 }

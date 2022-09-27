@@ -33,7 +33,7 @@ public class AuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequ
     }
 
     @Override
-    public void sendSms(SendSmsRequest sendSmsRequest) {
+    public void sendSmsBefore(SendSmsRequest sendSmsRequest) {
 
     }
 }
