@@ -7,7 +7,6 @@ import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
-import com.wxm.msfast.base.auth.common.rest.response.AuthorityUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.config.AliSmsConfig;
@@ -82,9 +81,8 @@ public class TokenServiceImpl implements TokenService {
             //登陆失败
             throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
         }
-        AuthorityUserResponse authorityUserResponse = new AuthorityUserResponse();
-        BeanUtils.copyProperties(loginUser, authorityUserResponse);
-        loginUserResponse.setAuthorityUserResponse(authorityUserResponse);
+
+        loginUserResponse.setInfo(loginUser.getInfo());
 
         loginUserResponse.setToken(createToken(loginUser));
 

@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.msfast.base.auth.authority.service.AuthorityServiceImpl;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
+import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.community.common.enums.FrUserStatus;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
+import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrUserService;
 import org.springframework.beans.BeanUtils;
@@ -68,5 +71,26 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
                 throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
             }
         }
+
+    }
+
+    @Override
+    public LoginUser login(UserLoginRequest loginRequest) {
+
+        LoginUser loginUser = new LoginUser();
+        FrUserEntity frUserEntity = this.frUserService.getFrUserByPhone(loginRequest.getUsername());
+        if (frUserEntity == null) {
+            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+
+        if (FrUserStatus.DISABLE.equals(frUserEntity.getStatus())) {
+            throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
+        }
+
+        loginUser.setId(frUserEntity.getId());
+        LoginResponse loginResponse = new LoginResponse();
+        BeanUtils.copyProperties(frUserEntity, loginResponse);
+        loginUser.setInfo(loginResponse);
+        return loginUser;
     }
 }

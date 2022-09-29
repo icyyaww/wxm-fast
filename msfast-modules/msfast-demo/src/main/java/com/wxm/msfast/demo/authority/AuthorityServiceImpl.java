@@ -25,8 +25,7 @@ public class AuthorityServiceImpl implements AuthorityService<UserLoginRequest, 
     @Override
     public LoginUser login(UserLoginRequest loginRequest) {
         LoginUser loginUser = new LoginUser();
-        loginUser.setId(1l);
-        loginUser.setUsername(loginRequest.getUsername());
+        loginUser.setId(1);
         return loginUser;
     }
 

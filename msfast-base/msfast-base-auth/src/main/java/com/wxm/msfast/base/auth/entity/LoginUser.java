@@ -1,6 +1,5 @@
 package com.wxm.msfast.base.auth.entity;
 
-import com.wxm.msfast.base.auth.common.rest.response.AuthorityUserResponse;
 import lombok.Data;
 
 /**
@@ -10,10 +9,9 @@ import lombok.Data;
  * @create: 2022-06-16 16:48
  **/
 @Data
-public class LoginUser {
+public class LoginUser<T> {
 
-    private Long id;
+    private Integer id;
 
-    private String username;
-
+    private T info;
 }

@@ -2,6 +2,7 @@ package com.wxm.msfast.community.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.wxm.msfast.base.common.entity.BaseEntity;
+import com.wxm.msfast.community.common.enums.FrUserStatus;
 import com.wxm.msfast.community.common.enums.GenderEnum;
 import lombok.Data;
 
@@ -60,4 +61,9 @@ public class FrUserEntity extends BaseEntity {
 
     @TableField("gender")
     private GenderEnum gender;
+
+    @TableField("status")
+    private FrUserStatus status;
+
+
 }

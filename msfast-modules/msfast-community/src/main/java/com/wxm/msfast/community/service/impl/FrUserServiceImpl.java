@@ -42,4 +42,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         return count(frUserEntityWrapper);
     }
 
+    @Override
+    public FrUserEntity getFrUserByPhone(String phone) {
+        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, phone);
+        return getOne(frUserEntityWrapper);
+    }
+
 }

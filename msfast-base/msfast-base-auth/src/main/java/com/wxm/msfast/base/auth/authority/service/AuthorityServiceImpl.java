@@ -22,8 +22,7 @@ public class AuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequ
     @Override
     public LoginUser login(T loginRequest) {
         LoginUser loginUser = new LoginUser();
-        loginUser.setId(1l);
-        loginUser.setUsername(loginRequest.getUsername());
+        loginUser.setId(1);
         return loginUser;
     }
 

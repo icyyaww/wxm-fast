@@ -9,10 +9,9 @@ import lombok.Data;
  * @create: 2022-06-16 16:48
  **/
 @Data
-public class LoginUserResponse {
-
-    private AuthorityUserResponse authorityUserResponse;
+public class LoginUserResponse<T> {
 
     private String token;
 
+    private T info;
 }
