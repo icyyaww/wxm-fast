@@ -1,7 +1,9 @@
 package com.wxm.msfast.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.entity.FrUserEntity;
 
 import java.util.Map;
@@ -18,5 +20,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     Long countByPhone(String phone);
 
     FrUserEntity getFrUserByPhone(String phone);
+
+    LoginUserResponse smsLogin(SmsLoginRequest request);
 }
 

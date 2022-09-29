@@ -58,7 +58,7 @@ public class TokenServiceImpl implements TokenService {
         checkSmsRequest.setCode(request.getVerificationCode());
         checkSmsRequest.setPhone(request.getPhone());
         checkSmsRequest.setMessageType(MessageType.REGISTER);
-        //checkSms(checkSmsRequest);
+        checkSms(checkSmsRequest);
 
         if (!request.getPassword().equals(request.getTruePassword())) {
             throw new JrsfException(BaseExceptionEnum.PWD_NOT_SAME_EXCEPTION);

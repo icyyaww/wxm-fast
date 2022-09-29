@@ -13,6 +13,4 @@ import lombok.Data;
 @Data
 public class UserLoginRequest extends LoginRequest {
 
-    @ApiModelProperty(value = "验证码")
-    private String verificationCode;
 }

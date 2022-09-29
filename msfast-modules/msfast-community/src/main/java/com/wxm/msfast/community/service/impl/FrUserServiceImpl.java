@@ -1,6 +1,21 @@
 package com.wxm.msfast.community.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.enums.MessageType;
+import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
+import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
+import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.auth.service.TokenService;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.SpringUtils;
+import com.wxm.msfast.community.common.exception.UserExceptionEnum;
+import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
+import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -18,6 +33,9 @@ import com.wxm.msfast.community.service.FrUserService;
 
 @Service("frUserService")
 public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> implements FrUserService {
+
+    @Autowired
+    TokenService tokenService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -46,6 +64,27 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public FrUserEntity getFrUserByPhone(String phone) {
         Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, phone);
         return getOne(frUserEntityWrapper);
+    }
+
+    @Override
+    public LoginUserResponse smsLogin(SmsLoginRequest request) {
+
+        FrUserEntity frUserEntity = getFrUserByPhone(request.getPhone());
+        if (frUserEntity == null) {
+            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+        CheckSmsRequest checkSmsRequest = new CheckSmsRequest();
+        checkSmsRequest.setMessageType(MessageType.LOGIN);
+        BeanUtils.copyProperties(request, checkSmsRequest);
+        tokenService.checkSms(checkSmsRequest);
+
+        UserLoginRequest userLoginRequest = new UserLoginRequest();
+
+
+        userLoginRequest.setUsername(request.getPhone());
+        userLoginRequest.setPassword(frUserEntity.getPassword());
+
+        return tokenService.login(userLoginRequest);
     }
 
 }
