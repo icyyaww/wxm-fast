@@ -7,6 +7,7 @@ import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
@@ -32,8 +33,21 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
     @Override
     @Transactional
     public void register(UserRegisterRequest registerRequest) {
+
         FrUserEntity frUserEntity = new FrUserEntity();
         BeanUtils.copyProperties(registerRequest, frUserEntity);
+        Integer age = DateUtils.getAgeByBirth(registerRequest.getBirthday());
+        if (age < 16) {
+            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setData("未满16周岁无法注册");
+        }
+        if (age > 100) {
+            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setData("超过100周岁无法注册");
+        }
+
+        if (this.frUserService.countByPhone(registerRequest.getPhone()) > 0l) {
+            throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
+        }
+
         this.frUserService.save(frUserEntity);
     }
 

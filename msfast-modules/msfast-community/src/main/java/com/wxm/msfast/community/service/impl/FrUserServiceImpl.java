@@ -1,7 +1,10 @@
 package com.wxm.msfast.community.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import org.springframework.stereotype.Service;
+
 import java.util.Map;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -24,6 +27,19 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         );
 
         return new PageUtils(page);
+    }
+
+    /**
+     * @Description: 根据手机号查询数量
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/9/29 下午2:53
+     */
+    @Override
+    public Long countByPhone(String phone) {
+        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, phone);
+        return count(frUserEntityWrapper);
     }
 
 }

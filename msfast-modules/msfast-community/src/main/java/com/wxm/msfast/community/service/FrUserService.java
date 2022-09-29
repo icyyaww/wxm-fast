@@ -7,8 +7,6 @@ import com.wxm.msfast.community.entity.FrUserEntity;
 import java.util.Map;
 
 /**
- * 
- *
  * @author wanglei
  * @email 378526425@qq.com
  * @date 2022-09-22 15:46:53
@@ -16,5 +14,7 @@ import java.util.Map;
 public interface FrUserService extends IService<FrUserEntity> {
 
     PageUtils queryPage(Map<String, Object> params);
+
+    Long countByPhone(String phone);
 }
 
