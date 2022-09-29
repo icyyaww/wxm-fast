@@ -54,8 +54,7 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
     @Override
     public void sendSmsBefore(SendSmsRequest sendSmsRequest) {
 
-        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, sendSmsRequest.getPhone());
-        Long count = frUserService.count(frUserEntityWrapper);
+        Long count = this.frUserService.countByPhone(sendSmsRequest.getPhone());
         if (MessageType.REGISTER.equals(sendSmsRequest.getMessageType())) {
             //注册
             if (count > 0l) {
