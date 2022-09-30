@@ -1,24 +1,22 @@
 package com.wxm.msfast.community.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
 import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
+import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
+import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
+import com.wxm.msfast.community.service.FrUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.wxm.msfast.community.entity.FrUserEntity;
-import com.wxm.msfast.community.service.FrUserService;
-import com.wxm.msfast.base.common.utils.PageUtils;
-import com.wxm.msfast.base.common.web.domain.R;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 /**
@@ -30,6 +28,7 @@ import javax.validation.Valid;
 @Api(tags = "用户模块")
 @RequestMapping("community/fruser")
 public class FrUserController {
+
     @Autowired
     private FrUserService frUserService;
 
@@ -40,4 +39,14 @@ public class FrUserController {
     public R<LoginUserResponse> smsLogin(@RequestBody @Valid SmsLoginRequest request) {
         return R.ok(frUserService.smsLogin(request));
     }
+
+    @ApiOperation("首页动态用户")
+    @ApiOperationSort(value = 1)
+    @PostMapping("/dynamic/user")
+    @AuthIgnore
+    public R<List<DynamicUserResponse>> dynamicUser() {
+        return R.ok(frUserService.getDynamicUser());
+    }
+
+
 }

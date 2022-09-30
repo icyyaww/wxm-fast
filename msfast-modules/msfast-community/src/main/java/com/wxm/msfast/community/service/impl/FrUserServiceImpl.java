@@ -1,23 +1,21 @@
 package com.wxm.msfast.community.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
-import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
-import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
+import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -85,6 +83,12 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         userLoginRequest.setPassword(frUserEntity.getPassword());
 
         return tokenService.login(userLoginRequest);
+    }
+
+    @Override
+    public List<DynamicUserResponse> getDynamicUser() {
+        FrUserEntity frUserEntity = getById(TokenUtils.getUserId());
+        return this.baseMapper.getDynamicUser(frUserEntity.getGender(), frUserEntity.getId());
     }
 
 }

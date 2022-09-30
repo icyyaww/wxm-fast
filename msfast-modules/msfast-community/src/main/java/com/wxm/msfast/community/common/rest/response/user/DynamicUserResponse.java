@@ -1,5 +1,6 @@
 package com.wxm.msfast.community.common.rest.response.user;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -7,20 +8,18 @@ import lombok.Data;
  * @program: wxm-fast
  * @description:
  * @author: Mr.Wang
- * @create: 2022-09-29 16:46
+ * @create: 2022-09-30 15:50
  **/
 
 @Data
-public class LoginResponse {
+public class DynamicUserResponse {
 
-    /**
-     * 登陆账号
-     */
-    @ApiModelProperty(value = "登陆账号")
-    private String phone;
-    /**
-     * 昵称
-     */
+    @ApiModelProperty(value = "用户id")
+    private Integer id;
+
+    @ApiModelProperty(value = "头像")
+    private String headPortrait;
+
     @ApiModelProperty(value = "昵称")
     private String nickName;
 }
