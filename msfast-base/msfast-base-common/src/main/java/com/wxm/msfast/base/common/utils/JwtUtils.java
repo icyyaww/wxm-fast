@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.text.Convert;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -36,6 +37,9 @@ public class JwtUtils {
      * @return 数据声明
      */
     public static Claims parseToken(String token) {
+        if (StringUtils.isBlank(token)) {
+            return null;
+        }
         Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         return claims;
     }

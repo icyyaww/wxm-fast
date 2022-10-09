@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wanglei
@@ -19,8 +20,5 @@ import java.util.List;
 @Mapper
 public interface FrUserDao extends BaseMapper<FrUserEntity> {
 
-    @Select("select fu.id,fu.nick_name,fu.head_portrait from fr_user fu " +
-            "where fu.del_flag=0 and fu.status='ENABLE' and fu.gender!=#{gender} and id!=#{id} and fu.head_portrait is not null " +
-            "order by fu.create_time desc limit 10")
-    List<DynamicUserResponse> getDynamicUser(@Param("gender") GenderEnum gender, @Param("id")Integer id);
+    List<DynamicUserResponse> getDynamicUser(Map<String, Object> param);
 }

@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -87,8 +88,17 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Override
     public List<DynamicUserResponse> getDynamicUser() {
-        FrUserEntity frUserEntity = getById(TokenUtils.getUserId());
-        return this.baseMapper.getDynamicUser(frUserEntity.getGender(), frUserEntity.getId());
+        Map<String, Object> param = new HashMap<>();
+        Integer loginUserId = TokenUtils.getOwnerId();
+        if (loginUserId != null) {
+            FrUserEntity frUserEntity = getById(loginUserId);
+            if (frUserEntity != null) {
+                param.put("id", frUserEntity.getId());
+                param.put("gender", frUserEntity.getGender().name());
+            }
+        }
+
+        return this.baseMapper.getDynamicUser(param);
     }
 
 }

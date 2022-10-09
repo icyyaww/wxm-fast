@@ -19,8 +19,11 @@ public class TokenUtils {
      *
      * @return 用户ID
      */
-    public static Integer getUserId() {
+    public static Integer getOwnerId() {
         Claims claims = JwtUtils.parseToken(SecurityUtils.getToken());
+        if (claims == null) {
+            return null;
+        }
         return Integer.parseInt(JwtUtils.getValue(claims, SecurityConstants.DETAILS_USER_ID));
     }
 }
