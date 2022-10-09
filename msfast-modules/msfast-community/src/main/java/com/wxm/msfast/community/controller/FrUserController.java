@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2022-09-22 15:46:53
  */
 @RestController
-@Api(tags = "用户模块")
+@Api(tags = "前台用户模块")
 @RequestMapping("community/fruser")
 public class FrUserController {
 
