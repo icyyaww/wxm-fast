@@ -36,5 +36,15 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @Date: 2022/10/10 下午2:18
      */
     LoginResponse info();
+
+    /**
+     * @Description: 获取匹配提示信息
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/10 下午4:40
+     */
+    List<String> message();
+
 }
 

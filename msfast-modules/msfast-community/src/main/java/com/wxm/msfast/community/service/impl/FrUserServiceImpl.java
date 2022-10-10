@@ -1,5 +1,6 @@
 package com.wxm.msfast.community.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
@@ -8,11 +9,14 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.community.common.enums.SysConfigEnum;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
+import com.wxm.msfast.community.service.SysConfigService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +41,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     TokenService tokenService;
+
+    @Autowired
+    SysConfigService sysConfigService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -107,6 +114,22 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public LoginResponse info() {
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         return loginUser.getInfo();
+    }
+
+    /**
+     * @Description: 获取匹配提示信息
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/10 下午4:40
+     */
+    @Override
+    public List<String> message() {
+        String value = sysConfigService.getValueByCode(SysConfigEnum.video_matching_tips.name());
+        if (StringUtils.isNotBlank(value)) {
+            return JSON.parseArray(value, String.class);
+        }
+        return null;
     }
 
 }

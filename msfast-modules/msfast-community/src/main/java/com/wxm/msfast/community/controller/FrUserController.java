@@ -52,4 +52,11 @@ public class FrUserController {
     public R<LoginResponse> info() {
         return R.ok(frUserService.info());
     }
+
+    @ApiOperation("获取匹配提示信息")
+    @ApiOperationSort(value = 4)
+    @GetMapping("/message")
+    public R<List<String>> message() {
+        return R.ok(frUserService.message());
+    }
 }
