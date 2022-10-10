@@ -5,6 +5,7 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.utils.PageUtils;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
+import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;
 
 import java.util.List;
@@ -26,5 +27,14 @@ public interface FrUserService extends IService<FrUserEntity> {
     LoginUserResponse smsLogin(SmsLoginRequest request);
 
     List<DynamicUserResponse> getDynamicUser();
+
+    /**
+     * @Description: 获取当前登陆用户信息
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/10 下午2:18
+     */
+    LoginResponse info();
 }
 

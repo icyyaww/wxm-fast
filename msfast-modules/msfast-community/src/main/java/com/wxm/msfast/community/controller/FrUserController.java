@@ -5,6 +5,7 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
+import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.service.FrUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,12 +39,17 @@ public class FrUserController {
     }
 
     @ApiOperation("首页动态用户")
-    @ApiOperationSort(value =1)
+    @ApiOperationSort(value = 2)
     @GetMapping("/dynamic/user")
     @AuthIgnore
     public R<List<DynamicUserResponse>> dynamicUser() {
         return R.ok(frUserService.getDynamicUser());
     }
 
-
+    @ApiOperation("获取登陆用户详细信息")
+    @ApiOperationSort(value = 3)
+    @GetMapping("/info")
+    public R<LoginResponse> info() {
+        return R.ok(frUserService.info());
+    }
 }

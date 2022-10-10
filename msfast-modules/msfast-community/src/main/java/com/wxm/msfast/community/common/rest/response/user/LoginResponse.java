@@ -1,7 +1,11 @@
 package com.wxm.msfast.community.common.rest.response.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wxm.msfast.community.common.enums.GenderEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * @program: wxm-fast
@@ -13,14 +17,34 @@ import lombok.Data;
 @Data
 public class LoginResponse {
 
+    private Integer id;
+
     /**
      * 登陆账号
      */
-    @ApiModelProperty(value = "登陆账号")
     private String phone;
+
+    /**
+     * 头像
+     */
+    private String headPortrait;
     /**
      * 昵称
      */
-    @ApiModelProperty(value = "昵称")
     private String nickName;
+    /**
+     * 出生日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
+
+    /**
+     * 城市
+     */
+    private String city;
+
+
+    private GenderEnum gender;
+
+
 }
