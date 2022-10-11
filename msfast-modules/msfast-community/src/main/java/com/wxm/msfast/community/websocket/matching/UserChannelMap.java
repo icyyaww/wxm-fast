@@ -8,7 +8,7 @@ import java.util.HashMap;
  * @author liuhm
  * @Description: 用户id和channel的关联关系处理
  */
-public class UserChannelRel {
+public class UserChannelMap {
 
 	private static HashMap<Integer, Channel> manager = new HashMap<>();
 

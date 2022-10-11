@@ -27,18 +27,19 @@ public class HeartBeatHandler extends ChannelInboundHandlerAdapter {
             } else if (event.state() == IdleState.WRITER_IDLE) {
                 System.out.println("进入写空闲...");
             } else if (event.state() == IdleState.ALL_IDLE) {
-
-                System.out.println("channel关闭前，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelRel.getManager().size());
-
-                Channel channel = ctx.channel();
-                // 关闭无用的channel，以防资源浪费
-                channel.close();
-                // 移除用户与channel的关联
-                UserChannelRel.getManager().entrySet().removeIf(p->p.getValue().equals(ctx.channel()));
-                System.out.println("channel关闭后，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelRel.getManager().size());
+                closeChannel(ctx.channel());
             }
         }
 
+    }
+
+    private void closeChannel(Channel channel) {
+        System.out.println("channel关闭前，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelMap.getManager().size());
+        // 关闭无用的channel，以防资源浪费
+        channel.close();
+        // 移除用户与channel的关联
+        UserChannelMap.getManager().entrySet().removeIf(p -> p.getValue().equals(channel));
+        System.out.println("channel关闭后，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelMap.getManager().size());
     }
 
 }
