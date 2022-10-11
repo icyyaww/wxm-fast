@@ -38,9 +38,14 @@ public class ChatHandler extends SimpleChannelInboundHandler<TextWebSocketFrame>
     //客户端与服务器关闭连接的时候触发，
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("channel关闭前，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelMap.getManager().size());
+        //移除管道
         channelGroup.remove(ctx.channel());
-        System.out.println("与客户端断开连接，通道关闭！此时连接人数：" + channelGroup.size());
+        // 移除用户与channel的关联
+        UserChannelMap.getManager().entrySet().removeIf(p -> p.getValue().equals(ctx.channel()));
+        System.out.println("channel关闭后，users的数量为：" + ChatHandler.channelGroup.size() + "; 关联数量为" + UserChannelMap.getManager().size());
     }
+
 
     //服务器接受客户端的数据信息，
     @Override
