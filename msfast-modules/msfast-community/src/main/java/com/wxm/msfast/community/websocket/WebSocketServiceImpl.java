@@ -1,6 +1,6 @@
-package com.wxm.msfast.community.service.impl;
+package com.wxm.msfast.community.websocket;
 
-import com.wxm.msfast.base.websocket.service.WebSocketService;
+import com.wxm.msfast.base.websocket.service.IWebSocketService;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  **/
 
 @Service
-public class WebSocketServiceImpl implements WebSocketService {
+public class WebSocketServiceImpl implements IWebSocketService {
     @Override
     public void read(Channel channel, String message) {
         System.out.println("收到消息：" + message);

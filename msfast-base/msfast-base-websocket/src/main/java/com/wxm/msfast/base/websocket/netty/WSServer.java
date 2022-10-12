@@ -39,7 +39,7 @@ public class WSServer {
 
 
     public WSServer() {
-	/*	mainGroup = new NioEventLoopGroup();
+		/*mainGroup = new NioEventLoopGroup();
 		subGroup = new NioEventLoopGroup();*/
         mainGroup = new NioEventLoopGroup(2, new DefaultThreadFactory("server1", true));
         subGroup = new NioEventLoopGroup(4, new DefaultThreadFactory("server2", true));

@@ -1,8 +1,7 @@
 package com.wxm.msfast.base.websocket.common.enums;
 
 public enum MessageTypeEnum {
-    MATCHING_CONNECT("视频匹配连接"),
-    MATCHING("视频匹配");
+    CONNECT("视频匹配连接");
     private String desc;
 
     MessageTypeEnum(String desc) {

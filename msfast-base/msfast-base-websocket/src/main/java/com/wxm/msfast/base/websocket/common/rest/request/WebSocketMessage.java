@@ -1,4 +1,4 @@
-package com.wxm.msfast.base.websocket.common.type;
+package com.wxm.msfast.base.websocket.common.rest.request;
 
 
 import com.wxm.msfast.base.websocket.common.enums.MessageTypeEnum;
@@ -12,9 +12,9 @@ import lombok.Data;
  **/
 
 @Data
-public class MessageType {
+public class WebSocketMessage {
 
-    private MessageTypeEnum messageTypeEnum;
+    private MessageTypeEnum messageType;
 
     private String info;
 }
