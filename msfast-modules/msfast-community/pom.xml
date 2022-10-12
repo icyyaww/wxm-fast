@@ -33,14 +33,10 @@
             <artifactId>msfast-base-file</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
+            <groupId>com.wxm.msfast</groupId>
+            <artifactId>msfast-base-websocket</artifactId>
+            <version>${msfast.base.common.version}</version>
         </dependency>
     </dependencies>
 

@@ -1,4 +1,4 @@
-package com.wxm.msfast.community.websocket.matching;
+package com.wxm.msfast.base.websocket.netty;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;

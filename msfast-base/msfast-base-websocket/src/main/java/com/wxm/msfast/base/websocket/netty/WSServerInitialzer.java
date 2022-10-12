@@ -1,4 +1,4 @@
-package com.wxm.msfast.community.websocket.matching;
+package com.wxm.msfast.base.websocket.netty;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -51,7 +51,7 @@ public class WSServerInitialzer extends ChannelInitializer<SocketChannel> {
 		// 自定义的handler
 		// 处理 TextWebSocketFrame
 //		pipeline.addLast(new WebSocketProtoCodec());
-		pipeline.addLast(new ChatHandler());
+		pipeline.addLast(new MessageHandler());
 //		pipeline.addLast(Config.ROOMEVENT,new ChatHandler());
 //		pipeline.addLast(Config.CHATEVENT,new ChantEventHandler());
 	}

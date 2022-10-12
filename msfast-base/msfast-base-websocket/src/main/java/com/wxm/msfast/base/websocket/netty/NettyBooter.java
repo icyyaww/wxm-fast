@@ -1,4 +1,4 @@
-package com.wxm.msfast.community.websocket.matching;
+package com.wxm.msfast.base.websocket.netty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

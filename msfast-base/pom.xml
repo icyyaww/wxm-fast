@@ -15,5 +15,6 @@
         <module>msfast-base-common</module>
         <module>msfast-base-auth</module>
         <module>msfast-base-file</module>
+        <module>msfast-base-websocket</module>
     </modules>
 </project>

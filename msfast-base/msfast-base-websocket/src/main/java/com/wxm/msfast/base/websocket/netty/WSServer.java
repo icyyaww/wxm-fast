@@ -1,4 +1,4 @@
-package com.wxm.msfast.community.websocket.matching;
+package com.wxm.msfast.base.websocket.netty;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -6,7 +6,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -21,10 +20,6 @@ import org.springframework.stereotype.Component;
 public class WSServer {
     @Value("${server.websocket.port:8888}")
     private int webSocketPort;
-
-    /*private static class SingletionWSServer {
-        static final WSServer instance = new WSServer();
-    }*/
 
     /**
      * 定义一对线程组
