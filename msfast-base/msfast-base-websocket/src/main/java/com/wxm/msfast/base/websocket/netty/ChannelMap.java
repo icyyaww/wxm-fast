@@ -20,8 +20,8 @@ public class ChannelMap {
     }
 
 
-    public static Channel get(Integer key) {
-        return manager.get(key);
+    public static Channel get(Integer userId) {
+        return manager.get(userId);
     }
 
     public static HashMap<Integer, Channel> getManager() {
@@ -32,8 +32,8 @@ public class ChannelMap {
         online.put(key, channel);
     }
 
-    public static Channel getOnline(String key) {
-        return online.get(key);
+    public static Channel getOnline(String ip) {
+        return online.get(ip);
     }
 
     public static Map<String, Channel> getOnline() {
