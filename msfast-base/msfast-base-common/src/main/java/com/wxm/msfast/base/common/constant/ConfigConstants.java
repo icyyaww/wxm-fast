@@ -44,6 +44,12 @@ public class ConfigConstants {
     @Value("${wxmfast.config.file.name-length:100}")
     private int fileNameLength;
 
+    @Value("${wxmfast.config.websocket.port:8888}")
+    private int webSocketPort;
+
+    @Value("${wxmfast.config.websocket.heartbeat-time:30}")
+    private int heartBeatTime;
+
 
     /**
      * @Description: 是否启用redis 默认false
@@ -102,7 +108,37 @@ public class ConfigConstants {
         return SpringUtils.getBean(ConfigConstants.class).getFileMaxSize();
     }
 
+    /**
+     * @Description: 文件名长度
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/13 上午10:12
+     */
     public static int FILE_NAME_LENGTH() {
         return SpringUtils.getBean(ConfigConstants.class).getFileNameLength();
     }
+
+    /**
+     * @Description: websocket端口号
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/13 上午10:13
+     */
+    public static int WEB_SOCKET_PORT() {
+        return SpringUtils.getBean(ConfigConstants.class).getWebSocketPort();
+    }
+
+    /**
+     * @Description: websocket心跳检测时间
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/10/13 上午10:20
+     */
+    public static int HEART_BEAT_TIME() {
+        return SpringUtils.getBean(ConfigConstants.class).getHeartBeatTime();
+    }
+
 }

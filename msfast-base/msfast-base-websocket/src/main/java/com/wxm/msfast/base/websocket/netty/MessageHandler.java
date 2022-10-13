@@ -45,6 +45,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         if (message != null && MessageTypeEnum.CONNECT.equals(message.getMessageType())) {
             if (StringUtils.isNotBlank(message.getInfo())) {
                 ChannelMap.put(Integer.valueOf(message.getInfo()), ctx.channel());
+                System.out.println("建立连接完成，关联数量为" + ChannelMap.getManager().size());
             }
         } else {
             IWebSocketService webSocketService = SpringBeanUtils.getBean(IWebSocketService.class);

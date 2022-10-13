@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.websocket.netty;
 
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.EventLoopGroup;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WSServer {
-    @Value("${server.websocket.port:8888}")
-    private int webSocketPort;
 
     /**
      * 定义一对线程组
@@ -53,8 +52,8 @@ public class WSServer {
     }
 
     public void start() {
-        this.future = server.bind(webSocketPort);
-        System.out.println("netty websocket server  启动完毕..端口是" + webSocketPort);
+        this.future = server.bind(ConfigConstants.WEB_SOCKET_PORT());
+        System.out.println("netty websocket server  启动完毕..端口是" + ConfigConstants.WEB_SOCKET_PORT());
     }
 
     public void restart() throws Exception {
