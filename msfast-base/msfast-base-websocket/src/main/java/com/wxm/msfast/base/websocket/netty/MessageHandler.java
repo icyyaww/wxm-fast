@@ -13,6 +13,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.SocketAddress;
+
 @Component
 public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
@@ -20,6 +22,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     //客户端与服务器建立连接的时候触发，
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        SocketAddress socketAddress = ctx.channel().remoteAddress();
+        //System.out.println(socketAddress);
         System.out.println("与客户端建立连接，通道开启！关联数量为" + ChannelMap.getManager().size());
     }
 

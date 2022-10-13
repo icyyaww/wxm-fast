@@ -51,6 +51,7 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
             throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
         }
 
+        frUserEntity.setStatus(FrUserStatus.ENABLE);
         this.frUserService.save(frUserEntity);
     }
 
