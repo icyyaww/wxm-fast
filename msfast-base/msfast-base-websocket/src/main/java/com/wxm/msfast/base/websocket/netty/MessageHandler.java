@@ -6,33 +6,57 @@ import com.wxm.msfast.base.common.utils.SpringBeanUtils;
 import com.wxm.msfast.base.websocket.common.enums.MessageTypeEnum;
 import com.wxm.msfast.base.websocket.common.rest.request.WebSocketMessage;
 import com.wxm.msfast.base.websocket.service.IWebSocketService;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.SocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 
+
+    private final ChannelFutureListener remover = new ChannelFutureListener() {
+        @Override
+        public void operationComplete(ChannelFuture future) throws Exception {
+            // 移除用户与channel的关联
+            ChannelMap.getManager().entrySet().removeIf(p -> p.getValue().equals(future.channel()));
+            ChannelMap.getOnline().entrySet().removeIf(p -> p.getValue().equals(future.channel()));
+            System.out.println("channel关闭监听，用户连接数量：" + ChannelMap.getManager().size() + "在线客户端数：" + ChannelMap.getOnline().size());
+        }
+    };
+
     //客户端与服务器建立连接的时候触发，
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+
+        //增加关闭监听
+        ctx.channel().closeFuture().addListener(remover);
         SocketAddress socketAddress = ctx.channel().remoteAddress();
-        //System.out.println(socketAddress);
-        System.out.println("与客户端建立连接，通道开启！关联数量为" + ChannelMap.getManager().size());
+        String ip = socketAddress.toString().replaceAll("/", "");
+        ip = ip.substring(0, ip.indexOf(":"));
+
+        //将相同ip的管道关闭 防止资源占用
+        Channel channel = ChannelMap.getOnline().get(ip);
+        if (channel != null) {
+            channel.close();
+        }
+        ChannelMap.getOnline().put(ip, ctx.channel());
+        System.out.println("与客户端建立连接, 客户端ip:" + ip + "，通道开启！ 用户连接数量：" + ChannelMap.getManager().size() + " 在线客户端数：" + ChannelMap.getOnline().size());
     }
 
     //客户端与服务器关闭连接的时候触发，
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        // 移除用户与channel的关联
-        ChannelMap.getManager().entrySet().removeIf(p -> p.getValue().equals(ctx.channel()));
-        System.out.println("channel关闭后，关联数量为" + ChannelMap.getManager().size());
+
     }
 
 

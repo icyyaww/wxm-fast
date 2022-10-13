@@ -3,6 +3,7 @@ package com.wxm.msfast.base.websocket.netty;
 import io.netty.channel.Channel;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author liuhm
@@ -12,9 +13,12 @@ public class ChannelMap {
 
     private static HashMap<Integer, Channel> manager = new HashMap<>();
 
+    private static Map<String, Channel> online = new HashMap<>();
+
     public static void put(Integer key, Channel channel) {
         manager.put(key, channel);
     }
+
 
     public static Channel get(Integer key) {
         return manager.get(key);
@@ -22,5 +26,17 @@ public class ChannelMap {
 
     public static HashMap<Integer, Channel> getManager() {
         return manager;
+    }
+
+    public static void putOnline(String key, Channel channel) {
+        online.put(key, channel);
+    }
+
+    public static Channel getOnline(String key) {
+        return online.get(key);
+    }
+
+    public static Map<String, Channel> getOnline() {
+        return online;
     }
 }
