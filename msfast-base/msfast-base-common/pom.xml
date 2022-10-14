@@ -28,6 +28,7 @@
         <swagger.bootstrap.ui.version>1.9.1</swagger.bootstrap.ui.version>
         <aliyun.java.sdk.sms.version>3.0.0-rc1</aliyun.java.sdk.sms.version>
         <aliyun.java.sdk.core.version>4.5.0</aliyun.java.sdk.core.version>
+        <org.redisson.redisson.version>3.17.7</org.redisson.redisson.version>
     </properties>
 
     <dependencies>
@@ -116,6 +117,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <!-- redis 分布式锁框架 -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>${org.redisson.redisson.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>

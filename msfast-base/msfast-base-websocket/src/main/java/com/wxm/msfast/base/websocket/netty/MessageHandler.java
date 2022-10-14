@@ -45,11 +45,11 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         ip = ip.substring(0, ip.indexOf(":"));
 
         //将相同ip的管道关闭 防止资源占用
-        Channel channel = ChannelMap.getOnline().get(ip);
+        /*Channel channel = ChannelMap.getOnline().get(ip);
         if (channel != null) {
             channel.close();
         }
-        ChannelMap.getOnline().put(ip, ctx.channel());
+        ChannelMap.getOnline().put(ip, ctx.channel());*/
         System.out.println("与客户端建立连接, 客户端ip:" + ip + "，通道开启！ 用户连接数量：" + ChannelMap.getManager().size() + " 在线客户端数：" + ChannelMap.getOnline().size());
     }
 
