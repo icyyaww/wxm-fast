@@ -59,4 +59,5 @@ public class FrUserController {
     public R<List<String>> message() {
         return R.ok(frUserService.message());
     }
+
 }
