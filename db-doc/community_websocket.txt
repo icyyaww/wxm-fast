@@ -1,0 +1,7 @@
+视频匹配
+1 建立连接 ws://127.0.0.1:8888/ws
+2 连接建立成功后立刻发送连接请求 发送一次 {"messageType":"CONNECT","info":"1"}
+3 发送匹配请求 每秒发送一次 {"messageType":"MATCHING","info":"{'type':'ORDINARY', 'userId':1 }"}  ORDINARY("普通匹配"),SENIOR("高级匹配")
+
+
+

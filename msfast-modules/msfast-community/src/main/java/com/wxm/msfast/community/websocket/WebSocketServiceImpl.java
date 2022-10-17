@@ -9,6 +9,7 @@ import com.wxm.msfast.base.websocket.service.IWebSocketService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.enums.MessageTypeEnum;
+import com.wxm.msfast.community.common.type.MatchingType;
 import com.wxm.msfast.community.common.type.MessageInfo;
 import io.netty.channel.Channel;
 import org.apache.commons.lang.StringUtils;
@@ -43,12 +44,14 @@ public class WebSocketServiceImpl implements IWebSocketService {
         MessageInfo message = JSON.parseObject(text, MessageInfo.class);
         if (MessageTypeEnum.MATCHING.equals(message.getMessageType())) {
             if (StringUtils.isNotBlank(message.getInfo())) {
-                Channel connect = ChannelMap.get(Integer.parseInt(message.getInfo()));
+                String info = message.getInfo().replaceAll("'", "\"");
+                MatchingType matchingType = JSON.parseObject(info, MatchingType.class);
+                Channel connect = ChannelMap.get(matchingType.getUserId());
                 if (connect == null) {
                     ChannelUtil.sendText(channel, "未绑定连接");
                 } else {
                     //开始匹配
-                    matching(message.getInfo());
+                    matching(matchingType);
                    /* RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
                     try {
                         //开始匹配
@@ -62,17 +65,17 @@ public class WebSocketServiceImpl implements IWebSocketService {
         }
     }
 
-    private void matching(String userId) {
-        redisService.setCacheObject(Constants.MATCHING + userId, userId, 10l, TimeUnit.MINUTES);
-        Collection<String> keys = redisService.keys(Constants.MATCHING+"*");
+    private void matching(MatchingType matchingType) {
+        redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 10l, TimeUnit.MINUTES);
+        Collection<String> keys = redisService.keys(Constants.MATCHING + "*");
         if (CollectionUtil.isNotEmpty(keys)) {
             keys.forEach(model -> {
-                if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + userId)) {
-                    Channel channel = ChannelMap.get(Integer.valueOf(userId));
+                if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {
+                    Channel channel = ChannelMap.get(Integer.valueOf(matchingType.getUserId()));
                     Channel channelMatch = ChannelMap.get(Integer.valueOf(model.substring(Constants.MATCHING.length())));
                     if (channel != null && channelMatch != null) {
                         ChannelUtil.sendText(channel, model.substring(Constants.MATCHING.length()));
-                        ChannelUtil.sendText(channelMatch, userId);
+                        ChannelUtil.sendText(channelMatch, matchingType.getUserId().toString());
                         return;
                     }
                 }
