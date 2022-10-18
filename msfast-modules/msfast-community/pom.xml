@@ -11,6 +11,9 @@
 
     <artifactId>msfast-community</artifactId>
 
+    <properties>
+
+    </properties>
     <dependencies>
         <!--服务必要依赖-->
         <dependency>

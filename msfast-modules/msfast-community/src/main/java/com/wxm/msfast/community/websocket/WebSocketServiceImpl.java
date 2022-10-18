@@ -36,9 +36,9 @@ public class WebSocketServiceImpl implements IWebSocketService {
     @Resource
     private RedisService redisService;
 
-  /*  @Autowired
-    RedissonClient redissonClient;*/
-
+   /* @Autowired
+    RedissonClient redissonClient;
+*/
     @Override
     public void read(Channel channel, String text) {
         MessageInfo message = JSON.parseObject(text, MessageInfo.class);
@@ -50,12 +50,12 @@ public class WebSocketServiceImpl implements IWebSocketService {
                 if (connect == null) {
                     ChannelUtil.sendText(channel, "未绑定连接");
                 } else {
-                    //开始匹配
                     matching(matchingType);
-                   /* RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
+              /*      RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
                     try {
+                        lock.lock();
                         //开始匹配
-                        matching(message.getInfo());
+                        matching(matchingType);
                     } finally {
                         lock.unlock();
                     }*/
@@ -66,7 +66,14 @@ public class WebSocketServiceImpl implements IWebSocketService {
     }
 
     private void matching(MatchingType matchingType) {
-        redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 10l, TimeUnit.MINUTES);
+
+
+        Long successTime = redisService.getExpire(Constants.MATCHING_SUCCESS + matchingType.getUserId(), TimeUnit.SECONDS);
+        if (successTime > 0) {
+            return;
+        }
+
+        redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
         Collection<String> keys = redisService.keys(Constants.MATCHING + "*");
         if (CollectionUtil.isNotEmpty(keys)) {
             keys.forEach(model -> {
@@ -74,8 +81,15 @@ public class WebSocketServiceImpl implements IWebSocketService {
                     Channel channel = ChannelMap.get(Integer.valueOf(matchingType.getUserId()));
                     Channel channelMatch = ChannelMap.get(Integer.valueOf(model.substring(Constants.MATCHING.length())));
                     if (channel != null && channelMatch != null) {
+                        //成功
                         ChannelUtil.sendText(channel, model.substring(Constants.MATCHING.length()));
                         ChannelUtil.sendText(channelMatch, matchingType.getUserId().toString());
+
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.SECONDS);
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.SECONDS);
+
+                        redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
+                        redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));
                         return;
                     }
                 }
