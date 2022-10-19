@@ -60,4 +60,12 @@ public class FrUserController {
         return R.ok(frUserService.message());
     }
 
+    @ApiOperation("开始匹配")
+    @ApiOperationSort(value = 5)
+    @GetMapping("/start/matching/{userId}")
+    public R<Void> startMatching(@PathVariable Integer userId) {
+        frUserService.startMatching(userId);
+        return R.ok();
+    }
+
 }

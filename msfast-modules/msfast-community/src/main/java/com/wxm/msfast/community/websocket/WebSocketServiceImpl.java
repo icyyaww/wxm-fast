@@ -85,8 +85,8 @@ public class WebSocketServiceImpl implements IWebSocketService {
                         ChannelUtil.sendText(channel, model.substring(Constants.MATCHING.length()));
                         ChannelUtil.sendText(channelMatch, matchingType.getUserId().toString());
 
-                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.SECONDS);
-                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.SECONDS);
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
 
                         redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
                         redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));

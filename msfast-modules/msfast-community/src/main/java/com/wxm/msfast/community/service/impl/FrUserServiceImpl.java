@@ -9,6 +9,8 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.enums.SysConfigEnum;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
@@ -35,6 +37,8 @@ import com.wxm.msfast.community.dao.FrUserDao;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrUserService;
 
+import javax.annotation.Resource;
+
 
 @Service("frUserService")
 public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> implements FrUserService {
@@ -44,6 +48,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     SysConfigService sysConfigService;
+
+    @Resource
+    private RedisService redisService;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -130,6 +137,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             return JSON.parseArray(value, String.class);
         }
         return null;
+    }
+
+    @Override
+    public void startMatching(Integer userId) {
+        redisService.deleteObject(Constants.MATCHING_SUCCESS + userId);
     }
 
 }
