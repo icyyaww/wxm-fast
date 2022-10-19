@@ -36,9 +36,9 @@ public class WebSocketServiceImpl implements IWebSocketService {
     @Resource
     private RedisService redisService;
 
-   /* @Autowired
+    @Autowired
     RedissonClient redissonClient;
-*/
+
     @Override
     public void read(Channel channel, String text) {
         MessageInfo message = JSON.parseObject(text, MessageInfo.class);
@@ -50,15 +50,15 @@ public class WebSocketServiceImpl implements IWebSocketService {
                 if (connect == null) {
                     ChannelUtil.sendText(channel, "未绑定连接");
                 } else {
-                    matching(matchingType);
-              /*      RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
+
+                    RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
                     try {
                         lock.lock();
                         //开始匹配
                         matching(matchingType);
                     } finally {
                         lock.unlock();
-                    }*/
+                    }
 
                 }
             }
