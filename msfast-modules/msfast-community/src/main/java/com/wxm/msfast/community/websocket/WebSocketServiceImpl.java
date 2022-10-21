@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -63,6 +64,20 @@ public class WebSocketServiceImpl implements IWebSocketService {
                 }
             }
         }
+    }
+
+    @Override
+    public void close(Channel channel) {
+        Map.Entry<Integer, Channel> map = ChannelMap.getManager().entrySet().stream().filter(p -> p.getValue().equals(channel)).findFirst().orElse(null);
+        if (map != null) {
+            redisService.deleteObject(Constants.MATCHING + map.getKey());
+            redisService.deleteObject(Constants.MATCHING_SUCCESS + map.getKey());
+        }
+    }
+
+    @Override
+    public void connect(Channel channel) {
+
     }
 
     private void matching(MatchingType matchingType) {

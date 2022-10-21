@@ -50,6 +50,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.websocket.heartbeat-time:30}")
     private int heartBeatTime;
 
+    @Value("${wxmfast.config.websocket.only-one:false}")
+    private Boolean onlyOne;
+
 
     /**
      * @Description: 是否启用redis 默认false
@@ -139,6 +142,10 @@ public class ConfigConstants {
      */
     public static int HEART_BEAT_TIME() {
         return SpringUtils.getBean(ConfigConstants.class).getHeartBeatTime();
+    }
+
+    public static Boolean ONLY_ONE() {
+        return SpringUtils.getBean(ConfigConstants.class).getOnlyOne();
     }
 
 }
