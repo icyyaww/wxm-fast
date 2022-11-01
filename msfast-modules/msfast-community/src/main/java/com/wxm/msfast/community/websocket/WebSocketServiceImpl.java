@@ -9,12 +9,16 @@ import com.wxm.msfast.base.websocket.service.IWebSocketService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.enums.MessageTypeEnum;
+import com.wxm.msfast.community.common.rest.response.matching.MatchSuccessResponse;
 import com.wxm.msfast.community.common.type.MatchingType;
 import com.wxm.msfast.community.common.type.MessageInfo;
+import com.wxm.msfast.community.entity.FrUserEntity;
+import com.wxm.msfast.community.service.FrUserService;
 import io.netty.channel.Channel;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +43,9 @@ public class WebSocketServiceImpl implements IWebSocketService {
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    FrUserService frUserService;
 
     @Override
     public void read(Channel channel, String text) {
@@ -94,11 +101,25 @@ public class WebSocketServiceImpl implements IWebSocketService {
             keys.forEach(model -> {
                 if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {
                     Channel channel = ChannelMap.get(Integer.valueOf(matchingType.getUserId()));
-                    Channel channelMatch = ChannelMap.get(Integer.valueOf(model.substring(Constants.MATCHING.length())));
+                    Integer otherUserId = Integer.valueOf(model.substring(Constants.MATCHING.length()));
+                    Channel channelMatch = ChannelMap.get(otherUserId);
                     if (channel != null && channelMatch != null) {
                         //成功
-                        ChannelUtil.sendText(channel, model.substring(Constants.MATCHING.length()));
-                        ChannelUtil.sendText(channelMatch, matchingType.getUserId().toString());
+                        //todo 使用多线程优化 减少等待时间
+                        FrUserEntity otherUser = frUserService.getById(otherUserId);
+                        FrUserEntity selfUser = frUserService.getById(matchingType.getUserId());
+                        if (otherUser != null && selfUser != null) {
+                            MatchSuccessResponse matchSuccessResponse = new MatchSuccessResponse();
+                            BeanUtils.copyProperties(otherUser, matchSuccessResponse);
+                            matchSuccessResponse.setHeadPortraitSelf(selfUser.getHeadPortrait());
+                            ChannelUtil.sendText(channel, JSON.toJSONString(matchSuccessResponse));
+
+                            MatchSuccessResponse matchSuccessOther = new MatchSuccessResponse();
+                            BeanUtils.copyProperties(selfUser, matchSuccessOther);
+                            matchSuccessOther.setHeadPortraitSelf(otherUser.getHeadPortrait());
+                            ChannelUtil.sendText(channelMatch, JSON.toJSONString(matchSuccessOther));
+
+                        }
 
                         redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
                         redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
