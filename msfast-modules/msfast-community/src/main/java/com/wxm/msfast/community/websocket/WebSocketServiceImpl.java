@@ -112,11 +112,13 @@ public class WebSocketServiceImpl implements IWebSocketService {
                             MatchSuccessResponse matchSuccessResponse = new MatchSuccessResponse();
                             BeanUtils.copyProperties(otherUser, matchSuccessResponse);
                             matchSuccessResponse.setHeadPortraitSelf(selfUser.getHeadPortrait());
+                            matchSuccessResponse.setMessage("恭喜你");
                             ChannelUtil.sendText(channel, JSON.toJSONString(matchSuccessResponse));
 
                             MatchSuccessResponse matchSuccessOther = new MatchSuccessResponse();
                             BeanUtils.copyProperties(selfUser, matchSuccessOther);
                             matchSuccessOther.setHeadPortraitSelf(otherUser.getHeadPortrait());
+                            matchSuccessOther.setMessage("恭喜你");
                             ChannelUtil.sendText(channelMatch, JSON.toJSONString(matchSuccessOther));
 
                         }
