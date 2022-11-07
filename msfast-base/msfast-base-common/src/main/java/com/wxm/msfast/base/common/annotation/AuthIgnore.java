@@ -1,4 +1,4 @@
-package com.wxm.msfast.base.auth.annotation;
+package com.wxm.msfast.base.common.annotation;
 
 import java.lang.annotation.*;
 

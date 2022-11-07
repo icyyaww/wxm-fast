@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.file.controller;
 
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.file.rest.response.FileResponse;
 import com.wxm.msfast.base.file.service.IFileService;
@@ -41,6 +42,7 @@ public class FileController {
      */
     @PostMapping("/upload")
     @ApiOperation(value = "文件上传")
+    @AuthIgnore
     public R<FileResponse> upload(@RequestPart MultipartFile file) throws Exception {
 
         try {

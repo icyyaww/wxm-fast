@@ -1,7 +1,6 @@
 package com.wxm.msfast.base.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
@@ -10,6 +9,7 @@ import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.ViolationUtils;
 import com.wxm.msfast.base.common.web.domain.R;

@@ -1,17 +1,16 @@
 package com.wxm.msfast.community.controller;
 
-import com.wxm.msfast.base.auth.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
-import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.service.TestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @program: wxm-fast

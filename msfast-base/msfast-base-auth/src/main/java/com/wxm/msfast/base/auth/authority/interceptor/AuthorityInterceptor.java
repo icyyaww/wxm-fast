@@ -2,9 +2,9 @@ package com.wxm.msfast.base.auth.authority.interceptor;
 
 
 import cn.hutool.core.util.ObjectUtil;
-import com.wxm.msfast.base.auth.annotation.AuthIgnore;
 import com.wxm.msfast.base.auth.authority.service.TokenValidService;
 import com.wxm.msfast.base.auth.service.TokenService;
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
