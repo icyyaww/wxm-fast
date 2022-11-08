@@ -1,6 +1,6 @@
 package com.wxm.msfast.demo.controller;
 
-import com.wxm.msfast.base.auth.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.JwtUtils;
