@@ -38,6 +38,11 @@ public class JrsfException extends RuntimeException {
         return this;
     }
 
+    public JrsfException setMsg(String msg) {
+        this.message = msg;
+        return this;
+    }
+
     public Object getData() {
         return data;
     }

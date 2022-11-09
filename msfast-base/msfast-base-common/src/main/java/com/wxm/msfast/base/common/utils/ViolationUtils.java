@@ -27,7 +27,7 @@ public class ViolationUtils {
             validate.forEach(model -> {
                 errorMap.put(model.getPropertyPath().toString(), model.getMessage());
             });
-            throw new JrsfException(BaseExceptionEnum.VALID_EXCEPTION).setData(errorMap);
+            throw new JrsfException(BaseExceptionEnum.VALID_EXCEPTION).setData(errorMap).setMsg(errorMap.values().toArray()[0].toString());
         }
     }
 }

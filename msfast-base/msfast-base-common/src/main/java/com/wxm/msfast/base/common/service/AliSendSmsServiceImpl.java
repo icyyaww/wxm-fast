@@ -59,7 +59,7 @@ public class AliSendSmsServiceImpl implements ISendSmsService {
         try {
             response = client.getCommonResponse(request);
         } catch (ClientException e) {
-            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(e.getErrMsg());
+            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setMsg(e.getErrMsg());
         }
         if (response == null)
             throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION);
@@ -69,10 +69,10 @@ public class AliSendSmsServiceImpl implements ISendSmsService {
             AliMsgErrCode[] aliMsgErrCodes = AliMsgErrCode.values();
             for (AliMsgErrCode aliMsgErrCode : aliMsgErrCodes) {
                 if (aliMsgErrCode.getMsg().equalsIgnoreCase(code)) {
-                    throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(aliMsgErrCode.name());
+                    throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setMsg(aliMsgErrCode.name());
                 }
             }
-            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setData(jsonObject.getString("Message"));
+            throw new JrsfException(BaseExceptionEnum.SMS_EXCEPTION_EXCEPTION).setMsg(jsonObject.getString("Message"));
         }
 
 

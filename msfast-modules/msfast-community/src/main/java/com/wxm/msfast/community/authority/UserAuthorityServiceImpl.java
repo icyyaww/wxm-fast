@@ -41,10 +41,10 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
         BeanUtils.copyProperties(registerRequest, frUserEntity);
         Integer age = DateUtils.getAgeByBirth(registerRequest.getBirthday());
         if (age < 16) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setData("未满16周岁无法注册");
+            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("未满16周岁无法注册");
         }
         if (age > 100) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setData("超过100周岁无法注册");
+            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("超过100周岁无法注册");
         }
 
         if (this.frUserService.countByPhone(registerRequest.getPhone()) > 0l) {

@@ -37,7 +37,9 @@ public class ExceptionAdvice {
         bindingResult.getFieldErrors().forEach((fieldError -> {
             errorMap.put(fieldError.getField(), fieldError.getDefaultMessage());
         }));
-        return R.fail(BaseExceptionEnum.VALID_EXCEPTION.getCode(), BaseExceptionEnum.VALID_EXCEPTION.getMessage(), errorMap);
+
+        String msg = errorMap.values().toArray()[0].toString();
+        return R.fail(BaseExceptionEnum.VALID_EXCEPTION.getCode(), msg, errorMap);
     }
 
     @ExceptionHandler(value = NoSuchBeanDefinitionException.class)

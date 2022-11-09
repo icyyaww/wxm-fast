@@ -18,7 +18,7 @@ import javax.validation.constraints.Pattern;
 @Data
 public class SendSmsRequest {
 
-    @NotBlank
+    @NotBlank(message = "手机号不能为空")
     @Pattern(regexp = "^[0-9]{11}$", message = "手机号格式不正确")
     @ApiModelProperty("手机号")
     private String phone;
