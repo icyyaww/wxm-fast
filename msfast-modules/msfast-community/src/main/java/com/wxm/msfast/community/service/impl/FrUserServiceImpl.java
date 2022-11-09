@@ -8,6 +8,7 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.community.common.constant.Constants;
@@ -17,6 +18,7 @@ import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
+import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
 import com.wxm.msfast.community.service.SysConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -142,6 +144,19 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public void startMatching(Integer userId) {
         redisService.deleteObject(Constants.MATCHING_SUCCESS + userId);
+    }
+
+    @Override
+    public PersonalCenterResponse personalCenter() {
+
+        Integer loginUserId = TokenUtils.getOwnerId();
+        FrUserEntity frUserEntity = this.baseMapper.selectById(loginUserId);
+        if (frUserEntity == null) {
+            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+        PersonalCenterResponse personalCenterResponse = new PersonalCenterResponse();
+        BeanUtils.copyProperties(frUserEntity, personalCenterResponse);
+        return personalCenterResponse;
     }
 
 }

@@ -65,5 +65,7 @@ public class FrUserEntity extends BaseEntity {
     @TableField("status")
     private FrUserStatus status;
 
+    @TableField("gold_balance")
+    private Integer goldBalance;
 
 }

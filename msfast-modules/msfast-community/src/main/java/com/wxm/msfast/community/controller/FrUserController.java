@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
+import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
 import com.wxm.msfast.community.service.FrUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,4 +69,10 @@ public class FrUserController {
         return R.ok();
     }
 
+    @ApiOperation("我的-个人中心")
+    @ApiOperationSort(value = 6)
+    @GetMapping("/personalCenter}")
+    public R<PersonalCenterResponse> personalCenter() {
+        return R.ok(frUserService.personalCenter());
+    }
 }

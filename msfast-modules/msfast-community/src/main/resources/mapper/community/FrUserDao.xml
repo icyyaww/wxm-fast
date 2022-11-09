@@ -21,6 +21,7 @@
         <result property="lat" column="lat"/>
         <result property="city" column="city"/>
         <result property="gender" column="gender"/>
+        <result property="goldBalance" column="gold_balance"/>
     </resultMap>
 
     <resultMap id="dynamicUserResponse" type="com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse">

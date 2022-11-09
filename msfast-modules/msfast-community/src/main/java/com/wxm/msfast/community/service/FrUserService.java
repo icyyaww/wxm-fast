@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.utils.PageUtils;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
+import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;
 
 import java.util.List;
@@ -47,5 +48,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     List<String> message();
 
     void startMatching(Integer userId);
+
+    PersonalCenterResponse personalCenter();
 }
 
