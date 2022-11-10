@@ -71,7 +71,7 @@ public class FrUserController {
 
     @ApiOperation("我的-个人中心")
     @ApiOperationSort(value = 6)
-    @GetMapping("/personalCenter}")
+    @GetMapping("/personalCenter")
     public R<PersonalCenterResponse> personalCenter() {
         return R.ok(frUserService.personalCenter());
     }
