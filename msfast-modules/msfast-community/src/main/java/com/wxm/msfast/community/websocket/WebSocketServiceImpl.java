@@ -13,6 +13,7 @@ import com.wxm.msfast.community.common.rest.response.matching.MatchSuccessRespon
 import com.wxm.msfast.community.common.type.MatchingType;
 import com.wxm.msfast.community.common.type.MessageInfo;
 import com.wxm.msfast.community.entity.FrUserEntity;
+import com.wxm.msfast.community.service.AsyncService;
 import com.wxm.msfast.community.service.FrUserService;
 import io.netty.channel.Channel;
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +47,12 @@ public class WebSocketServiceImpl implements IWebSocketService {
     @Autowired
     FrUserService frUserService;
 
+    @Autowired
+    ChannelUtil channelUtil;
+
+    @Autowired
+    AsyncService asyncService;
+
     @Override
     public void read(Channel channel, String text) {
         MessageInfo message = JSON.parseObject(text, MessageInfo.class);
@@ -56,7 +62,7 @@ public class WebSocketServiceImpl implements IWebSocketService {
                 MatchingType matchingType = JSON.parseObject(info, MatchingType.class);
                 Channel connect = ChannelMap.get(matchingType.getUserId());
                 if (connect == null) {
-                    ChannelUtil.sendText(channel, "未绑定连接");
+                    channelUtil.sendText(channel, "未绑定连接");
                 } else {
 
                     RLock lock = redissonClient.getLock(Constants.MATCHING_LOCK);
@@ -94,42 +100,22 @@ public class WebSocketServiceImpl implements IWebSocketService {
         if (successTime > 0) {
             return;
         }
-
         redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
         Collection<String> keys = redisService.keys(Constants.MATCHING + "*");
         if (CollectionUtil.isNotEmpty(keys)) {
             keys.forEach(model -> {
                 if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {
-                    Channel channel = ChannelMap.get(Integer.valueOf(matchingType.getUserId()));
+
                     Integer otherUserId = Integer.valueOf(model.substring(Constants.MATCHING.length()));
-                    Channel channelMatch = ChannelMap.get(otherUserId);
-                    if (channel != null && channelMatch != null) {
-                        //成功
-                        //todo 使用多线程优化 减少等待时间 通过redis发布订阅来查询发送
-                        FrUserEntity otherUser = frUserService.getById(otherUserId);
-                        FrUserEntity selfUser = frUserService.getById(matchingType.getUserId());
-                        if (otherUser != null && selfUser != null) {
-                            MatchSuccessResponse matchSuccessResponse = new MatchSuccessResponse();
-                            BeanUtils.copyProperties(otherUser, matchSuccessResponse);
-                            matchSuccessResponse.setHeadPortraitSelf(selfUser.getHeadPortrait());
-                            matchSuccessResponse.setMessage("恭喜你,匹配成功");
-                            ChannelUtil.sendText(channel, JSON.toJSONString(matchSuccessResponse));
+                    //成功
+                    //异步发送通知消息
+                    asyncService.sendMatchMessage(otherUserId, matchingType.getUserId());
 
-                            MatchSuccessResponse matchSuccessOther = new MatchSuccessResponse();
-                            BeanUtils.copyProperties(selfUser, matchSuccessOther);
-                            matchSuccessOther.setHeadPortraitSelf(otherUser.getHeadPortrait());
-                            matchSuccessOther.setMessage("恭喜你,匹配成功");
-                            ChannelUtil.sendText(channelMatch, JSON.toJSONString(matchSuccessOther));
+                    redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
+                    redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
 
-                        }
-
-                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
-                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
-
-                        redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
-                        redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));
-                        return;
-                    }
+                    redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
+                    redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));
                 }
             });
         }
