@@ -63,9 +63,9 @@ public class FrUserController {
 
     @ApiOperation("开始匹配")
     @ApiOperationSort(value = 5)
-    @GetMapping("/start/matching/{userId}")
-    public R<Void> startMatching(@PathVariable Integer userId) {
-        frUserService.startMatching(userId);
+    @GetMapping("/start/matching")
+    public R<Void> startMatching() {
+        frUserService.startMatching();
         return R.ok();
     }
 

@@ -105,20 +105,20 @@ public class WebSocketServiceImpl implements IWebSocketService {
                     Channel channelMatch = ChannelMap.get(otherUserId);
                     if (channel != null && channelMatch != null) {
                         //成功
-                        //todo 使用多线程优化 减少等待时间
+                        //todo 使用多线程优化 减少等待时间 通过redis发布订阅来查询发送
                         FrUserEntity otherUser = frUserService.getById(otherUserId);
                         FrUserEntity selfUser = frUserService.getById(matchingType.getUserId());
                         if (otherUser != null && selfUser != null) {
                             MatchSuccessResponse matchSuccessResponse = new MatchSuccessResponse();
                             BeanUtils.copyProperties(otherUser, matchSuccessResponse);
                             matchSuccessResponse.setHeadPortraitSelf(selfUser.getHeadPortrait());
-                            matchSuccessResponse.setMessage("恭喜你");
+                            matchSuccessResponse.setMessage("恭喜你,匹配成功");
                             ChannelUtil.sendText(channel, JSON.toJSONString(matchSuccessResponse));
 
                             MatchSuccessResponse matchSuccessOther = new MatchSuccessResponse();
                             BeanUtils.copyProperties(selfUser, matchSuccessOther);
                             matchSuccessOther.setHeadPortraitSelf(otherUser.getHeadPortrait());
-                            matchSuccessOther.setMessage("恭喜你");
+                            matchSuccessOther.setMessage("恭喜你,匹配成功");
                             ChannelUtil.sendText(channelMatch, JSON.toJSONString(matchSuccessOther));
 
                         }

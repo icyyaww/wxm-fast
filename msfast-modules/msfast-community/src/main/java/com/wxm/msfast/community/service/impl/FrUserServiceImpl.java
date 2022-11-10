@@ -142,8 +142,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
-    public void startMatching(Integer userId) {
-        redisService.deleteObject(Constants.MATCHING_SUCCESS + userId);
+    public void startMatching() {
+        redisService.deleteObject(Constants.MATCHING_SUCCESS + TokenUtils.getOwnerId());
     }
 
     @Override

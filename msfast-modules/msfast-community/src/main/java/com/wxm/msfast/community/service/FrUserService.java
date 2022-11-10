@@ -47,7 +47,7 @@ public interface FrUserService extends IService<FrUserEntity> {
      */
     List<String> message();
 
-    void startMatching(Integer userId);
+    void startMatching();
 
     PersonalCenterResponse personalCenter();
 }
