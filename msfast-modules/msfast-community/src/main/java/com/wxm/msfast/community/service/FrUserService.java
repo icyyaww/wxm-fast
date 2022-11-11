@@ -49,6 +49,8 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     void startMatching();
 
+    void endMatching();
+
     PersonalCenterResponse personalCenter();
 }
 

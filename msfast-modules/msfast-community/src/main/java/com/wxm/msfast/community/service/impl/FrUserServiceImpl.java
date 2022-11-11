@@ -147,6 +147,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
+    public void endMatching() {
+        redisService.deleteObject(Constants.MATCHING +TokenUtils.getOwnerId());
+    }
+
+    @Override
     public PersonalCenterResponse personalCenter() {
 
         Integer loginUserId = TokenUtils.getOwnerId();

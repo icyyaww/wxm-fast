@@ -75,4 +75,12 @@ public class FrUserController {
     public R<PersonalCenterResponse> personalCenter() {
         return R.ok(frUserService.personalCenter());
     }
+
+    @ApiOperation("结束匹配")
+    @ApiOperationSort(value = 7)
+    @GetMapping("/end/matching")
+    public R<Void> endMatching() {
+        frUserService.endMatching();
+        return R.ok();
+    }
 }
