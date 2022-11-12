@@ -3,6 +3,8 @@ package com.wxm.msfast.community.common.rest.response.user;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class PersonalCenterResponse {
 
@@ -17,4 +19,16 @@ public class PersonalCenterResponse {
 
     @ApiModelProperty(value = "余额")
     private Integer goldBalance;
+
+    @ApiModelProperty(value = "动态数")
+    private Long blogCount;
+
+    @ApiModelProperty(value = "关注数")
+    private Long followCount;
+
+    @ApiModelProperty(value = "粉丝")
+    private Long fansCount;
+
+    @ApiModelProperty(value = "我的动态")
+    private List<PersonalCenterBlogResponse> blog;
 }
