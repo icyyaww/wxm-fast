@@ -1,10 +1,7 @@
 package com.wxm.msfast.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.base.common.utils.PageUtils;
 import com.wxm.msfast.community.entity.FrUserFollowEntity;
-
-import java.util.Map;
 
 /**
  * 前台用户关注关系
@@ -15,6 +12,5 @@ import java.util.Map;
  */
 public interface FrUserFollowService extends IService<FrUserFollowEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
 }
 
