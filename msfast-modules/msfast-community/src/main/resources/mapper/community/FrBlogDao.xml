@@ -14,7 +14,7 @@
         <result property="version" column="version"/>
         <result property="userId" column="user_id"/>
         <result property="content" column="content"/>
-        <result property="images" column="images"/>
+        <result property="images" column="images" typeHandler="com.wxm.msfast.community.common.type.BlogImageListTypeHandler"/>
     </resultMap>
 
 

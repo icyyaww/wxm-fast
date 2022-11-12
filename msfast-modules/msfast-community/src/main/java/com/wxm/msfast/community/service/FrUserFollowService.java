@@ -12,5 +12,22 @@ import com.wxm.msfast.community.entity.FrUserFollowEntity;
  */
 public interface FrUserFollowService extends IService<FrUserFollowEntity> {
 
+    /*
+     * @Author 我关注数
+     * @Description  
+     * @Date 17:28 2022/11/12
+     * @Param 
+     * @return 
+     **/
+    Long followUserCount();
+
+    /*
+     * @Author 粉丝数
+     * @Description  
+     * @Date 19:13 2022/11/12
+     * @Param 
+     * @return 
+     **/
+    Long fansCount();
 }
 

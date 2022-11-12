@@ -19,7 +19,7 @@ import java.util.Date;
  * @date ${datetime}
  */
 @Data
-@TableName("${tableName}")
+@TableName(value = "${tableName}", autoResultMap = true)
 public class ${className}Entity extends BaseEntity {
 
 

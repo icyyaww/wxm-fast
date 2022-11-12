@@ -19,6 +19,8 @@ import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
+import com.wxm.msfast.community.service.FrBlogService;
+import com.wxm.msfast.community.service.FrUserFollowService;
 import com.wxm.msfast.community.service.SysConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -51,18 +53,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Autowired
     SysConfigService sysConfigService;
 
+    @Autowired
+    FrBlogService frBlogService;
+
+    @Autowired
+    FrUserFollowService frUserFollowService;
+
     @Resource
     private RedisService redisService;
 
-    @Override
-    public PageUtils queryPage(Map<String, Object> params) {
-        IPage<FrUserEntity> page = this.page(
-                new Query<FrUserEntity>().getPage(params),
-                new QueryWrapper<FrUserEntity>()
-        );
-
-        return new PageUtils(page);
-    }
 
     /**
      * @Description: 根据手机号查询数量
@@ -148,7 +147,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Override
     public void endMatching() {
-        redisService.deleteObject(Constants.MATCHING +TokenUtils.getOwnerId());
+        redisService.deleteObject(Constants.MATCHING + TokenUtils.getOwnerId());
     }
 
     @Override
@@ -161,6 +160,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         }
         PersonalCenterResponse personalCenterResponse = new PersonalCenterResponse();
         BeanUtils.copyProperties(frUserEntity, personalCenterResponse);
+
+        personalCenterResponse.setBlogCount(this.frBlogService.userBlogCount());
+        personalCenterResponse.setFollowCount(this.frUserFollowService.followUserCount());
+        personalCenterResponse.setFansCount(this.frUserFollowService.fansCount());
         return personalCenterResponse;
     }
 

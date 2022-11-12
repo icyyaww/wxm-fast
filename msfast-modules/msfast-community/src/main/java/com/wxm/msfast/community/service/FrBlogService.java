@@ -14,5 +14,13 @@ import java.util.Map;
  */
 public interface FrBlogService extends IService<FrBlogEntity> {
 
+    /*
+     * @Author 用户发布的动态数量
+     * @Description
+     * @Date 17:12 2022/11/12
+     * @Param
+     * @return
+     **/
+    Long userBlogCount();
 }
 

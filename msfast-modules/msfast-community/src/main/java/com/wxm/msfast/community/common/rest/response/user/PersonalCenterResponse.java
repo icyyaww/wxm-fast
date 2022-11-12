@@ -17,6 +17,9 @@ public class PersonalCenterResponse {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
+    @ApiModelProperty(value = "ip地址")
+    private String city;
+
     @ApiModelProperty(value = "余额")
     private Integer goldBalance;
 

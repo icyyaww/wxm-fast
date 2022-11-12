@@ -19,8 +19,6 @@ import java.util.Map;
  */
 public interface FrUserService extends IService<FrUserEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
-
     Long countByPhone(String phone);
 
     FrUserEntity getFrUserByPhone(String phone);
