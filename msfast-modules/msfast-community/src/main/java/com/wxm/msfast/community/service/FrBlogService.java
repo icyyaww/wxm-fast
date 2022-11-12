@@ -1,8 +1,10 @@
 package com.wxm.msfast.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.community.common.rest.response.user.PersonalCenterBlogResponse;
 import com.wxm.msfast.community.entity.FrBlogEntity;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,5 +24,14 @@ public interface FrBlogService extends IService<FrBlogEntity> {
      * @return
      **/
     Long userBlogCount();
+
+    /*
+     * @Author 查询个人中心的日志预览
+     * @Description
+     * @Date 20:13 2022/11/12
+     * @Param
+     * @return
+     **/
+    List<PersonalCenterBlogResponse> getPersonalBlogImage();
 }
 

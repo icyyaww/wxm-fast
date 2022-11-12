@@ -19,7 +19,6 @@ import java.util.List;
 @TableName(value = "fr_blog", autoResultMap = true)
 public class FrBlogEntity extends BaseEntity {
 
-
     /**
      * 前台用户id
      */

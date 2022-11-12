@@ -164,6 +164,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         personalCenterResponse.setBlogCount(this.frBlogService.userBlogCount());
         personalCenterResponse.setFollowCount(this.frUserFollowService.followUserCount());
         personalCenterResponse.setFansCount(this.frUserFollowService.fansCount());
+
+        personalCenterResponse.setBlog(frBlogService.getPersonalBlogImage());
         return personalCenterResponse;
     }
 
