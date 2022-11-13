@@ -1,7 +1,7 @@
 package com.wxm.msfast.community.common.rest.request.user;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
+import com.wxm.msfast.base.file.annotation.FileSave;
 import com.wxm.msfast.community.common.enums.GenderEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,17 +22,17 @@ import java.util.Date;
 @Data
 public class UserRegisterRequest extends RegisterRequest {
 
-
     /**
      * 头像
      */
     @ApiModelProperty(value = "头像")
+    @FileSave
     private String headPortrait;
     /**
      * 昵称
      */
     @ApiModelProperty(value = "昵称")
-    @Length(min = 1,max = 8)
+    @Length(min = 1, max = 8)
     @NotBlank
     private String nickName;
     /**
