@@ -1,11 +1,14 @@
-package com.wxm.msfast.base.file.service;
-
+package com.wxm.msfast.base.file.service.impl;
 
 import com.wxm.msfast.base.file.config.MinioConfig;
+import com.wxm.msfast.base.file.service.IFileService;
+import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.FileUploadUtils;
+import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +22,7 @@ import java.net.URLEncoder;
  *
  * @author ruoyi
  */
+@Primary
 @Service
 public class MinioFileServiceImpl implements IFileService {
 
@@ -27,6 +31,9 @@ public class MinioFileServiceImpl implements IFileService {
 
     @Autowired
     private MinioClient client;
+
+    @Autowired
+    private MsfFileService fileService;
 
     /**
      * 本地文件上传接口
@@ -37,6 +44,7 @@ public class MinioFileServiceImpl implements IFileService {
      */
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
+
         String fileName = FileUploadUtils.extractFilename(file);
         PutObjectArgs args = PutObjectArgs.builder()
                 .bucket(minioConfig.getBucketName())
@@ -45,7 +53,10 @@ public class MinioFileServiceImpl implements IFileService {
                 .contentType(file.getContentType())
                 .build();
         client.putObject(args);
-        return minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + fileName;
+        String url = minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + fileName;
+        //保存文件 此时文件时临时文件 会被定期删除
+        fileService.saveFile(url, FileUtils.getName(file.getOriginalFilename()));
+        return url;
     }
 
     /**

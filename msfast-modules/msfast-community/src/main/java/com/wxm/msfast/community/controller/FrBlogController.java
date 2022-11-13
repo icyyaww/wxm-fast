@@ -4,15 +4,16 @@ package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.entity.FrBlogEntity;
+import com.wxm.msfast.community.service.FrBlogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.wxm.msfast.community.service.FrBlogService;
 
 
 /**

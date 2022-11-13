@@ -4,24 +4,17 @@ import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.file.rest.response.FileResponse;
 import com.wxm.msfast.base.file.service.IFileService;
+import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.FileUtils;
-import io.minio.GetObjectArgs;
-import io.minio.StatObjectArgs;
-import io.minio.StatObjectResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
 
 /**
  * 文件请求处理

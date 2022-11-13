@@ -1,6 +1,6 @@
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.wxm.msfast.community.MsfastCommunityApplication;
+import com.wxm.msfast.MsfastCommunityApplication;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.entity.SysConfigEntity;
 import com.wxm.msfast.community.service.FrUserService;
