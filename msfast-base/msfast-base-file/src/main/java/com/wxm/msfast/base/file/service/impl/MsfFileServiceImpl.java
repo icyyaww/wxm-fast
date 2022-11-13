@@ -5,6 +5,7 @@ import com.wxm.msfast.base.file.common.enums.FileStatusEnum;
 import com.wxm.msfast.base.file.dao.MsfFileDao;
 import com.wxm.msfast.base.file.entity.MsfFileEntity;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
 
     @Override
     @Transactional
+    @Async
     public void saveFile(String url, String fileName) {
         MsfFileEntity msfFileEntity = new MsfFileEntity();
         msfFileEntity.setUrl(url);
