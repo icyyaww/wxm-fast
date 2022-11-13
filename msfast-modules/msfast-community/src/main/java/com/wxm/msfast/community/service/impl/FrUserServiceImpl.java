@@ -2,15 +2,17 @@ package com.wxm.msfast.community.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
-import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.enums.SysConfigEnum;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
@@ -19,29 +21,21 @@ import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
+import com.wxm.msfast.community.dao.FrUserDao;
+import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrBlogService;
 import com.wxm.msfast.community.service.FrUserFollowService;
+import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.service.SysConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wxm.msfast.base.common.utils.PageUtils;
-import com.wxm.msfast.base.common.web.page.Query;
-
-import com.wxm.msfast.community.dao.FrUserDao;
-import com.wxm.msfast.community.entity.FrUserEntity;
-import com.wxm.msfast.community.service.FrUserService;
-
-import javax.annotation.Resource;
 
 
 @Service("frUserService")
@@ -151,6 +145,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
+    @FileSaveService
     public PersonalCenterResponse personalCenter() {
 
         Integer loginUserId = TokenUtils.getOwnerId();

@@ -1,16 +1,17 @@
 package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
+import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.service.TestService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: wxm-fast
@@ -27,6 +28,8 @@ public class TestController {
     @Autowired
     private TestService testService;
 
+    @Autowired
+    private FrUserService frUserService;
 
     @ApiOperation("删除前台用户")
     @ApiOperationSort(value = 1)
@@ -34,6 +37,16 @@ public class TestController {
     @AuthIgnore
     public R<Void> deleteFruser(@PathVariable Integer id) {
         testService.deleteFruser(id);
+        return R.ok();
+    }
+
+    @ApiOperation("保存用户信息")
+    @ApiOperationSort(value = 2)
+    @PostMapping("/save/fruser")
+    @AuthIgnore
+    public R<Void> saveFruser(@RequestBody UserRegisterRequest request) {
+
+        System.out.println("保存用户信息");
         return R.ok();
     }
 }

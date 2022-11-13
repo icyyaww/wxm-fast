@@ -9,6 +9,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -76,6 +77,12 @@ public class ExceptionAdvice {
     public R handleOptimisticLockerException(OptimisticLockerException e) {
         log.error("乐观锁更新失败：{}", e.getMessage());
         return R.fail(BaseExceptionEnum.OPTIMISTICLOCKER_EXCEPTION.getCode(), BaseExceptionEnum.OPTIMISTICLOCKER_EXCEPTION.getMessage());
+    }
+
+    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    public R handleOptimisticLockerException(HttpMessageNotReadableException e) {
+        log.error("请求内容字段格式转换错误：{}", e.getMessage());
+        return R.fail(BaseExceptionEnum.CONVERSION_EXCEPTION.getCode(), BaseExceptionEnum.CONVERSION_EXCEPTION.getMessage());
     }
 
     @ExceptionHandler(value = Throwable.class)

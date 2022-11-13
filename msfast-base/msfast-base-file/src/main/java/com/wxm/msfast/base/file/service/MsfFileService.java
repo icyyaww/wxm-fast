@@ -21,5 +21,17 @@ public interface MsfFileService extends IService<MsfFileEntity> {
      * @return
      **/
     void saveFile(String url, String fileName);
+
+    /*
+     * @Author wanglei
+     * @Description  临时文件持久化
+     * @Date 20:36 2022/11/13
+     * @Param
+     * @return
+     **/
+    void changeTempFile(Object object);
+
+    void changeTempFile(String url);
+
 }
 

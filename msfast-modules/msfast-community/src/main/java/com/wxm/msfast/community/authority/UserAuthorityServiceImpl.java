@@ -1,14 +1,13 @@
 package com.wxm.msfast.community.authority;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.msfast.base.auth.authority.service.AuthorityServiceImpl;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
-import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.base.file.annotation.FileSaveService;
+import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.community.common.enums.FrUserStatus;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
@@ -33,10 +32,13 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
     @Autowired
     FrUserService frUserService;
 
+    @Autowired
+    MsfFileService fileService;
+
     @Override
     @Transactional
+    @FileSaveService
     public void register(UserRegisterRequest registerRequest) {
-
         FrUserEntity frUserEntity = new FrUserEntity();
         BeanUtils.copyProperties(registerRequest, frUserEntity);
         Integer age = DateUtils.getAgeByBirth(registerRequest.getBirthday());
@@ -53,6 +55,9 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
 
         frUserEntity.setStatus(FrUserStatus.ENABLE);
         this.frUserService.save(frUserEntity);
+
+        //保存头像
+        fileService.changeTempFile(registerRequest.getHeadPortrait());
     }
 
     @Override

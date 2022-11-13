@@ -18,7 +18,6 @@ import lombok.Data;
 @TableName(value = "msf_file", autoResultMap = true)
 public class MsfFileEntity extends BaseEntity {
 
-
     /**
      * 是否是原图
      */
@@ -32,8 +31,8 @@ public class MsfFileEntity extends BaseEntity {
     /**
      * 文件名称
      */
-    @TableField("name")
-    private String name;
+    @TableField("file_name")
+    private String fileName;
     /**
      * 文件状态 TEMP-临时文件 SAVED-已保存的文件
      */

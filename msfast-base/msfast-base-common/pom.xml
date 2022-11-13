@@ -144,6 +144,10 @@
             <artifactId>swagger-bootstrap-ui</artifactId>
             <version>${swagger.bootstrap.ui.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!--阿里短信接口-->
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -155,7 +159,6 @@
             <artifactId>aliyun-java-sdk-core</artifactId>
             <version>${aliyun.java.sdk.core.version}</version>
         </dependency>
-
     </dependencies>
 
 </project>

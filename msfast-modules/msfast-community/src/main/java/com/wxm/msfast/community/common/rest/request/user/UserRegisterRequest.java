@@ -26,7 +26,6 @@ public class UserRegisterRequest extends RegisterRequest {
      * 头像
      */
     @ApiModelProperty(value = "头像")
-    @FileSave
     private String headPortrait;
     /**
      * 昵称

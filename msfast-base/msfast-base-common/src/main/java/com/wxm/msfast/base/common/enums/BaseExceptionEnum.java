@@ -23,8 +23,8 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     SMS_SENDED_EXCEPTION(10014, "验证码已发送"),
     SMS_CODE_ERROR_EXCEPTION(10015, "验证码错误"),
     SMS_CODE_NOT_EXIST_EXCEPTION(10016, "验证码不存在或已过期"),
-    PWD_NOT_SAME_EXCEPTION(10017,"两次密码输入不一致")
-    ;
+    PWD_NOT_SAME_EXCEPTION(10017, "两次密码输入不一致"),
+    CONVERSION_EXCEPTION(10018, "转换格式错误");
 
     private Integer code;
     private String msg;
