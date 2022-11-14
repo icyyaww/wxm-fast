@@ -3,6 +3,7 @@ package com.wxm.msfast.base.file.service.impl;
 import com.wxm.msfast.base.file.config.MinioConfig;
 import com.wxm.msfast.base.file.service.IFileService;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import com.wxm.msfast.base.file.utils.DelayTaskProducer;
 import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.Calendar;
 
 /**
  * Minio 文件存储
@@ -45,17 +47,17 @@ public class MinioFileServiceImpl implements IFileService {
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
 
-        String fileName = FileUploadUtils.extractFilename(file);
+        String filePath = FileUploadUtils.extractFilename(file);
         PutObjectArgs args = PutObjectArgs.builder()
                 .bucket(minioConfig.getBucketName())
-                .object(fileName)
+                .object(filePath)
                 .stream(file.getInputStream(), file.getSize(), -1)
                 .contentType(file.getContentType())
                 .build();
         client.putObject(args);
-        String url = minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + fileName;
-        //保存文件 此时文件时临时文件 会被定期删除
-        fileService.saveFile(url, FileUtils.getName(file.getOriginalFilename()));
+        String url = minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + filePath;
+        //保存文件 此时文件为临时文件 会被定期删除
+        fileService.saveFile(url,filePath, FileUtils.getName(file.getOriginalFilename()));
         return url;
     }
 
@@ -92,7 +94,7 @@ public class MinioFileServiceImpl implements IFileService {
     }
 
     /**
-     * @param filename
+     * @param filePath
      * @Description: 删除文件
      * @Param:
      * @return:
@@ -100,8 +102,8 @@ public class MinioFileServiceImpl implements IFileService {
      * @Date: 2022/9/9 下午3:39
      */
     @Override
-    public void deleteFile(String filename) throws Exception {
+    public void deleteFile(String filePath) throws Exception {
         client.removeObject(
-                RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filename).build());
+                RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filePath).build());
     }
 }

@@ -44,6 +44,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.file.name-length:100}")
     private int fileNameLength;
 
+    @Value("${wxmfast.config.file.temp-time:30}")
+    private int fileTempTime;
+
     @Value("${wxmfast.config.websocket.port:8888}")
     private int webSocketPort;
 
@@ -120,6 +123,17 @@ public class ConfigConstants {
      */
     public static int FILE_NAME_LENGTH() {
         return SpringUtils.getBean(ConfigConstants.class).getFileNameLength();
+    }
+
+    /*
+     * @Author wanglei
+     * @Description  上传文件临时保存时间 到期后会被删除 分钟
+     * @Date 21:26 2022/11/14
+     * @Param
+     * @return
+     **/
+    public static int FILE_TEMP_TIME() {
+        return SpringUtils.getBean(ConfigConstants.class).getFileTempTime();
     }
 
     /**

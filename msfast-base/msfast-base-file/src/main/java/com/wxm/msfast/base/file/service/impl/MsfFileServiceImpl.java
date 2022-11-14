@@ -4,33 +4,51 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.file.annotation.FileSave;
 import com.wxm.msfast.base.file.common.enums.FileStatusEnum;
+import com.wxm.msfast.base.file.config.MinioConfig;
 import com.wxm.msfast.base.file.dao.MsfFileDao;
 import com.wxm.msfast.base.file.entity.MsfFileEntity;
 import com.wxm.msfast.base.file.exception.TempFileNoExistException;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import com.wxm.msfast.base.file.utils.DelayTaskProducer;
+import io.minio.MinioClient;
+import io.minio.RemoveObjectArgs;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.Calendar;
 
 @Service("msfFileService")
 public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> implements MsfFileService {
 
+    @Autowired
+    private MinioClient client;
+
+    @Autowired
+    private MinioConfig minioConfig;
+
+
     @Override
     @Transactional
     @Async
-    public void saveFile(String url, String fileName) {
+    public void saveFile(String url, String filePath, String fileName) {
         MsfFileEntity msfFileEntity = new MsfFileEntity();
         msfFileEntity.setUrl(url);
         msfFileEntity.setOriginal(true);
         msfFileEntity.setFileName(fileName);
         msfFileEntity.setStatus(FileStatusEnum.TEMP);
         this.save(msfFileEntity);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, ConfigConstants.FILE_TEMP_TIME());//30分钟后文件删除
+        DelayTaskProducer.put(filePath, url, calendar.getTimeInMillis());
     }
 
     @Override
@@ -64,6 +82,34 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Retryable(value = TempFileNoExistException.class)
     public void changeTempFile(String url) {
         changeTempUrl(url);
+    }
+
+    @Override
+    @Async
+    @Transactional
+    public void deleteTempFile(String filePath, String url) {
+
+        try {
+            deleteFile(filePath);
+            Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
+                    .eq(MsfFileEntity::getUrl, url);
+            this.remove(wrapper);
+        } catch (Exception e) {
+        }
+    }
+
+    /**
+     * @param filePath
+     * @Description: 删除文件
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/9/9 下午3:39
+     */
+    @Override
+    public void deleteFile(String filePath) throws Exception {
+        client.removeObject(
+                RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filePath).build());
     }
 
     private void changeTempUrl(String url) {

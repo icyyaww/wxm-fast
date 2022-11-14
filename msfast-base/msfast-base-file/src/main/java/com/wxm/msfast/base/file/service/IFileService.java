@@ -39,5 +39,5 @@ public interface IFileService {
      * @Author: Mr.Wang
      * @Date: 2022/9/9 下午3:39
      */
-    void deleteFile(String filename) throws Exception;
+    void deleteFile(String filePath) throws Exception;
 }
