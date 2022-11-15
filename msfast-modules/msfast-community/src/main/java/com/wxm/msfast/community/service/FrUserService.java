@@ -75,5 +75,32 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @return
      **/
     PageResult<FollowPageResponse> fansPage(Integer pageIndex, Integer pageSize);
+
+    /*
+     * @Author wanglei
+     * @Description  取消关注
+     * @Date 20:40 2022/11/15
+     * @Param
+     * @return
+     **/
+    void cancelFollow(Integer id);
+
+    /*
+     * @Author wanglei
+     * @Description  关注用户
+     * @Date 20:46 2022/11/15
+     * @Param
+     * @return
+     **/
+    void followUser(Integer id);
+
+    /*
+     * @Author wanglei
+     * @Description  移除粉丝
+     * @Date 20:53 2022/11/15
+     * @Param
+     * @return
+     **/
+    void removeFans(Integer id);
 }
 

@@ -189,4 +189,19 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     }
 
+    @Override
+    public void cancelFollow(Integer id) {
+
+    }
+
+    @Override
+    public void followUser(Integer id) {
+
+    }
+
+    @Override
+    public void removeFans(Integer id) {
+
+    }
+
 }

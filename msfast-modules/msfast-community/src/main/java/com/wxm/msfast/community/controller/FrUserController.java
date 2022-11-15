@@ -4,11 +4,9 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.community.common.rest.request.user.EditPersonalDataRequest;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
-import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
-import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
-import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
-import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
+import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.service.FrUserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +88,7 @@ public class FrUserController {
             @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", defaultValue = "1"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "数量", defaultValue = "10")
     })
-    @ApiOperation("我的-个人中心-关注列表")
+    @ApiOperation("我的-关注列表")
     @ApiOperationSort(value = 8)
     @GetMapping("/follow/page")
     public R<PageResult<FollowPageResponse>> followPage(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -102,11 +100,51 @@ public class FrUserController {
             @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", defaultValue = "1"),
             @ApiImplicitParam(paramType = "query", name = "pageSize", value = "数量", defaultValue = "10")
     })
-    @ApiOperation("我的-个人中心-粉丝列表")
+    @ApiOperation("我的-粉丝列表")
     @ApiOperationSort(value = 9)
     @GetMapping("/fans/page")
     public R<PageResult<FollowPageResponse>> fansPage(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
                                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
         return R.ok(this.frUserService.fansPage(pageIndex, pageSize));
     }
+
+    @ApiOperation("我的-关注列表-取消关注")
+    @ApiOperationSort(value = 10)
+    @GetMapping("/cancel/follow/{id}")
+    public R<Void> cancelFollow(@PathVariable Integer id) {
+        //TODO 接口实现
+        this.frUserService.cancelFollow(id);
+        return R.ok();
+    }
+
+    @ApiOperation("我的-关注列表-关注用户")
+    @ApiOperationSort(value = 11)
+    @GetMapping("/follow/user/{id}")
+    public R<Void> followUser(@PathVariable Integer id) {
+        this.frUserService.followUser(id);
+        return R.ok();
+    }
+
+    @ApiOperation("我的-粉丝列表-移除粉丝")
+    @ApiOperationSort(value = 12)
+    @GetMapping("/remove/fans/{id}")
+    public R<Void> removeFans(@PathVariable Integer id) {
+        this.frUserService.removeFans(id);
+        return R.ok();
+    }
+
+    @ApiOperation("我的-查询个人资料")
+    @ApiOperationSort(value = 13)
+    @GetMapping("/personal/data")
+    public R<PersonalDataResponse> personalData() {
+        return R.ok(new PersonalDataResponse());
+    }
+
+    @ApiOperation("我的-修改个人资料")
+    @ApiOperationSort(value = 14)
+    @PostMapping("/edit/personal")
+    public R<Void> editPersonal(@RequestBody @Valid EditPersonalDataRequest request) {
+        return R.ok();
+    }
+
 }
