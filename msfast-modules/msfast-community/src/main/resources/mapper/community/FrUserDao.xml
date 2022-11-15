@@ -44,13 +44,11 @@
         order by fu.create_time desc limit 10
     </select>
 
-    <!--个人中心 我的关注列表-->
+
     <resultMap id="followPageResponse" type="com.wxm.msfast.community.common.rest.response.user.FollowPageResponse">
-        <id column="id" jdbcType="INTEGER" property="id"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
-        <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
-        <result column="city" jdbcType="VARCHAR" property="city"/>
     </resultMap>
+
+    <!--个人中心 我的关注列表-->
     <select id="getFollowPage" resultMap="followPageResponse" parameterType="Integer">
        select
         fu.id,
@@ -67,6 +65,27 @@
         fu.del_flag=0 and fuf.del_flag=0
         and fu.status='ENABLE'
         and fuf.user_id = ${id}
+        order by
+        fuf.id desc
+    </select>
+
+    <!--个人中心 我的关注粉丝列表-->
+    <select id="getFansPage" resultMap="followPageResponse" parameterType="Integer">
+       select
+        fu.id,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.city,
+				case (select count(1) from fr_user_follow fuf1 where fuf1.del_flag=0 and fuf1.user_id=${id} and fuf1.follow_id=fu.id)
+					when 1 then 'FRIEND'
+					else 'FANS' end as followStatus
+        from
+        fr_user_follow fuf
+        left join fr_user fu on fu.id = fuf.user_id
+        where
+        fu.del_flag=0 and fuf.del_flag=0
+        and fu.status='ENABLE'
+        and fuf.follow_id = ${id}
         order by
         fuf.id desc
     </select>

@@ -24,4 +24,6 @@ public interface FrUserDao extends BaseMapper<FrUserEntity> {
     List<DynamicUserResponse> getDynamicUser(Map<String, Object> param);
 
     List<FollowPageResponse> getFollowPage(Integer userId);
+
+    List<FollowPageResponse> getFansPage(Integer userId);
 }

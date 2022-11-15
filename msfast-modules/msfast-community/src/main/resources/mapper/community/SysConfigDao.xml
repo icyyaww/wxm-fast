@@ -3,7 +3,7 @@
 
 <mapper namespace="com.wxm.msfast.community.dao.SysConfigDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.wxm.msfast.community.entity.SysConfigEntity" id="sysConfigMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
@@ -16,6 +16,4 @@
         <result property="value" column="value"/>
         <result property="descr" column="descr"/>
     </resultMap>
-
-
 </mapper>

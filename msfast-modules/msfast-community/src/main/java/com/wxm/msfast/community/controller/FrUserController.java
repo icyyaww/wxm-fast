@@ -94,7 +94,19 @@ public class FrUserController {
     @ApiOperationSort(value = 8)
     @GetMapping("/follow/page")
     public R<PageResult<FollowPageResponse>> followPage(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
-                                                  @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+                                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
         return R.ok(this.frUserService.followPage(pageIndex, pageSize));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("我的-个人中心-粉丝列表")
+    @ApiOperationSort(value = 9)
+    @GetMapping("/fans/page")
+    public R<PageResult<FollowPageResponse>> fansPage(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+                                                      @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return R.ok(this.frUserService.fansPage(pageIndex, pageSize));
     }
 }

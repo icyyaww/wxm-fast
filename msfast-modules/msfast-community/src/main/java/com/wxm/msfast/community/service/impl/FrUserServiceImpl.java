@@ -178,4 +178,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         return result;
     }
 
+    @Override
+    public PageResult<FollowPageResponse> fansPage(Integer pageIndex, Integer pageSize) {
+
+        Page<FollowPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.getBaseMapper().getFansPage(TokenUtils.getOwnerId());
+        PageResult<FollowPageResponse> result = new PageResult<>(page);
+
+        return result;
+
+    }
+
 }
