@@ -50,7 +50,7 @@ public interface MsfFileService extends IService<MsfFileEntity> {
     void deleteTempFile(String filePath,String url);
 
     /**
-     * @Description: 删除文件
+     * @Description: 删除文件 物理删除
      * @Param:
      * @return:
      * @Author: Mr.Wang

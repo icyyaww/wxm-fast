@@ -103,7 +103,7 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
 
     /**
      * @param filePath
-     * @Description: 删除文件
+     * @Description: 删除文件 物理删除
      * @Param:
      * @return:
      * @Author: Mr.Wang
