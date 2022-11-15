@@ -52,19 +52,22 @@
         <result column="city" jdbcType="VARCHAR" property="city"/>
     </resultMap>
     <select id="getFollowPage" resultMap="followPageResponse" parameterType="Integer">
-        SELECT
+       select
         fu.id,
         fu.head_portrait,
         fu.nick_name,
-        fu.city
-        FROM
+        fu.city,
+				case (select count(1) from fr_user_follow fuf1 where fuf1.del_flag=0 and fuf1.user_id=fu.id and fuf1.follow_id=${id})
+					when 1 then 'FRIEND'
+					else 'FOLLOW' end as followStatus
+        from
         fr_user_follow fuf
-        LEFT JOIN fr_user fu ON fu.id = fuf.follow_id
-        WHERE
+        left join fr_user fu on fu.id = fuf.follow_id
+        where
         fu.del_flag=0 and fuf.del_flag=0
         and fu.status='ENABLE'
         and fuf.user_id = ${id}
-        ORDER BY
-        fuf.id DESC
+        order by
+        fuf.id desc
     </select>
 </mapper>

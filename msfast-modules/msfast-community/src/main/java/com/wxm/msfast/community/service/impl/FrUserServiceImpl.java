@@ -174,6 +174,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         Page<FollowPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
         this.getBaseMapper().getFollowPage(TokenUtils.getOwnerId());
         PageResult<FollowPageResponse> result = new PageResult<>(page);
+
         return result;
     }
 
