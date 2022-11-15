@@ -17,13 +17,18 @@ public class DelayTaskProducer {
         DelayTask delayTask = new DelayTask();//创建任务
         delayTask.setFilePath(filePath).setUrl(url).setTime(time);
         log.info("=============入延时队列,{}", delayTask);
-
         boolean offer = delayQueue.offer(delayTask);//任务入队
         if (offer) {
-            log.info("=============入延时队列成功,{}", delayQueue);
+            log.info("=============入延时队列成功,{}", delayTask);
         } else {
             log.info("=============入延时队列失败");
         }
+    }
+
+    public static void remove(String url) {
+        DelayQueue<DelayTask> delayQueue = DelayTaskQueue.getInstance();
+        delayQueue.removeIf(p -> p.getUrl().equals(url));
+        log.info("=============移除延时队列,{}", url);
     }
 }
 

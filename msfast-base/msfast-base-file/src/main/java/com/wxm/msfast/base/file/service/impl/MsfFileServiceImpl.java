@@ -88,12 +88,15 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Async
     @Transactional
     public void deleteTempFile(String filePath, String url) {
-
         try {
-            deleteFile(filePath);
             Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
-                    .eq(MsfFileEntity::getUrl, url);
-            this.remove(wrapper);
+                    .eq(MsfFileEntity::getUrl, url)
+                    .eq(MsfFileEntity::getStatus, FileStatusEnum.TEMP);
+            Long tempCount = this.getBaseMapper().selectCount(wrapper);
+            if (tempCount > 0) {
+                deleteFile(filePath);
+                this.remove(wrapper);
+            }
         } catch (Exception e) {
         }
     }
@@ -126,6 +129,8 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                 e.printStackTrace();
             }
             throw new TempFileNoExistException();
+        } else {
+            DelayTaskProducer.remove(url);
         }
     }
 }
