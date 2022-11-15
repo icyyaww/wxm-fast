@@ -1,8 +1,6 @@
 package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
-import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
-import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
 import com.wxm.msfast.community.service.FrUserService;

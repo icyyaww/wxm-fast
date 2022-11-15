@@ -1,7 +1,7 @@
 package com.wxm.msfast.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.demo.entity.UserEntity;
 
 import java.util.Map;
@@ -15,7 +15,6 @@ import java.util.Map;
  */
 public interface UserService extends IService<UserEntity> {
 
-    PageUtils queryPage(Map<String, Object> params);
 
     void wrapper();
 }

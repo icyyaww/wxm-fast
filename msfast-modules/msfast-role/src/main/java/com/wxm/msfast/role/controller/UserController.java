@@ -1,20 +1,17 @@
 package com.wxm.msfast.role.controller;
 
-import java.util.Arrays;
-import java.util.Map;
-
-//import org.apache.shiro.authz.annotation.RequiresPermissions;
+import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.role.entity.UserEntity;
+import com.wxm.msfast.role.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wxm.msfast.role.entity.UserEntity;
-import com.wxm.msfast.role.service.UserService;
-import com.wxm.msfast.base.common.utils.PageUtils;
-import com.wxm.msfast.base.common.web.domain.R;
+import java.util.Arrays;
+
+//import org.apache.shiro.authz.annotation.RequiresPermissions;
 
 
 
@@ -30,17 +27,6 @@ import com.wxm.msfast.base.common.web.domain.R;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    //@RequiresPermissions("role:user:list")
-    public R list(@RequestParam Map<String, Object> params){
-        PageUtils page = userService.queryPage(params);
-
-        return R.ok(page);
-    }
 
 
     /**

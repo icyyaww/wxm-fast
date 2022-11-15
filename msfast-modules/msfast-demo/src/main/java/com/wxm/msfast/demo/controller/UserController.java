@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wxm.msfast.demo.entity.UserEntity;
 import com.wxm.msfast.demo.service.UserService;
-import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 
 
 /**
@@ -28,18 +28,6 @@ import com.wxm.msfast.base.common.utils.PageUtils;
 public class UserController {
     @Autowired
     private UserService userService;
-
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    @AuthIgnore
-    //@RequiresPermissions("demo:user:list")
-    public R list(@RequestParam Map<String, Object> params) {
-        PageUtils page = userService.queryPage(params);
-
-        return R.ok(page);
-    }
 
 
     /**

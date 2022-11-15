@@ -1,7 +1,7 @@
 package com.wxm.msfast.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.demo.entity.FrontUserEntity;
 
 import java.util.Map;
@@ -12,8 +12,6 @@ import java.util.Map;
  * @date 2022-07-06 18:07:55
  */
 public interface FrontUserService extends IService<FrontUserEntity> {
-
-    PageUtils queryPage(Map<String, Object> params);
 
     void versionLock(Long id);
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.wxm.msfast.demo.entity.FrontUserEntity;
 import com.wxm.msfast.demo.service.FrontUserService;
-import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 
 
@@ -23,17 +23,6 @@ import com.wxm.msfast.base.common.web.domain.R;
 public class FrontUserController {
     @Autowired
     private FrontUserService frontUserService;
-
-    /**
-     * 列表
-     */
-    @RequestMapping("/list")
-    //@RequiresPermissions("demo:frontuser:list")
-    public R list(@RequestParam Map<String, Object> params) {
-        PageUtils page = frontUserService.queryPage(params);
-
-        return R.ok(page);
-    }
 
 
     /**

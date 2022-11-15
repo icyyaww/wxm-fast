@@ -24,12 +24,12 @@
         <result property="goldBalance" column="gold_balance"/>
     </resultMap>
 
+    <!--获取首页动态用户信息-->
     <resultMap id="dynamicUserResponse" type="com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
     </resultMap>
-
     <select id="getDynamicUser" resultMap="dynamicUserResponse" parameterType="map">
         select fu.id,fu.nick_name,fu.head_portrait from fr_user fu
         <where>
@@ -42,5 +42,29 @@
             </if>
         </where>
         order by fu.create_time desc limit 10
+    </select>
+
+    <!--个人中心 我的关注列表-->
+    <resultMap id="followPageResponse" type="com.wxm.msfast.community.common.rest.response.user.FollowPageResponse">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
+        <result column="city" jdbcType="VARCHAR" property="city"/>
+    </resultMap>
+    <select id="getFollowPage" resultMap="followPageResponse" parameterType="Integer">
+        SELECT
+        fu.id,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.city
+        FROM
+        fr_user_follow fuf
+        LEFT JOIN fr_user fu ON fu.id = fuf.follow_id
+        WHERE
+        fu.del_flag=0 and fuf.del_flag=0
+        and fu.status='ENABLE'
+        and fuf.user_id = ${id}
+        ORDER BY
+        fuf.id DESC
     </select>
 </mapper>

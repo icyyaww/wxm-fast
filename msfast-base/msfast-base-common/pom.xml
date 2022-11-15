@@ -29,6 +29,7 @@
         <aliyun.java.sdk.sms.version>3.0.0-rc1</aliyun.java.sdk.sms.version>
         <aliyun.java.sdk.core.version>4.5.0</aliyun.java.sdk.core.version>
         <org.redisson.redisson.version>3.17.7</org.redisson.redisson.version>
+        <pagehelper.spring.boot.starter.version>1.4.5</pagehelper.spring.boot.starter.version>
     </properties>
 
     <dependencies>
@@ -40,6 +41,12 @@
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis.plus.boot.starter.version}</version>
+        </dependency>
+        <!--MyBatis分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>${pagehelper.spring.boot.starter.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

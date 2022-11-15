@@ -4,6 +4,8 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
@@ -12,6 +14,7 @@ import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.enums.SysConfigEnum;
@@ -19,6 +22,7 @@ import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
+import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
 import com.wxm.msfast.community.dao.FrUserDao;
@@ -162,6 +166,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
         personalCenterResponse.setBlog(frBlogService.getPersonalBlogImage());
         return personalCenterResponse;
+    }
+
+    @Override
+    public PageResult<FollowPageResponse> followPage(Integer pageIndex, Integer pageSize) {
+
+        Page<FollowPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.getBaseMapper().getFollowPage(TokenUtils.getOwnerId());
+        PageResult<FollowPageResponse> result = new PageResult<>(page);
+        return result;
     }
 
 }

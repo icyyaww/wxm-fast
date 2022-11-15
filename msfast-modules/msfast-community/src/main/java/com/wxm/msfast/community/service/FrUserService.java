@@ -2,15 +2,15 @@ package com.wxm.msfast.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
-import com.wxm.msfast.base.common.utils.PageUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
+import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
 import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wanglei
@@ -49,6 +49,22 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     void endMatching();
 
+    /*
+     * @Author wanglei
+     * @Description  个人中心
+     * @Date 15:38 2022/11/15
+     * @Param
+     * @return
+     **/
     PersonalCenterResponse personalCenter();
+
+    /*
+     * @Author wanglei
+     * @Description  我的关注列表
+     * @Date 15:38 2022/11/15
+     * @Param
+     * @return
+     **/
+    PageResult<FollowPageResponse> followPage(Integer pageIndex,Integer pageSize);
 }
 
