@@ -20,7 +20,7 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     SERVICE_BUSY_EXCEPTION(10011, "服务繁忙"),
     OPTIMISTICLOCKER_EXCEPTION(10012, "当前请求拥挤"),
     SMS_EXCEPTION_EXCEPTION(10013, "发送短信错误"),
-    SMS_SENDED_EXCEPTION(10014, "验证码已发送"),
+    SMS_SENDED_EXCEPTION(10014, "验证码已发送，请勿重复提交"),
     SMS_CODE_ERROR_EXCEPTION(10015, "验证码错误"),
     SMS_CODE_NOT_EXIST_EXCEPTION(10016, "验证码不存在或已过期"),
     PWD_NOT_SAME_EXCEPTION(10017, "两次密码输入不一致"),

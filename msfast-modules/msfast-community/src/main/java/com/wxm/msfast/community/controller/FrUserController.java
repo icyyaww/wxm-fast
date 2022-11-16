@@ -142,7 +142,7 @@ public class FrUserController {
 
     @ApiOperation("我的-修改个人资料")
     @ApiOperationSort(value = 14)
-    @PostMapping("/edit/personal")
+    @PutMapping("/edit/personal")
     public R<Void> editPersonal(@RequestBody @Valid EditPersonalDataRequest request) {
         return R.ok();
     }
