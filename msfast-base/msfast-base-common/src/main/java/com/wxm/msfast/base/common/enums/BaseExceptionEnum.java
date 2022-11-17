@@ -2,7 +2,6 @@ package com.wxm.msfast.base.common.enums;
 
 
 import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
-import io.jsonwebtoken.ExpiredJwtException;
 
 public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     //错误状态码规范 两位业务场景+三位错误码 例如：10 通用场景 000 系统未知异常
