@@ -9,6 +9,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.response.blog.BlogDetailResponse;
 import com.wxm.msfast.community.common.rest.response.blog.BlogPageResponse;
 import com.wxm.msfast.community.common.rest.response.blog.CommentPageResponse;
+import com.wxm.msfast.community.common.rest.response.blog.ReplyResponse;
 import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
 import com.wxm.msfast.community.entity.FrBlogEntity;
 import com.wxm.msfast.community.service.FrBlogService;
@@ -66,6 +67,23 @@ public class FrBlogController {
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
 
         PageResult<CommentPageResponse> pageResult = new PageResult<>(null);
+        return R.ok(pageResult);
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.pathVariable, name = "commentId", value = "评论id"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("动态列表-评论列表-回复列表 从第二条后开始返回")
+    @ApiOperationSort(value = 4)
+    @GetMapping("/blog/reply/page/{commentId}")
+    public R<PageResult<ReplyResponse>> blogReplyPage(
+            @PathVariable Integer commentId,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+
+        PageResult<ReplyResponse> pageResult = new PageResult<>(null);
         return R.ok(pageResult);
     }
 }
