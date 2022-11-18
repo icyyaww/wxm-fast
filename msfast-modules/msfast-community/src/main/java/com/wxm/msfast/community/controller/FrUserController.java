@@ -2,6 +2,7 @@ package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.community.common.rest.request.user.EditPersonalDataRequest;
@@ -85,8 +86,8 @@ public class FrUserController {
 
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", defaultValue = "1"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "数量", defaultValue = "10")
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
     })
     @ApiOperation("我的-关注列表")
     @ApiOperationSort(value = 8)
@@ -97,8 +98,8 @@ public class FrUserController {
     }
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "query", name = "pageIndex", value = "页码", defaultValue = "1"),
-            @ApiImplicitParam(paramType = "query", name = "pageSize", value = "数量", defaultValue = "10")
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
     })
     @ApiOperation("我的-粉丝列表")
     @ApiOperationSort(value = 9)

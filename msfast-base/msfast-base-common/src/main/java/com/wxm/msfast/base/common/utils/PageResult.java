@@ -47,11 +47,13 @@ public class PageResult<T> {
      * 分页
      */
     public PageResult(Page<T> page) {
-        this.rows = page.getResult();
-        this.totalCount = page.getTotal();
-        this.pageSize = page.getPageSize();
-        this.currPage = page.getPageNum();
-        this.totalPage = page.getPages();
+        if (page != null) {
+            this.rows = page.getResult();
+            this.totalCount = page.getTotal();
+            this.pageSize = page.getPageSize();
+            this.currPage = page.getPageNum();
+            this.totalPage = page.getPages();
+        }
     }
 
 }

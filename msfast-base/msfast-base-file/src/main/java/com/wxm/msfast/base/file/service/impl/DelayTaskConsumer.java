@@ -25,6 +25,7 @@ public class DelayTaskConsumer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         DelayQueue<DelayTask> delayQueue = DelayTaskQueue.getInstance();//获取同一个put进去任务的队列
         /**启动一个线程，去取延迟消息**/
+        // TODO: 2022/11/17 多线程优化
         Executors.newSingleThreadExecutor().execute(() -> {
             while (true) {
                 // 从延迟队列的头部获取已经过期的消息

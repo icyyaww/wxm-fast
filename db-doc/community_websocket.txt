@@ -4,5 +4,10 @@
 3 连接建立成功后立刻发送连接请求 发送一次 {"messageType":"CONNECT","info":"1"}
 4 发送匹配请求 每秒发送一次 {"messageType":"MATCHING","info":"{'type':'ORDINARY', 'userId':1 }"}  ORDINARY("普通匹配"),SENIOR("高级匹配")
 
+ui修改
+1 我的粉丝列表中“取消取关”改为“移除粉丝”
+2 动态 有一个自己点赞的红心
+3 动态评论和回复 增加时间 和ip地址
+4 评论里的回复增加 查看更多
 
 
