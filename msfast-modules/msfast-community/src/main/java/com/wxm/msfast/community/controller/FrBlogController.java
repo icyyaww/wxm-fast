@@ -82,4 +82,18 @@ public class FrBlogController {
         PageResult<ReplyResponse> pageResult = new PageResult<>(null);
         return R.ok(pageResult);
     }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("好友资料-动态列表")
+    @ApiOperationSort(value = 5)
+    @GetMapping("/friend/blog/page/{userId}")
+    public R<PageResult<BlogPageResponse>> friendBlogPage(
+            @PathVariable Integer userId,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return R.ok();
+    }
 }

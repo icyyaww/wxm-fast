@@ -148,4 +148,10 @@ public class FrUserController {
         return R.ok();
     }
 
+    @ApiOperation("查看好友资料")
+    @ApiOperationSort(value = 15)
+    @GetMapping("/user/info/{id}")
+    public R<UserInfoResponse> userInfo(@PathVariable Integer id) {
+        return R.ok(new UserInfoResponse());
+    }
 }
