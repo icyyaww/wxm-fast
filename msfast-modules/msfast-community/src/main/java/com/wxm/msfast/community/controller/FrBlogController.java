@@ -2,13 +2,11 @@ package com.wxm.msfast.community.controller;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.community.common.rest.response.blog.BlogDetailResponse;
-import com.wxm.msfast.community.common.rest.response.blog.BlogPageResponse;
-import com.wxm.msfast.community.common.rest.response.blog.CommentPageResponse;
-import com.wxm.msfast.community.common.rest.response.blog.ReplyResponse;
+import com.wxm.msfast.community.common.rest.response.blog.*;
 import com.wxm.msfast.community.service.FrBlogService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +31,7 @@ public class FrBlogController {
     @ApiOperation("动态详情")
     @ApiOperationSort(value = 1)
     @GetMapping("/detail/{id}")
+    @AuthIgnore
     public R<BlogDetailResponse> detail(@PathVariable Integer id) {
         return R.ok();
     }
@@ -57,6 +56,7 @@ public class FrBlogController {
     @ApiOperation("动态列表-评论列表")
     @ApiOperationSort(value = 3)
     @GetMapping("/blog/comment/page/{blogId}")
+    @AuthIgnore
     public R<PageResult<CommentPageResponse>> blogCommentPage(
             @PathVariable Integer blogId,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -74,6 +74,7 @@ public class FrBlogController {
     @ApiOperation("动态列表-评论列表-回复列表 从第二条后开始返回")
     @ApiOperationSort(value = 4)
     @GetMapping("/blog/reply/page/{commentId}")
+    @AuthIgnore
     public R<PageResult<ReplyResponse>> blogReplyPage(
             @PathVariable Integer commentId,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
@@ -90,10 +91,60 @@ public class FrBlogController {
     @ApiOperation("好友资料-动态列表")
     @ApiOperationSort(value = 5)
     @GetMapping("/friend/blog/page/{userId}")
+    @AuthIgnore
     public R<PageResult<BlogPageResponse>> friendBlogPage(
             @PathVariable Integer userId,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
         return R.ok();
     }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "lon", value = "经度", defaultValue = ""),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "lat", value = "纬度", defaultValue = "")
+    })
+    @ApiOperation("附近-动态列表")
+    @ApiOperationSort(value = 6)
+    @GetMapping("/near/blog/page")
+    @AuthIgnore
+    public R<PageResult<NearBlogPageResponse>> nearBlogPage(
+            @RequestParam(value = "lon", required = false, defaultValue = "") String lon,
+            @RequestParam(value = "lat", required = false, defaultValue = "") String lat,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return R.ok();
+
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("关注-动态列表")
+    @ApiOperationSort(value = 7)
+    @GetMapping("/follow/blog/page")
+    public R<PageResult<NearBlogPageResponse>> followBlogPage(
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+        return R.ok();
+
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("好友-动态列表")
+    @ApiOperationSort(value = 8)
+    @GetMapping("/friend/blog/page")
+    public R<PageResult<NearBlogPageResponse>> friendBlogPage(
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+
+        return R.ok();
+    }
+
 }

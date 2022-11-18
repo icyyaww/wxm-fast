@@ -35,4 +35,19 @@ public class FrBlogEntity extends BaseEntity {
     @TableField(value = "images", typeHandler = BlogImageListTypeHandler.class)
     private List<String> images;
 
+    /**
+     * 经度
+     */
+    @TableField("lon")
+    private String lon;
+    /**
+     * 纬度
+     */
+    @TableField("lat")
+    private String lat;
+    /**
+     * 城市
+     */
+    @TableField("city")
+    private String city;
 }

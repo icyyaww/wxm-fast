@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.community.common.enums.FollowStatus;
 import com.wxm.msfast.community.common.rest.request.user.EditPersonalDataRequest;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.*;
@@ -112,7 +113,7 @@ public class FrUserController {
     @ApiOperation("我的-关注列表-取消关注")
     @ApiOperationSort(value = 10)
     @GetMapping("/cancel/follow/{id}")
-    public R<Void> cancelFollow(@PathVariable Integer id) {
+    public R<FollowStatus> cancelFollow(@PathVariable Integer id) {
         //TODO 接口实现
         this.frUserService.cancelFollow(id);
         return R.ok();
@@ -121,7 +122,7 @@ public class FrUserController {
     @ApiOperation("我的-关注列表-关注用户")
     @ApiOperationSort(value = 11)
     @GetMapping("/follow/user/{id}")
-    public R<Void> followUser(@PathVariable Integer id) {
+    public R<FollowStatus> followUser(@PathVariable Integer id) {
         this.frUserService.followUser(id);
         return R.ok();
     }
@@ -129,7 +130,7 @@ public class FrUserController {
     @ApiOperation("我的-粉丝列表-移除粉丝")
     @ApiOperationSort(value = 12)
     @GetMapping("/remove/fans/{id}")
-    public R<Void> removeFans(@PathVariable Integer id) {
+    public R<FollowStatus> removeFans(@PathVariable Integer id) {
         this.frUserService.removeFans(id);
         return R.ok();
     }
@@ -151,6 +152,7 @@ public class FrUserController {
     @ApiOperation("查看好友资料")
     @ApiOperationSort(value = 15)
     @GetMapping("/user/info/{id}")
+    @AuthIgnore
     public R<UserInfoResponse> userInfo(@PathVariable Integer id) {
         return R.ok(new UserInfoResponse());
     }

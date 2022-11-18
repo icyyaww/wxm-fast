@@ -44,6 +44,7 @@ public class FrUserEntity extends BaseEntity {
      */
     @TableField("birthday")
     private Date birthday;
+
     /**
      * 经度
      */
