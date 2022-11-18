@@ -2,7 +2,6 @@ package com.wxm.msfast.community.controller;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
-import com.sun.xml.internal.ws.wsdl.writer.document.ParamType;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
@@ -10,12 +9,9 @@ import com.wxm.msfast.community.common.rest.response.blog.BlogDetailResponse;
 import com.wxm.msfast.community.common.rest.response.blog.BlogPageResponse;
 import com.wxm.msfast.community.common.rest.response.blog.CommentPageResponse;
 import com.wxm.msfast.community.common.rest.response.blog.ReplyResponse;
-import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
-import com.wxm.msfast.community.entity.FrBlogEntity;
 import com.wxm.msfast.community.service.FrBlogService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
