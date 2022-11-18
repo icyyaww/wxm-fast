@@ -2,6 +2,7 @@ package com.wxm.msfast.base.common.config;
 
 import com.github.xiaoymin.swaggerbootstrapui.annotations.EnableSwaggerBootstrapUI;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +44,7 @@ public class SwaggerConfig {
                         .name(ConfigConstants.AUTHENTICATION())
                         .description("token")
                         .modelRef(new ModelRef("string"))
-                        .parameterType("header")
+                        .parameterType(ParamTypeConstants.requestHeader)
                         .required(false)
                         .build()));
     }
