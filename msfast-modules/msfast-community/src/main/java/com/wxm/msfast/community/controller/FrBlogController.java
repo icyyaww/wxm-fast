@@ -2,15 +2,20 @@ package com.wxm.msfast.community.controller;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.community.common.rest.request.blog.BlogSubmitRequest;
+import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.blog.*;
 import com.wxm.msfast.community.service.FrBlogService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 /**
@@ -143,6 +148,14 @@ public class FrBlogController {
     public R<PageResult<NearBlogPageResponse>> friendBlogPage(
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize) {
+
+        return R.ok();
+    }
+
+    @ApiOperation("发布动态")
+    @ApiOperationSort(value = 9)
+    @PostMapping("/submit")
+    public R<Void> smsLogin(@RequestBody @Valid BlogSubmitRequest request) {
 
         return R.ok();
     }

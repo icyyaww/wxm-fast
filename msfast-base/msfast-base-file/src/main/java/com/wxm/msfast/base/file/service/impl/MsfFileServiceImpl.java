@@ -1,10 +1,12 @@
 package com.wxm.msfast.base.file.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
+import com.wxm.msfast.base.file.annotation.FileListSave;
 import com.wxm.msfast.base.file.annotation.FileSave;
 import com.wxm.msfast.base.file.common.enums.FileStatusEnum;
 import com.wxm.msfast.base.file.config.MinioConfig;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.Calendar;
+import java.util.List;
 
 @Service("msfFileService")
 public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> implements MsfFileService {
@@ -65,8 +68,24 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                 if (fileSave != null) {
                     try {
                         Object urlObject = field.get(object);
-                        if (urlObject != null) {
+                        if (urlObject != null && urlObject instanceof String) {
                             changeTempUrl(urlObject.toString());
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                FileListSave fileListSave = field.getAnnotation(FileListSave.class);
+                if (fileListSave != null) {
+                    try {
+                        Object urlObject = field.get(object);
+                        if (urlObject != null && urlObject instanceof List) {
+                            ((List) urlObject).forEach(model -> {
+                                if (model instanceof String) {
+                                    changeTempUrl(model.toString());
+                                }
+                            });
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -133,4 +152,5 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
             DelayTaskProducer.remove(url);
         }
     }
+
 }
