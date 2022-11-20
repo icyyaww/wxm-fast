@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
-import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
-import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
-import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
-import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
+import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.entity.FrUserEntity;
 
 import java.util.List;
@@ -102,5 +99,14 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @return
      **/
     void removeFans(Integer id);
+
+    /*
+     * @Author wanglei
+     * @Description  腾讯视频配置文件
+     * @Date 21:19 2022/11/20
+     * @Param
+     * @return
+     **/
+    TuiCallKitResponse tuiCallKit();
 }
 

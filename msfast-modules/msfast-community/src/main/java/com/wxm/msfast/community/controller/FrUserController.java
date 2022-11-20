@@ -1,6 +1,7 @@
 package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
+import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
@@ -10,11 +11,13 @@ import com.wxm.msfast.community.common.rest.request.user.EditPersonalDataRequest
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.service.FrUserService;
+import com.wxm.msfast.community.utils.TLSSigAPIv2;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -155,5 +158,13 @@ public class FrUserController {
     @AuthIgnore
     public R<UserInfoResponse> userInfo(@PathVariable Integer id) {
         return R.ok(new UserInfoResponse());
+    }
+
+    @ApiOperation("获取腾讯视频登录信息")
+    @ApiOperationSort(value = 16)
+    @GetMapping("/tuicallkit")
+    public R<TuiCallKitResponse> tuiCallKit() {
+        return R.ok(frUserService.tuiCallKit());
+
     }
 }

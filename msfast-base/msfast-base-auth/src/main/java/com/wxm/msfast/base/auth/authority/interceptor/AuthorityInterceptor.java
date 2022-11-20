@@ -15,9 +15,7 @@ import com.wxm.msfast.base.common.utils.ServletUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 

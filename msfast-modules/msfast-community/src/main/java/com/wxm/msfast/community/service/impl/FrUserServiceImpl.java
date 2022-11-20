@@ -17,26 +17,26 @@ import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.community.common.constant.Constants;
+import com.wxm.msfast.community.common.constant.PropertiesConstants;
 import com.wxm.msfast.community.common.enums.SysConfigEnum;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
-import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
-import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
-import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
-import com.wxm.msfast.community.common.rest.response.user.PersonalCenterResponse;
+import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.dao.FrUserDao;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrBlogService;
 import com.wxm.msfast.community.service.FrUserFollowService;
 import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.service.SysConfigService;
+import com.wxm.msfast.community.utils.TLSSigAPIv2;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -202,6 +202,18 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public void removeFans(Integer id) {
 
+    }
+
+    @Override
+    public TuiCallKitResponse tuiCallKit() {
+        TuiCallKitResponse tuiCallKitResponse = new TuiCallKitResponse();
+        tuiCallKitResponse.setSdkAppId(PropertiesConstants.SDK_APP_ID());
+        tuiCallKitResponse.setUserId(TokenUtils.getOwnerId().toString());
+        TLSSigAPIv2 tlsSigAPIv2 = new TLSSigAPIv2(tuiCallKitResponse.getSdkAppId(), PropertiesConstants.SECRET_KEY());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        tuiCallKitResponse.setUserSig(tlsSigAPIv2.genUserSig(TokenUtils.getOwnerId().toString(), calendar.getTimeInMillis()));
+        return tuiCallKitResponse;
     }
 
 }
