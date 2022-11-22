@@ -35,6 +35,7 @@ public class AsyncServiceImpl implements AsyncService {
     private void sendChannel(FrUserEntity selfUser, FrUserEntity otherUser) {
         MatchSuccessResponse matchSuccessResponse = new MatchSuccessResponse();
         BeanUtils.copyProperties(otherUser, matchSuccessResponse);
+        matchSuccessResponse.setId(String.valueOf(otherUser.getId()));
         matchSuccessResponse.setHeadPortraitSelf(selfUser.getHeadPortrait());
         matchSuccessResponse.setMessage("恭喜你,匹配成功");
         channelUtil.sendText(selfUser.getId(), JSON.toJSONString(matchSuccessResponse));

@@ -14,7 +14,7 @@ import lombok.Data;
 public class MatchSuccessResponse {
 
     @ApiModelProperty(value = "用户id")
-    private Integer id;
+    private String id;
 
     @ApiModelProperty(value = "头像")
     private String headPortrait;

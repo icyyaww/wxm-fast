@@ -10,4 +10,10 @@ public class TuiCallKitResponse {
     private String userId;
 
     private String userSig;
+
+    private String nickName;
+
+    private String avatar;
+
+    private String callingBell;
 }

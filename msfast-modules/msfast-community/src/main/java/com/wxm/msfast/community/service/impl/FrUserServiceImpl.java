@@ -36,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,9 +209,12 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         tuiCallKitResponse.setSdkAppId(PropertiesConstants.SDK_APP_ID());
         tuiCallKitResponse.setUserId(TokenUtils.getOwnerId().toString());
         TLSSigAPIv2 tlsSigAPIv2 = new TLSSigAPIv2(tuiCallKitResponse.getSdkAppId(), PropertiesConstants.SECRET_KEY());
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, 1);
-        tuiCallKitResponse.setUserSig(tlsSigAPIv2.genUserSig(TokenUtils.getOwnerId().toString(), calendar.getTimeInMillis()));
+        tuiCallKitResponse.setUserSig(tlsSigAPIv2.genUserSig(TokenUtils.getOwnerId().toString(), 86400));
+
+        LoginResponse loginResponse = TokenUtils.info(LoginResponse.class).getInfo();
+        tuiCallKitResponse.setNickName(loginResponse.getNickName());
+        tuiCallKitResponse.setAvatar(loginResponse.getHeadPortrait());
+        tuiCallKitResponse.setCallingBell(sysConfigService.getValueByCode(SysConfigEnum.home_bgm.name()));
         return tuiCallKitResponse;
     }
 

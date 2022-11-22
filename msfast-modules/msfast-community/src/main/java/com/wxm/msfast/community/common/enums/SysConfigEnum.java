@@ -1,8 +1,8 @@
 package com.wxm.msfast.community.common.enums;
 
 public enum SysConfigEnum {
-    video_matching_tips("视频匹配提示信息")
-    ;
+    video_matching_tips("视频匹配提示信息"),
+    home_bgm("背景音乐");
     private String desc;
 
 

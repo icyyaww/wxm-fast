@@ -101,7 +101,7 @@ public class WebSocketServiceImpl implements IWebSocketService {
             return;
         }
         redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.SECONDS);
-        Collection<String> keys = redisService.keys(Constants.MATCHING + "*");
+        Collection<String> keys = redisService.keys(Constants.MATCHING+"*");
         if (CollectionUtil.isNotEmpty(keys)) {
             keys.forEach(model -> {
                 if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {

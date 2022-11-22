@@ -1,7 +1,6 @@
 package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
-import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
@@ -11,15 +10,12 @@ import com.wxm.msfast.community.common.rest.request.user.EditPersonalDataRequest
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.service.FrUserService;
-import com.wxm.msfast.community.utils.TLSSigAPIv2;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -34,6 +30,7 @@ public class FrUserController {
 
     @Autowired
     private FrUserService frUserService;
+
 
     @ApiOperation("验证码登陆")
     @ApiOperationSort(value = 1)
