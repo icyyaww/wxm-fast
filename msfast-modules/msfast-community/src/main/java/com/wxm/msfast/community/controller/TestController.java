@@ -2,6 +2,7 @@ package com.wxm.msfast.community.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.community.common.rest.request.file.FileSaveRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
 import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.service.TestService;
@@ -38,13 +39,11 @@ public class TestController {
         return R.ok();
     }
 
-    @ApiOperation("保存用户信息")
+    @ApiOperation("保存文件")
     @ApiOperationSort(value = 2)
-    @PostMapping("/save/fruser")
+    @PostMapping("/save/file")
     @AuthIgnore
-    public R<Void> saveFruser(@RequestBody UserRegisterRequest request) {
-
-        System.out.println("保存用户信息");
+    public R<Void> saveFile(@RequestBody FileSaveRequest request) {
         return R.ok();
     }
 }

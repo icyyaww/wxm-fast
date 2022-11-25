@@ -12,7 +12,6 @@
     <artifactId>msfast-community</artifactId>
 
     <properties>
-
     </properties>
     <dependencies>
         <!--服务必要依赖-->
@@ -49,6 +48,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot.maven.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
