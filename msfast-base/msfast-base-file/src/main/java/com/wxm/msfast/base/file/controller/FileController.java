@@ -59,6 +59,7 @@ public class FileController {
      */
     @GetMapping("/download")
     @ApiOperation(value = "文件下载")
+    @AuthIgnore
     public void download(@RequestParam String filename, HttpServletResponse response) throws Exception {
 
         try {

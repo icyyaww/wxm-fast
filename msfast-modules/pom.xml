@@ -18,5 +18,6 @@
         <module>msfast-role</module>
         <module>msfast-demo</module>
         <module>msfast-community</module>
+        <module>msfast-nostalgia</module>
     </modules>
 </project>
