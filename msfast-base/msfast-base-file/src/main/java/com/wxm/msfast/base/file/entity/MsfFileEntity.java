@@ -1,10 +1,10 @@
 package com.wxm.msfast.base.file.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.wxm.msfast.base.common.entity.BaseEntity;
+import com.baomidou.mybatisplus.annotation.*;
 import com.wxm.msfast.base.file.common.enums.FileStatusEnum;
 import lombok.Data;
+
+import java.util.Date;
 
 
 /**
@@ -16,7 +16,37 @@ import lombok.Data;
  */
 @Data
 @TableName(value = "msf_file", autoResultMap = true)
-public class MsfFileEntity extends BaseEntity {
+public class MsfFileEntity {
+
+    /**
+     * 主键
+     */
+    @TableId
+    private Integer id;
+    /**
+     * 创建者
+     */
+    private String creator;
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    /**
+     * 修改者
+     */
+    private String modifyer;
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date modifyTime;
+
+    /**
+     * 乐观锁版本号
+     */
+    @Version
+    private Integer version;
 
     /**
      * 是否是原图

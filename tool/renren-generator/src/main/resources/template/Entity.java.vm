@@ -7,9 +7,6 @@ import lombok.Data;
 #if(${hasBigDecimal})
 import java.math.BigDecimal;
 #end
-#if(${hasDate})
-import java.util.Date;
-#end
 
 /**
  * ${comments}
