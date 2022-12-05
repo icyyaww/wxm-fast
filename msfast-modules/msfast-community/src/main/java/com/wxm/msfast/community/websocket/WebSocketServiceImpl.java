@@ -1,9 +1,11 @@
 package com.wxm.msfast.community.websocket;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson2.JSON;
 
 import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.base.common.utils.NumberUtils;
 import com.wxm.msfast.base.websocket.netty.ChannelMap;
 import com.wxm.msfast.base.websocket.service.IWebSocketService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
@@ -109,10 +111,7 @@ public class WebSocketServiceImpl implements IWebSocketService {
                 if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {
 
                     String matching = model.substring(Constants.MATCHING.length());
-
-                    Pattern pattern = Pattern.compile("[0-9]+");
-                    Matcher matcher = pattern.matcher((CharSequence) matching);
-                    boolean result = matcher.matches();
+                    boolean result = NumberUtils.isNumber(matching);
                     if (result) {
                         Integer otherUserId = Integer.valueOf(matching);
                         //成功
