@@ -27,6 +27,8 @@ import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @program: wxm-fast
@@ -101,21 +103,29 @@ public class WebSocketServiceImpl implements IWebSocketService {
             return;
         }
         redisService.setCacheObject(Constants.MATCHING + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.SECONDS);
-        Collection<String> keys = redisService.keys(Constants.MATCHING+"*");
+        Collection<String> keys = redisService.keys(Constants.MATCHING + "*");
         if (CollectionUtil.isNotEmpty(keys)) {
             keys.forEach(model -> {
                 if (StringUtils.isNotBlank(model) && !model.equals(Constants.MATCHING + matchingType.getUserId())) {
 
-                    Integer otherUserId = Integer.valueOf(model.substring(Constants.MATCHING.length()));
-                    //成功
-                    //异步发送通知消息
-                    asyncService.sendMatchMessage(otherUserId, matchingType.getUserId());
+                    String matching = model.substring(Constants.MATCHING.length());
 
-                    redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
-                    redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
+                    Pattern pattern = Pattern.compile("[0-9]+");
+                    Matcher matcher = pattern.matcher((CharSequence) matching);
+                    boolean result = matcher.matches();
+                    if (result) {
+                        Integer otherUserId = Integer.valueOf(matching);
+                        //成功
+                        //异步发送通知消息
+                        asyncService.sendMatchMessage(otherUserId, matchingType.getUserId());
 
-                    redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
-                    redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + matchingType.getUserId(), matchingType.getUserId(), 5l, TimeUnit.MINUTES);
+                        redisService.setCacheObject(Constants.MATCHING_SUCCESS + model.substring(Constants.MATCHING.length()), model.substring(Constants.MATCHING.length()), 5l, TimeUnit.MINUTES);
+
+                        redisService.deleteObject(Constants.MATCHING + matchingType.getUserId());
+                        redisService.deleteObject(Constants.MATCHING + model.substring(Constants.MATCHING.length()));
+                    }
+
                 }
             });
         }

@@ -9,7 +9,7 @@ package com.wxm.msfast.community.common.constant;
 
 public class Constants {
 
-    public static final String MATCHING = "TANXIAO_MATCHING_";
+    public static final String MATCHING = "TANXIAO_MATCHING_USERID";
 
     public static final String MATCHING_LOCK = "TANXIAO_MATCHING_LOCK";
 
