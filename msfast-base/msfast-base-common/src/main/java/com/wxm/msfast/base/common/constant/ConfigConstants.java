@@ -1,7 +1,10 @@
 package com.wxm.msfast.base.common.constant;
 
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import lombok.Data;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
@@ -37,6 +40,12 @@ public class ConfigConstants {
 
     @Value("${wxmfast.config.auth.refresh:5}")
     private Long refresh;
+
+    @Value("${wxmfast.config.auth.wxapplet.appId:}")
+    private String wxAppletAppId;
+
+    @Value("${wxmfast.config.auth.wxapplet.secret:}")
+    private String wxAppletSecret;
 
     @Value("${wxmfast.config.file.max-size:50}")
     private Long fileMaxSize;
@@ -158,8 +167,46 @@ public class ConfigConstants {
         return SpringUtils.getBean(ConfigConstants.class).getHeartBeatTime();
     }
 
+    /*
+     * @Author wanglei
+     * @Description  websocket 一个主机只能允许一个连接
+     * @Date 15:14 2022/12/5
+     * @Param
+     * @return
+     **/
     public static Boolean ONLY_ONE() {
         return SpringUtils.getBean(ConfigConstants.class).getOnlyOne();
     }
 
+
+    /*
+     * @Author wanglei
+     * @Description  微信小程序 appid
+     * @Date 15:15 2022/12/5
+     * @Param
+     * @return
+     **/
+    public static String WX_APPLET_APPID() {
+        String appid = SpringUtils.getBean(ConfigConstants.class).getWxAppletAppId();
+        if (StringUtils.isBlank(appid)) {
+            throw new JrsfException(BaseExceptionEnum.APPID_ISEMPTY);
+        }
+        return appid;
+    }
+
+    /*
+     * @Author wanglei
+     * @Description  微信小程序Secret
+     * @Date 15:15 2022/12/5
+     * @Param
+     * @return
+     **/
+    public static String WX_APPLET_SECRET() {
+
+        String secret = SpringUtils.getBean(ConfigConstants.class).getWxAppletSecret();
+        if (StringUtils.isBlank(secret)) {
+            throw new JrsfException(BaseExceptionEnum.SECRET_ISEMPTY);
+        }
+        return secret;
+    }
 }

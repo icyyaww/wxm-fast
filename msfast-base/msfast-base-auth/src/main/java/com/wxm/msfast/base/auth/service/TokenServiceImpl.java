@@ -1,7 +1,9 @@
 package com.wxm.msfast.base.auth.service;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.enums.LoginType;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
@@ -25,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -50,6 +53,9 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     AliSmsConfig aliSmsConfig;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     @Override
     public void register(RegisterRequest request) {
 
@@ -73,9 +79,13 @@ public class TokenServiceImpl implements TokenService {
 
         LoginUserResponse loginUserResponse = new LoginUserResponse();
 
+        if (LoginType.WX_Applet.equals(request.getLoginType())) {
+            //微信小程序登录时 通过code 取得 openid,session_key,unionid
+            setWxAppletParam(request);
+        }
+
         //用户登陆业务校验
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-
         LoginUser loginUser = authorityService.login(request);
         if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
             //登陆失败
@@ -88,6 +98,7 @@ public class TokenServiceImpl implements TokenService {
 
         return loginUserResponse;
     }
+
 
     @Override
     public void logout() {
@@ -204,5 +215,21 @@ public class TokenServiceImpl implements TokenService {
             message += String.valueOf(random);
         }
         return message;
+    }
+
+    private void setWxAppletParam(LoginRequest request) {
+
+        String appId = ConfigConstants.WX_APPLET_APPID();
+        String secret = ConfigConstants.WX_APPLET_SECRET();
+        String result = restTemplate.getForObject("https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + secret + "&js_code=" + request.getUsername() + "&grant_type=authorization_code", String.class);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        Integer errcode = jsonObject.getInteger("errcode");
+        if (errcode == 0) {
+            request.setOpenid(jsonObject.getString("openid"));
+            request.setSessionKey(jsonObject.getString("session_key"));
+            request.setUnionId(jsonObject.getString("unionid"));
+        } else {
+            throw new JrsfException(BaseExceptionEnum.API_ERROR).setMsg(jsonObject.getString("errmsg"));
+        }
     }
 }

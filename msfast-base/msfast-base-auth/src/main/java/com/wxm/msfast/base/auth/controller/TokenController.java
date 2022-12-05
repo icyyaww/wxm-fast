@@ -2,6 +2,7 @@ package com.wxm.msfast.base.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.common.enums.LoginType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
@@ -10,12 +11,17 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.ViolationUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import io.swagger.annotations.*;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 
@@ -55,7 +61,14 @@ public class TokenController {
     @PostMapping("/login")
     @ApiOperation(value = "登陆")
     @ApiOperationSort(2)
-    public R<LoginUserResponse> login(@RequestBody @Valid String viewmodelJson) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\n" +
+                    "  \"username\":\"用户名 必填 loginType为WX_Applet时传code\",\n" +
+                    "  \"password\":\"登录密码 可选 loginType为Number_Password时为必填\",\n" +
+                    "  \"loginType\":\"登录方式 可选 Number_Password-账号密码登录,WX_Applet-微信小程序\"\n" +
+                    "}", required = true)
+    })
+    public R<LoginUserResponse> login(@RequestBody @Valid @ApiIgnore String viewmodelJson) {
 
         AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
 
@@ -65,6 +78,13 @@ public class TokenController {
 
         //数据校验
         ViolationUtils.violation(viewModel);
+
+        if (viewModel.getLoginType() == null || LoginType.Number_Password.equals(viewModel.getLoginType())) {
+            if (StringUtils.isBlank(viewModel.getPassword())) {
+                //登陆失败
+                throw new JrsfException(BaseExceptionEnum.PASSWORD_ISEMPTY);
+            }
+        }
         return R.ok(tokenService.login(viewModel));
     }
 
