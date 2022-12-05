@@ -2,9 +2,14 @@ package com.wxm.msfast.nostalgia.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.wxm.msfast.base.common.entity.BaseEntity;
+import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
+import com.wxm.msfast.nostalgia.common.enums.FrUserStatusEnum;
+import com.wxm.msfast.nostalgia.common.enums.GenderEnum;
+import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -18,17 +23,16 @@ import java.util.Date;
 @TableName(value = "fr_user", autoResultMap = true)
 public class FrUserEntity extends BaseEntity {
 
-
     /**
      * 登陆账号
      */
-    @TableField("login_num")
-    private String loginNum;
+    @TableField("open_id")
+    private String openId;
     /**
      * 用户状态 启用/停用/注销
      */
     @TableField("status")
-    private String status;
+    private FrUserStatusEnum status;
     /**
      * 头像
      */
@@ -58,7 +62,7 @@ public class FrUserEntity extends BaseEntity {
      * 性别
      */
     @TableField("gender")
-    private String gender;
+    private GenderEnum gender;
     /**
      * 毕业学校
      */
@@ -127,18 +131,19 @@ public class FrUserEntity extends BaseEntity {
     /**
      * 相册
      */
-    @TableField("img_list")
-    private String imgList;
+    @TableField(value = "img_list", typeHandler = UserImageListTypeHandler.class)
+    private List<String> imgList;
+
     /**
      * 用户认证状态
      */
     @TableField("auth_status")
-    private String authStatus;
+    private AuthStatusEnum authStatus;
     /**
      * 待审核相册
      */
-    @TableField("wait_approved_img")
-    private String waitApprovedImg;
+    @TableField(value = "wait_approved_img", typeHandler = UserImageListTypeHandler.class)
+    private List<String> waitApprovedImg;
     /**
      * 金币余额
      */
@@ -149,5 +154,11 @@ public class FrUserEntity extends BaseEntity {
      */
     @TableField("user_type")
     private String userType;
+
+    @TableField("session_key")
+    private String sessionKey;
+
+    @TableField("union_id")
+    private String unionId;
 
 }
