@@ -2,9 +2,9 @@ package com.wxm.msfast.nostalgia.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.wxm.msfast.base.common.entity.BaseEntity;
-import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
-import com.wxm.msfast.nostalgia.common.enums.FrUserStatusEnum;
-import com.wxm.msfast.nostalgia.common.enums.GenderEnum;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
+import com.wxm.msfast.base.common.enums.GenderEnum;
+import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
 import lombok.Data;
 
@@ -69,10 +69,17 @@ public class FrUserEntity extends BaseEntity {
     @TableField("school")
     private String school;
     /**
-     * 学历
+     * 最高学历
      */
     @TableField("education")
-    private String education;
+    private HighestEducationEnum education;
+
+    /**
+     * @Description: 学历类型
+     */
+    @TableField("educational_type")
+    private EducationalTypeEnum educationalType;
+
     /**
      * 关于我
      */
@@ -88,16 +95,19 @@ public class FrUserEntity extends BaseEntity {
      */
     @TableField("love_requirement")
     private String loveRequirement;
+
     /**
      * 经度
      */
     @TableField("lon")
     private String lon;
+
     /**
      * 纬度
      */
     @TableField("lat")
     private String lat;
+
     /**
      * 城市
      */
@@ -107,22 +117,22 @@ public class FrUserEntity extends BaseEntity {
      * 婚姻状况
      */
     @TableField("marriage")
-    private String marriage;
+    private MaritalStatusEnum marriage;
     /**
      * 脱单目标
      */
     @TableField("love_goal")
-    private String loveGoal;
+    private LoveGoalEnum loveGoal;
     /**
      * 感情状况
      */
     @TableField("emotional")
-    private String emotional;
+    private EmotionalStatus emotional;
     /**
      * 年薪
      */
     @TableField("annual_salary")
-    private String annualSalary;
+    private AnnualSalaryEnum annualSalary;
     /**
      * 微信号
      */
@@ -153,7 +163,7 @@ public class FrUserEntity extends BaseEntity {
      * 用户类型
      */
     @TableField("user_type")
-    private String userType;
+    private UserTypeEnum userType;
 
     @TableField("session_key")
     private String sessionKey;

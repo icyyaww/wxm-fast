@@ -1,4 +1,4 @@
-package com.wxm.msfast.community.common.enums;
+package com.wxm.msfast.base.common.enums;
 
 public enum GenderEnum {
     MALE("男"),

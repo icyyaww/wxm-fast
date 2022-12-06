@@ -1,6 +1,6 @@
 package com.wxm.msfast.community.common.rest.response.user;
 
-import com.wxm.msfast.community.common.enums.GenderEnum;
+import com.wxm.msfast.base.common.enums.GenderEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

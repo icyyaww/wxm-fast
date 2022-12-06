@@ -1,8 +1,7 @@
 package com.wxm.msfast.community.common.rest.request.user;
 
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
-import com.wxm.msfast.base.file.annotation.FileSave;
-import com.wxm.msfast.community.common.enums.GenderEnum;
+import com.wxm.msfast.base.common.enums.GenderEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

@@ -3,8 +3,8 @@ package com.wxm.msfast.community.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.wxm.msfast.base.common.entity.BaseEntity;
-import com.wxm.msfast.community.common.enums.FrUserStatus;
-import com.wxm.msfast.community.common.enums.GenderEnum;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
+import com.wxm.msfast.base.common.enums.GenderEnum;
 import lombok.Data;
 
 import java.util.Date;
@@ -65,7 +65,7 @@ public class FrUserEntity extends BaseEntity {
     private GenderEnum gender;
 
     @TableField("status")
-    private FrUserStatus status;
+    private FrUserStatusEnum status;
 
     @TableField("gold_balance")
     private Integer goldBalance;

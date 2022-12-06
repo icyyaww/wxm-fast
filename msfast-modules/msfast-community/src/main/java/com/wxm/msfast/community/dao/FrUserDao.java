@@ -1,15 +1,11 @@
 package com.wxm.msfast.community.dao;
 
-import com.wxm.msfast.community.common.enums.GenderEnum;
 import com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse;
 import com.wxm.msfast.community.common.rest.response.user.FollowPageResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 

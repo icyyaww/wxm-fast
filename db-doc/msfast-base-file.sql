@@ -11,7 +11,6 @@ CREATE TABLE `msf_file`  (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `modifyer` int NULL DEFAULT NULL COMMENT '修改者',
   `modify_time` datetime NULL DEFAULT NULL COMMENT '修改时间',
-  `del_flag` int NOT NULL DEFAULT 0 COMMENT '删除标志（0代表存在 1代表删除）',
   `version` int NOT NULL DEFAULT 0 COMMENT '乐观锁版本号',
   `original` bit(1) NULL DEFAULT b'1' COMMENT '是否是原图',
   `url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '文件路径',

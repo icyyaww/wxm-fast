@@ -1,13 +1,13 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
-public enum AuthStatusEnum {
-    EXAMINE("审核中"),
-    PASS("通过"),
-    REFUSE("拒绝");
+public enum UserTypeEnum {
+
+    Dummy("虚拟"),
+    Normal("正常");
 
     private String desc;
 
-    AuthStatusEnum(String desc) {
+    UserTypeEnum(String desc) {
         this.desc = desc;
     }
 

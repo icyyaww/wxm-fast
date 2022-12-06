@@ -4,11 +4,11 @@ import com.wxm.msfast.base.auth.authority.service.AuthorityServiceImpl;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.base.file.service.MsfFileService;
-import com.wxm.msfast.community.common.enums.FrUserStatus;
 import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
@@ -53,7 +53,7 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
             throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
         }
 
-        frUserEntity.setStatus(FrUserStatus.ENABLE);
+        frUserEntity.setStatus(FrUserStatusEnum.ENABLE);
         this.frUserService.save(frUserEntity);
 
         //保存头像
@@ -89,7 +89,7 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequ
             throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
 
-        if (FrUserStatus.DISABLE.equals(frUserEntity.getStatus())) {
+        if (FrUserStatusEnum.DISABLE.equals(frUserEntity.getStatus())) {
             throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
         }
 

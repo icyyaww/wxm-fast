@@ -1,11 +1,12 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
-public enum GenderEnum {
-    MALE("男"),
-    FEMALE("女");
+public enum MaritalStatusEnum {
+    Unmarried("未婚"),
+    Divorce("离异"),
+    Widow("丧偶");
     private String desc;
 
-    GenderEnum(String desc) {
+    MaritalStatusEnum(String desc) {
         this.desc = desc;
     }
 

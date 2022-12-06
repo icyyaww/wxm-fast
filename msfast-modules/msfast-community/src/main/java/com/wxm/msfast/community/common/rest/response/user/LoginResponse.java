@@ -1,8 +1,7 @@
 package com.wxm.msfast.community.common.rest.response.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wxm.msfast.community.common.enums.GenderEnum;
-import io.swagger.annotations.ApiModelProperty;
+import com.wxm.msfast.base.common.enums.GenderEnum;
 import lombok.Data;
 
 import java.util.Date;

@@ -1,13 +1,12 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
-public enum AuthStatusEnum {
-    EXAMINE("审核中"),
-    PASS("通过"),
-    REFUSE("拒绝");
+public enum EducationalTypeEnum {
 
+    Full_Time("全日制"),
+    NO_Full_Time("非全日制");
     private String desc;
 
-    AuthStatusEnum(String desc) {
+    EducationalTypeEnum(String desc) {
         this.desc = desc;
     }
 

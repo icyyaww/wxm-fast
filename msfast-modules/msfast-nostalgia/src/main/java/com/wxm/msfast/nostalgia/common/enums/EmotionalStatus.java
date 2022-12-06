@@ -1,17 +1,16 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
-public enum FrUserStatusEnum {
-    ENABLE("启用"),
-    DISABLE("禁用"),
-    LOGOFF("注销");
+public enum EmotionalStatus {
+    single("单身"),
+    Love("恋爱");
+
     private String desc;
 
-    FrUserStatusEnum(String desc) {
+    EmotionalStatus(String desc) {
         this.desc = desc;
     }
 
     public String getDesc() {
         return desc;
     }
-
 }
