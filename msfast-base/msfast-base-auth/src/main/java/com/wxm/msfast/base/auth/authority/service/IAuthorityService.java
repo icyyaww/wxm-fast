@@ -10,7 +10,7 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
  * @Description  有关权限相关的业务代码实现
  * @Date 21:45 2022/6/18
  **/
-public interface AuthorityService<T extends LoginRequest, R extends RegisterRequest> {
+public interface IAuthorityService<T extends LoginRequest, R extends RegisterRequest> {
 
     void register(R registerRequest);
 
@@ -19,4 +19,6 @@ public interface AuthorityService<T extends LoginRequest, R extends RegisterRequ
     void logout();
 
     void sendSmsBefore(SendSmsRequest sendSmsRequest);
+
+    void wxAppletRegister(R request);
 }

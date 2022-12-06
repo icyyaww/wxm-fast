@@ -12,7 +12,7 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
  * @create: 2022-09-23 15:04
  **/
 
-public class AuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequest> implements AuthorityService<T, R> {
+public class IAuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequest> implements IAuthorityService<T, R> {
 
     @Override
     public void register(R registerRequest) {
@@ -32,6 +32,11 @@ public class AuthorityServiceImpl<T extends LoginRequest, R extends RegisterRequ
 
     @Override
     public void sendSmsBefore(SendSmsRequest sendSmsRequest) {
+
+    }
+
+    @Override
+    public void wxAppletRegister(R request) {
 
     }
 }

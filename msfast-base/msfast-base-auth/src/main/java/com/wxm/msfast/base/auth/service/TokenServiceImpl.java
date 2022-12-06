@@ -2,8 +2,7 @@ package com.wxm.msfast.base.auth.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.wxm.msfast.base.auth.authority.service.AuthorityService;
-import com.wxm.msfast.base.auth.common.enums.LoginType;
+import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
@@ -23,7 +22,6 @@ import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.utils.SecurityUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
@@ -70,8 +68,8 @@ public class TokenServiceImpl implements TokenService {
             throw new JrsfException(BaseExceptionEnum.PWD_NOT_SAME_EXCEPTION);
         }
         //用户注册
-        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        authorityService.register(request);
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        IAuthorityService.register(request);
     }
 
     @Override
@@ -79,14 +77,9 @@ public class TokenServiceImpl implements TokenService {
 
         LoginUserResponse loginUserResponse = new LoginUserResponse();
 
-        if (LoginType.WX_Applet.equals(request.getLoginType())) {
-            //微信小程序登录时 通过code 取得 openid,session_key,unionid
-            setWxAppletParam(request);
-        }
-
         //用户登陆业务校验
-        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        LoginUser loginUser = authorityService.login(request);
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        LoginUser loginUser = IAuthorityService.login(request);
         if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
             //登陆失败
             throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
@@ -113,8 +106,8 @@ public class TokenServiceImpl implements TokenService {
         }
 
         //用户退出登陆
-        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        authorityService.logout();
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        IAuthorityService.logout();
     }
 
     @Override
@@ -137,8 +130,8 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public void sendSms(SendSmsRequest sendSmsRequest) {
         //用户发送短信前相关校验或是其他逻辑
-        AuthorityService authorityService = SpringUtils.getBean(AuthorityService.class);
-        authorityService.sendSmsBefore(sendSmsRequest);
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        IAuthorityService.sendSmsBefore(sendSmsRequest);
 
         long times = redisService.getExpire(sendSmsRequest.getMessageType().name() + sendSmsRequest.getPhone(), TimeUnit.MILLISECONDS);
         if (times > 0) {
@@ -183,6 +176,16 @@ public class TokenServiceImpl implements TokenService {
         }
     }
 
+    @Override
+    public void wxAppletRegister(RegisterRequest request) {
+        //微信小程序登录时 通过code 取得 openid,session_key,unionid
+        setWxAppletParam(request);
+
+        //用户注册
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        IAuthorityService.wxAppletRegister(request);
+    }
+
     private String createToken(LoginUser loginUser) {
 
         // Jwt存储信息
@@ -217,11 +220,11 @@ public class TokenServiceImpl implements TokenService {
         return message;
     }
 
-    private void setWxAppletParam(LoginRequest request) {
+    private void setWxAppletParam(RegisterRequest request) {
 
         String appId = ConfigConstants.WX_APPLET_APPID();
         String secret = ConfigConstants.WX_APPLET_SECRET();
-        String result = restTemplate.getForObject("https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + secret + "&js_code=" + request.getUsername() + "&grant_type=authorization_code", String.class);
+        String result = restTemplate.getForObject("https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + secret + "&js_code=" + request.getCode() + "&grant_type=authorization_code", String.class);
         JSONObject jsonObject = JSONObject.parseObject(result);
         Integer errcode = jsonObject.getInteger("errcode");
         if (errcode == 0) {

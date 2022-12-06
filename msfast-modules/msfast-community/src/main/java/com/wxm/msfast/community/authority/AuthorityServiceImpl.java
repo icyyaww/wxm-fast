@@ -1,6 +1,6 @@
 package com.wxm.msfast.community.authority;
 
-import com.wxm.msfast.base.auth.authority.service.AuthorityServiceImpl;
+import com.wxm.msfast.base.auth.authority.service.IAuthorityServiceImpl;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @create: 2022-06-16 18:05
  **/
 @Service
-public class UserAuthorityServiceImpl extends AuthorityServiceImpl<UserLoginRequest, UserRegisterRequest> {
+public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest, UserRegisterRequest> {
 
     @Autowired
     FrUserService frUserService;

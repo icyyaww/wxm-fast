@@ -20,8 +20,8 @@ import java.util.Set;
 
 public class ViolationUtils {
 
-    public static void violation(Object object) {
-        Set<ConstraintViolation<Object>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(object);
+    public static void violation(Object object, Class<?>... classz) {
+        Set<ConstraintViolation<Object>> validate = Validation.buildDefaultValidatorFactory().getValidator().validate(object, classz);
         if (CollectionUtil.isNotEmpty(validate)) {
             Map<String, String> errorMap = new HashMap<>();
             validate.forEach(model -> {

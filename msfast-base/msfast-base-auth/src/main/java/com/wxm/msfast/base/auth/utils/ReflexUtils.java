@@ -1,6 +1,6 @@
 package com.wxm.msfast.base.auth.utils;
 
-import com.wxm.msfast.base.auth.authority.service.AuthorityService;
+import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
@@ -19,24 +19,24 @@ import java.lang.reflect.Type;
 
 public class ReflexUtils {
 
-    public static Class<? extends LoginRequest> getServiceViewModel(AuthorityService service) {
+    public static Class<? extends LoginRequest> getServiceViewModel(IAuthorityService service) {
         Class clazz = service.getClass();
         while (clazz.getSimpleName().contains("$")) {
             clazz = (Class) clazz.getGenericSuperclass();
         }
 
-        Class<? extends LoginRequest> clsViewModel = getParameterizedType(clazz, AuthorityService.class, LoginRequest.class);
+        Class<? extends LoginRequest> clsViewModel = getParameterizedType(clazz, IAuthorityService.class, LoginRequest.class);
 
         return clsViewModel;
     }
 
-    public static <T> Class<? extends RegisterRequest> getServiceView(AuthorityService service) {
+    public static <T> Class<? extends RegisterRequest> getServiceView(IAuthorityService service) {
         Class clazz = service.getClass();
         while (clazz.getSimpleName().contains("$")) {
             clazz = (Class) clazz.getGenericSuperclass();
         }
 
-        Class<? extends RegisterRequest> clsViewModel = getParameterizedType(clazz, AuthorityService.class, RegisterRequest.class);
+        Class<? extends RegisterRequest> clsViewModel = getParameterizedType(clazz, IAuthorityService.class, RegisterRequest.class);
 
         return clsViewModel;
     }

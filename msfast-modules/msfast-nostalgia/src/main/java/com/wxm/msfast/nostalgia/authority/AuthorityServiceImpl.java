@@ -1,6 +1,6 @@
 package com.wxm.msfast.nostalgia.authority;
 
-import com.wxm.msfast.base.auth.authority.service.AuthorityServiceImpl;
+import com.wxm.msfast.base.auth.authority.service.IAuthorityServiceImpl;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  * @create: 2022-06-16 18:05
  **/
 @Service
-public class UserAuthorityServiceImpl extends AuthorityServiceImpl<LoginRequest, RegisterRequest> {
+public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, RegisterRequest> {
 
     @Autowired
     MsfFileService fileService;
@@ -31,5 +31,10 @@ public class UserAuthorityServiceImpl extends AuthorityServiceImpl<LoginRequest,
     public LoginUser login(LoginRequest loginRequest) {
         LoginUser loginUser = new LoginUser();
         return loginUser;
+    }
+
+    @Override
+    public void register(RegisterRequest registerRequest) {
+        super.register(registerRequest);
     }
 }
