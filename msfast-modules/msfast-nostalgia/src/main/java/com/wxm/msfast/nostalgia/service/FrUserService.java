@@ -13,5 +13,6 @@ import com.wxm.msfast.nostalgia.entity.FrUserEntity;
  */
 public interface FrUserService extends IService<FrUserEntity> {
 
+    Long countByOpenId(String openId);
 }
 

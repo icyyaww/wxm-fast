@@ -3,12 +3,14 @@ package com.wxm.msfast.base.auth.service;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
+import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
+import com.wxm.msfast.base.auth.common.rest.response.WxAppletOpenResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.config.AliSmsConfig;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
@@ -52,7 +54,7 @@ public class TokenServiceImpl implements TokenService {
     AliSmsConfig aliSmsConfig;
 
     @Autowired
-    RestTemplate restTemplate;
+    WxAppletService wxAppletService;
 
     @Override
     public void register(RegisterRequest request) {
@@ -95,6 +97,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public void logout() {
+
         if (ConfigConstants.AUTH_REDIS_ENABLE()) {
             String token = SecurityUtils.getToken();
             if (StringUtils.isNotBlank(token)) {
@@ -223,17 +226,10 @@ public class TokenServiceImpl implements TokenService {
 
     private void setWxAppletParam(RegisterRequest request) {
 
-        String appId = ConfigConstants.WX_APPLET_APPID();
-        String secret = ConfigConstants.WX_APPLET_SECRET();
-        String result = restTemplate.getForObject("https://api.weixin.qq.com/sns/jscode2session?appid=" + appId + "&secret=" + secret + "&js_code=" + request.getCode() + "&grant_type=authorization_code", String.class);
-        JSONObject jsonObject = JSONObject.parseObject(result);
-        Integer errcode = jsonObject.getInteger("errcode");
-        if (errcode == 0) {
-            request.setOpenid(jsonObject.getString("openid"));
-            request.setSessionKey(jsonObject.getString("session_key"));
-            request.setUnionId(jsonObject.getString("unionid"));
-        } else {
-            throw new JrsfException(BaseExceptionEnum.API_ERROR).setMsg(jsonObject.getString("errmsg"));
-        }
+        WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(request.getCode());
+        request.setOpenId(wxAppletOpenResponse.getOpenid());
+        request.setSessionKey(wxAppletOpenResponse.getSessionKey());
+        request.setUnionId(wxAppletOpenResponse.getUnionId());
+
     }
 }

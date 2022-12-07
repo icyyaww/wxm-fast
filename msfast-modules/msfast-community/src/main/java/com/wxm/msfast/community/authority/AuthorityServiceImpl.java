@@ -5,11 +5,11 @@ import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
+import com.wxm.msfast.base.common.enums.UserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.base.file.service.MsfFileService;
-import com.wxm.msfast.community.common.exception.UserExceptionEnum;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
 import com.wxm.msfast.community.common.rest.response.user.LoginResponse;
@@ -37,7 +37,6 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
 
     @Override
     @Transactional
-    @FileSaveService
     public void register(UserRegisterRequest registerRequest) {
         FrUserEntity frUserEntity = new FrUserEntity();
         BeanUtils.copyProperties(registerRequest, frUserEntity);

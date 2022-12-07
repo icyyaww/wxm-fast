@@ -2,6 +2,7 @@ package com.wxm.msfast.base.auth.common.rest.request;
 
 import com.wxm.msfast.base.auth.common.validtype.PhoneRegister;
 import com.wxm.msfast.base.auth.common.validtype.WxAppletRegister;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -34,13 +35,13 @@ public class RegisterRequest {
     @Length(min = 6, max = 25, message = "确认密码为{min}-{max}位", groups = {PhoneRegister.class})
     private String truePassword;
 
-
     @NotBlank(groups = {WxAppletRegister.class})
-    private String code; //
+    private String code;
+
     /*
      * @Description  登录方式为 WX_Applet 时
      **/
-    private String openid; //
+    private String openId; //
 
     /*
      * @Description  登录方式为 WX_Applet 时
