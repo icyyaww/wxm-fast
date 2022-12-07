@@ -9,6 +9,7 @@ import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.common.validtype.PhoneLogin;
 import com.wxm.msfast.base.auth.common.validtype.PhoneRegister;
+import com.wxm.msfast.base.auth.common.validtype.WxAppletLogin;
 import com.wxm.msfast.base.auth.common.validtype.WxAppletRegister;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
@@ -42,7 +43,10 @@ public class TokenController {
     @PostMapping("/register")
     @ApiOperation(value = "手机号注册")
     @ApiOperationSort(1)
-    public R<Void> register(@RequestBody String viewmodelJson) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"phone\":\"手机号 必填\",\"verificationCode\":\"验证码 必填\",\"password\":\"登录密码 必填\",\"truePassword\":\"确认密码 必填\"}", required = true)
+    })
+    public R<Void> register(@RequestBody @ApiIgnore String viewmodelJson) {
 
         IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
 
@@ -52,19 +56,17 @@ public class TokenController {
 
         //数据校验
         ViolationUtils.violation(viewModel, PhoneRegister.class);
+        ViolationUtils.violation(viewModel);
         tokenService.register(viewModel);
         return R.ok();
     }
 
     @AuthIgnore
     @PostMapping("/login")
-    @ApiOperation(value = "登陆")
+    @ApiOperation(value = "手机号登陆")
     @ApiOperationSort(2)
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\n" +
-                    "  \"username\":\"用户名 必填\",\n" +
-                    "  \"password\":\"登录密码 必填\n" +
-                    "}", required = true)
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"username\":\"用户名 必填\",\"password\":\"登录密码 必填\"}", required = true)
     })
     public R<LoginUserResponse> login(@RequestBody @ApiIgnore String viewmodelJson) {
 
@@ -76,7 +78,7 @@ public class TokenController {
 
         //数据校验
         ViolationUtils.violation(viewModel, PhoneLogin.class);
-
+        ViolationUtils.violation(viewModel);
         return R.ok(tokenService.login(viewModel));
     }
 
@@ -111,7 +113,10 @@ public class TokenController {
     @PostMapping("/wxAppletRegister")
     @ApiOperation(value = "微信小程序注册")
     @ApiOperationSort(6)
-    public R<Void> wxAppletRegister(@RequestBody String viewmodelJson) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
+    })
+    public R<Void> wxAppletRegister(@RequestBody @ApiIgnore String viewmodelJson) {
 
         IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
 
@@ -121,8 +126,31 @@ public class TokenController {
 
         //数据校验
         ViolationUtils.violation(viewModel, WxAppletRegister.class);
+        ViolationUtils.violation(viewModel);
+
         tokenService.wxAppletRegister(viewModel);
         return R.ok();
+    }
+
+    @AuthIgnore
+    @PostMapping("/wxAppletLogin")
+    @ApiOperation(value = "微信小程序登陆")
+    @ApiOperationSort(7)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
+    })
+    public R<LoginUserResponse> wxAppletLogin(@RequestBody @ApiIgnore String viewmodelJson) {
+
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+
+        Class<? extends LoginRequest> clsViewModel = ReflexUtils.getServiceViewModel(IAuthorityService);
+
+        LoginRequest viewModel = JSONObject.parseObject(viewmodelJson, clsViewModel);
+
+        //数据校验
+        ViolationUtils.violation(viewModel, WxAppletLogin.class);
+        ViolationUtils.violation(viewModel);
+        return R.ok(tokenService.login(viewModel));
     }
 }
 

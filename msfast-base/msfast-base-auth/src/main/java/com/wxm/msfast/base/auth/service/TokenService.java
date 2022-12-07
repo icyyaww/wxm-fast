@@ -25,4 +25,5 @@ public interface TokenService<T extends LoginRequest, R extends RegisterRequest>
     void checkSms(CheckSmsRequest checkSmsRequest);
 
     void wxAppletRegister(R request);
+
 }

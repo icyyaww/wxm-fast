@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.auth.common.rest.request;
 
 import com.wxm.msfast.base.auth.common.validtype.PhoneLogin;
+import com.wxm.msfast.base.auth.common.validtype.WxAppletLogin;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -25,5 +26,10 @@ public class LoginRequest {
     @NotBlank(groups = {PhoneLogin.class})
     private String password;
 
+    /**
+     * @Description: 微信code
+     */
+    @NotBlank(groups = {WxAppletLogin.class})
+    private String code;
 
 }

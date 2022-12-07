@@ -186,6 +186,7 @@ public class TokenServiceImpl implements TokenService {
         IAuthorityService.wxAppletRegister(request);
     }
 
+
     private String createToken(LoginUser loginUser) {
 
         // Jwt存储信息
