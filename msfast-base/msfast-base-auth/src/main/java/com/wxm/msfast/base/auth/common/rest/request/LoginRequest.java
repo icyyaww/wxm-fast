@@ -32,4 +32,19 @@ public class LoginRequest {
     @NotBlank(groups = {WxAppletLogin.class})
     private String code;
 
+    /*
+     * @Description  登录方式为 WX_Applet 时
+     **/
+    private String openId; //
+
+    /*
+     * @Description  登录方式为 WX_Applet 时
+     **/
+    private String sessionKey;
+
+    /*
+     * @Description  登录方式为 WX_Applet 时
+     **/
+    private String unionId;
+
 }

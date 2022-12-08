@@ -189,6 +189,17 @@ public class TokenServiceImpl implements TokenService {
         IAuthorityService.wxAppletRegister(request);
     }
 
+    @Override
+    public LoginUserResponse wxAppletLogin(LoginRequest request) {
+
+        WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(request.getCode());
+        request.setOpenId(wxAppletOpenResponse.getOpenid());
+        request.setSessionKey(wxAppletOpenResponse.getSessionKey());
+        request.setUnionId(wxAppletOpenResponse.getUnionId());
+
+        return login(request);
+    }
+
 
     private String createToken(LoginUser loginUser) {
 

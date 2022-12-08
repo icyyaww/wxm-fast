@@ -17,4 +17,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getOpenId, openId);
         return count(frUserEntityWrapper);
     }
+
+    @Override
+    public FrUserEntity getFrUserByOpenId(String openId) {
+        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getOpenId, openId);
+        return getOne(frUserEntityWrapper);
+    }
 }

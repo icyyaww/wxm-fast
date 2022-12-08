@@ -92,6 +92,8 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
             throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
         }
 
+        //todo 校验密码是否正确
+
         loginUser.setId(frUserEntity.getId());
         LoginResponse loginResponse = new LoginResponse();
         BeanUtils.copyProperties(frUserEntity, loginResponse);

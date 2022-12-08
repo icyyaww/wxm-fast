@@ -26,4 +26,5 @@ public interface TokenService<T extends LoginRequest, R extends RegisterRequest>
 
     void wxAppletRegister(R request);
 
+    LoginUserResponse wxAppletLogin(T request);
 }

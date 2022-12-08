@@ -150,7 +150,7 @@ public class TokenController {
         //数据校验
         ViolationUtils.violation(viewModel, WxAppletLogin.class);
         ViolationUtils.violation(viewModel);
-        return R.ok(tokenService.login(viewModel));
+        return R.ok(tokenService.wxAppletLogin(viewModel));
     }
 }
 

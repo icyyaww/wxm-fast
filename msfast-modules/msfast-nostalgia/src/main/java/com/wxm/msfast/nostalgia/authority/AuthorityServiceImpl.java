@@ -13,6 +13,7 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.UserTypeEnum;
 import com.wxm.msfast.nostalgia.common.request.fruser.AppletRegisterRequest;
+import com.wxm.msfast.nostalgia.common.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import org.springframework.beans.BeanUtils;
@@ -47,7 +48,21 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
      **/
     @Override
     public LoginUser login(LoginRequest loginRequest) {
+
         LoginUser loginUser = new LoginUser();
+        FrUserEntity frUserEntity = this.frUserService.getFrUserByOpenId(loginRequest.getOpenId());
+        if (frUserEntity == null) {
+            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+
+        if (FrUserStatusEnum.DISABLE.equals(frUserEntity.getStatus())) {
+            throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
+        }
+
+        loginUser.setId(frUserEntity.getId());
+        LoginResponse loginResponse = new LoginResponse();
+        BeanUtils.copyProperties(frUserEntity, loginResponse);
+        loginUser.setInfo(loginResponse);
         return loginUser;
     }
 
