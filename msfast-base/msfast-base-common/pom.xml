@@ -25,6 +25,7 @@
         <fastjson2.version>2.0.7</fastjson2.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
+        <swagger.models.version>1.6.9</swagger.models.version>
         <swagger.bootstrap.ui.version>1.9.1</swagger.bootstrap.ui.version>
         <aliyun.java.sdk.sms.version>3.0.0-rc1</aliyun.java.sdk.sms.version>
         <aliyun.java.sdk.core.version>4.5.0</aliyun.java.sdk.core.version>
@@ -144,6 +145,11 @@
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox.swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>${swagger.models.version}</version>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>

@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.fruser;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wxm.msfast.base.common.enums.GenderEnum;

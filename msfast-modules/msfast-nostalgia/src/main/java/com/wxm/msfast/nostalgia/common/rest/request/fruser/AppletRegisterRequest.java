@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.request.fruser;
+package com.wxm.msfast.nostalgia.common.rest.request.fruser;
 
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.common.enums.GenderEnum;

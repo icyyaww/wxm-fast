@@ -1,12 +1,12 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
-public enum EmotionalStatus {
-    Single("单身"),
-    Love("恋爱");
+public enum CharacterPosition {
 
+    LEFT("左边"),
+    RIGHT("右边");
     private String desc;
 
-    EmotionalStatus(String desc) {
+    CharacterPosition(String desc) {
         this.desc = desc;
     }
 
