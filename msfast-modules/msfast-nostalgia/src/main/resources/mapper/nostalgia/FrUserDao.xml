@@ -82,8 +82,8 @@
         fr_user fu
         <where>
             fu.del_flag=0 and fu.status='ENABLE' and fu.auth_status='PASS' and fu.img_list is not null
-            <if test="id!=null and id!=''">
-                and fu.id=#{id}
+            <if test="gender!=null and gender!=''">
+                and fu.gender!=#{gender}
             </if>
         </where>
     </select>
