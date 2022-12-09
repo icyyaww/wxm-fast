@@ -5,7 +5,7 @@ import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
-import com.wxm.msfast.base.common.enums.UserExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
@@ -51,11 +51,11 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         LoginUser loginUser = new LoginUser();
         FrUserEntity frUserEntity = this.frUserService.getFrUserByOpenId(loginRequest.getOpenId());
         if (frUserEntity == null) {
-            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
 
         if (FrUserStatusEnum.DISABLE.equals(frUserEntity.getStatus())) {
-            throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
         }
 
         loginUser.setId(frUserEntity.getId());
@@ -73,13 +73,13 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         BeanUtils.copyProperties(request, frUserEntity);
         Integer age = DateUtils.getAgeByBirth(request.getBirthday());
         if (age < 16) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("未满16周岁无法注册");
+            throw new JrsfException(BaseUserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("未满16周岁无法注册");
         }
         if (age > 100) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("超过100周岁无法注册");
+            throw new JrsfException(BaseUserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("超过100周岁无法注册");
         }
         if (this.frUserService.countByOpenId(request.getOpenId()) > 0l) {
-            throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_EXIST_EXCEPTION);
         }
 
         frUserEntity.setStatus(FrUserStatusEnum.ENABLE);

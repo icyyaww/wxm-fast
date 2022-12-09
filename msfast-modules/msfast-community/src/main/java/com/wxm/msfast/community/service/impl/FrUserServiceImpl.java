@@ -12,7 +12,7 @@ import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
-import com.wxm.msfast.base.common.enums.UserExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.PageResult;
@@ -84,7 +84,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
         FrUserEntity frUserEntity = getFrUserByPhone(request.getPhone());
         if (frUserEntity == null) {
-            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
         CheckSmsRequest checkSmsRequest = new CheckSmsRequest();
         checkSmsRequest.setMessageType(MessageType.LOGIN);
@@ -154,7 +154,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         Integer loginUserId = TokenUtils.getOwnerId();
         FrUserEntity frUserEntity = this.baseMapper.selectById(loginUserId);
         if (frUserEntity == null) {
-            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
         PersonalCenterResponse personalCenterResponse = new PersonalCenterResponse();
         BeanUtils.copyProperties(frUserEntity, personalCenterResponse);

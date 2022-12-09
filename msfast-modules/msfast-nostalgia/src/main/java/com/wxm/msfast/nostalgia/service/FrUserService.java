@@ -1,6 +1,8 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 
 
@@ -16,5 +18,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     Long countByOpenId(String openId);
 
     FrUserEntity getFrUserByOpenId(String openId);
+
+    RecommendUserInfoResponse recommendUserInfo(RecommendUserRequest request);
 }
 

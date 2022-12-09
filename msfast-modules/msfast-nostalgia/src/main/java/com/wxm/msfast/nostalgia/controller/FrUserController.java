@@ -38,6 +38,6 @@ public class FrUserController {
     @GetMapping("/recommendUserInfo")
     @AuthIgnore
     public R<RecommendUserInfoResponse> recommendUserInfo(RecommendUserRequest request) {
-        return R.ok(new RecommendUserInfoResponse());
+        return R.ok(frUserService.recommendUserInfo(request));
     }
 }

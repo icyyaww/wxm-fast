@@ -5,10 +5,9 @@ import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
-import com.wxm.msfast.base.common.enums.UserExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
-import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserRegisterRequest;
@@ -42,14 +41,14 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
         BeanUtils.copyProperties(registerRequest, frUserEntity);
         Integer age = DateUtils.getAgeByBirth(registerRequest.getBirthday());
         if (age < 16) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("未满16周岁无法注册");
+            throw new JrsfException(BaseUserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("未满16周岁无法注册");
         }
         if (age > 100) {
-            throw new JrsfException(UserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("超过100周岁无法注册");
+            throw new JrsfException(BaseUserExceptionEnum.AGE_NOT_RANGE_EXCEPTION).setMsg("超过100周岁无法注册");
         }
 
         if (this.frUserService.countByPhone(registerRequest.getPhone()) > 0l) {
-            throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_EXIST_EXCEPTION);
         }
 
         frUserEntity.setStatus(FrUserStatusEnum.ENABLE);
@@ -66,14 +65,14 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
         if (MessageType.REGISTER.equals(sendSmsRequest.getMessageType())) {
             //注册
             if (count > 0l) {
-                throw new JrsfException(UserExceptionEnum.USER_EXIST_EXCEPTION);
+                throw new JrsfException(BaseUserExceptionEnum.USER_EXIST_EXCEPTION);
             }
         }
 
         if (MessageType.RESETPWD.equals(sendSmsRequest.getMessageType()) || MessageType.LOGIN.equals(sendSmsRequest.getMessageType())) {
             //重置密码
             if (count == 0l) {
-                throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
             }
         }
 
@@ -85,11 +84,11 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
         LoginUser loginUser = new LoginUser();
         FrUserEntity frUserEntity = this.frUserService.getFrUserByPhone(loginRequest.getUsername());
         if (frUserEntity == null) {
-            throw new JrsfException(UserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
 
         if (FrUserStatusEnum.DISABLE.equals(frUserEntity.getStatus())) {
-            throw new JrsfException(UserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
+            throw new JrsfException(BaseUserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
         }
 
         //todo 校验密码是否正确

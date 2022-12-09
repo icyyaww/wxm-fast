@@ -43,6 +43,7 @@
         <result property="userType" column="user_type"/>
         <result property="sessionKey" column="session_key"/>
         <result property="unionId" column="union_id"/>
+        <result property="characterType" column="character_type" typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
     </resultMap>
 
 

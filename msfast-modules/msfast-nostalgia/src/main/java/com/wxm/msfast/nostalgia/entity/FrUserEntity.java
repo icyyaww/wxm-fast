@@ -5,7 +5,9 @@ import com.wxm.msfast.base.common.entity.BaseEntity;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.*;
+import com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler;
 import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.CharacterTypeResponse;
 import lombok.Data;
 
 import java.util.Date;
@@ -170,5 +172,8 @@ public class FrUserEntity extends BaseEntity {
 
     @TableField("union_id")
     private String unionId;
+
+    @TableField(value = "character_type", typeHandler = CharacterTypeHandler.class)
+    private CharacterTypeResponse characterType;
 
 }
