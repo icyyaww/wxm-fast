@@ -107,15 +107,6 @@ public class RecommendUserInfoResponse {
     private MaritalStatusEnum marriage;
 
     /**
-     * 脱单目标
-     */
-    @ApiModelProperty(value = "脱单目标 One_Year(\"一年内\"),\n" +
-            "    Two_Year(\"两年内\"),\n" +
-            "    Any_Time(\"随时\"),\n" +
-            "    Un_known(\"暂不考虑\")")
-    private LoveGoalEnum loveGoal;
-
-    /**
      * 感情状况
      */
     @ApiModelProperty(value = "感情状况 Single(\"单身\"),\n" +
@@ -142,7 +133,7 @@ public class RecommendUserInfoResponse {
 
 
     @ApiModelProperty(value = "性格测试")
-    private CharacterTypeResponse character;
+    private CharacterTypeResponse characterType;
 
     @ApiModelProperty(value = "剩余推荐次数")
     private Integer surplusNum;

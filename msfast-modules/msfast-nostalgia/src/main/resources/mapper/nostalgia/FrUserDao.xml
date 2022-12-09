@@ -43,8 +43,48 @@
         <result property="userType" column="user_type"/>
         <result property="sessionKey" column="session_key"/>
         <result property="unionId" column="union_id"/>
-        <result property="characterType" column="character_type" typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+        <result property="characterType" column="character_type"
+                typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
     </resultMap>
 
 
+    <resultMap id="recommendUserInfo"
+               type="com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse">
+        <result property="imgList" column="img_list"
+                typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
+        <result property="characterType" column="character_type"
+                typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+    </resultMap>
+
+    <!--首页推荐用户-->
+    <select id="getRecommendUserInfo" resultMap="recommendUserInfo" parameterType="map">
+        select
+        fu.id,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.birthday,
+        fu.height,
+        fu.profession,
+        fu.gender,
+        fu.school,
+        fu.education,
+        fu.educational_type,
+        fu.about_me,
+        fu.interest,
+        fu.love_requirement,
+        fu.city,
+        fu.marriage,
+        fu.emotional,
+        fu.annual_salary,
+        fu.img_list,
+        fu.character_type
+        from
+        fr_user fu
+        <where>
+            fu.del_flag=0 and fu.status='ENABLE' and fu.auth_status='PASS' and fu.img_list is not null
+            <if test="id!=null and id!=''">
+                and fu.id=#{id}
+            </if>
+        </where>
+    </select>
 </mapper>

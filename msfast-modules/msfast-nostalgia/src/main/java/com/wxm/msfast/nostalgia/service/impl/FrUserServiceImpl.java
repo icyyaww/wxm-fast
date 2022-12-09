@@ -16,6 +16,10 @@ import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @Service("frUserService")
 public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> implements FrUserService {
@@ -33,7 +37,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
-    public RecommendUserInfoResponse recommendUserInfo(RecommendUserRequest request) {
+    public RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request) {
 
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         if (loginUser == null) {
@@ -41,9 +45,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             if (request == null || request.getAge() == null || request.getGender() == null) {
                 throw new JrsfException(UserExceptionEnum.SEARCH_PARAM_EMPTY_EXCEPTION);
             }
-            FrUserEntity frUserEntity = this.getById(1);
+            Map<String, Object> param = new HashMap<>();
+            param.put("id", 1);
+            List<RecommendUserInfoResponse> list = this.baseMapper.getRecommendUserInfo(param);
             RecommendUserInfoResponse recommendUserInfo = new RecommendUserInfoResponse();
-            BeanUtils.copyProperties(frUserEntity, recommendUserInfo);
+            BeanUtils.copyProperties(list.get(0), recommendUserInfo);
             return recommendUserInfo;
         } else {
             //已登录

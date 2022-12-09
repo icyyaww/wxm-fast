@@ -19,6 +19,6 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     FrUserEntity getFrUserByOpenId(String openId);
 
-    RecommendUserInfoResponse recommendUserInfo(RecommendUserRequest request);
+    RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request);
 }
 
