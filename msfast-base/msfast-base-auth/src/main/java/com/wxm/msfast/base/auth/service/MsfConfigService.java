@@ -1,14 +1,14 @@
-package com.wxm.msfast.community.service;
+package com.wxm.msfast.base.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.community.entity.SysConfigEntity;
+import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
 
 /**
  * @author wanglei
  * @email 378526425@qq.com
  * @date 2022-10-10 15:45:08
  */
-public interface SysConfigService extends IService<SysConfigEntity> {
+public interface MsfConfigService extends IService<MsfConfigEntity> {
 
     /**
      * @Description: 根据code查询value
@@ -18,5 +18,7 @@ public interface SysConfigService extends IService<SysConfigEntity> {
      * @Date: 2022/10/10 下午4:08
      */
     String getValueByCode(String code);
+
+    MsfConfigEntity getConfigByCode(String code);
 }
 

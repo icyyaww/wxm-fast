@@ -85,6 +85,9 @@
             <if test="gender!=null and gender!=''">
                 and fu.gender!=#{gender}
             </if>
+            <if test="selfId!=null and selfId!=''">
+                and fu.id!=#{selfId}
+            </if>
         </where>
     </select>
 </mapper>

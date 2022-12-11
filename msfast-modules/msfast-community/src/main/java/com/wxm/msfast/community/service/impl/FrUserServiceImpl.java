@@ -10,6 +10,7 @@ import com.wxm.msfast.base.auth.common.enums.MessageType;
 import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
@@ -28,7 +29,6 @@ import com.wxm.msfast.community.entity.FrUserEntity;
 import com.wxm.msfast.community.service.FrBlogService;
 import com.wxm.msfast.community.service.FrUserFollowService;
 import com.wxm.msfast.community.service.FrUserService;
-import com.wxm.msfast.community.service.SysConfigService;
 import com.wxm.msfast.community.utils.TLSSigAPIv2;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -48,7 +48,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     TokenService tokenService;
 
     @Autowired
-    SysConfigService sysConfigService;
+    MsfConfigService msfConfigService;
 
     @Autowired
     FrBlogService frBlogService;
@@ -130,7 +130,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
      */
     @Override
     public List<String> message() {
-        String value = sysConfigService.getValueByCode(SysConfigEnum.video_matching_tips.name());
+        String value = msfConfigService.getValueByCode(SysConfigEnum.video_matching_tips.name());
         if (StringUtils.isNotBlank(value)) {
             return JSON.parseArray(value, String.class);
         }
@@ -214,7 +214,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         LoginResponse loginResponse = TokenUtils.info(LoginResponse.class).getInfo();
         tuiCallKitResponse.setNickName(loginResponse.getNickName());
         tuiCallKitResponse.setAvatar(loginResponse.getHeadPortrait());
-        tuiCallKitResponse.setCallingBell(sysConfigService.getValueByCode(SysConfigEnum.home_bgm.name()));
+        tuiCallKitResponse.setCallingBell(msfConfigService.getValueByCode(SysConfigEnum.home_bgm.name()));
         return tuiCallKitResponse;
     }
 

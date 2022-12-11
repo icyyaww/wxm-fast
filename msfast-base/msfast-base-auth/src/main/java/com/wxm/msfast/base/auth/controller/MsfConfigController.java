@@ -1,8 +1,12 @@
-package com.wxm.msfast.community.controller;
+package com.wxm.msfast.base.auth.controller;
 
+import com.wxm.msfast.base.auth.common.enums.ConfigAccessEnum;
+import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
+import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.community.service.SysConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
@@ -21,12 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022-10-10 15:45:08
  */
 @RestController
-@RequestMapping("community/sysconfig")
+@RequestMapping("msfast/sysconfig")
 @Api(tags = "系统配置")
-public class SysConfigController {
+public class MsfConfigController {
 
     @Autowired
-    private SysConfigService sysConfigService;
+    private MsfConfigService msfConfigService;
 
     /**
      * 信息
@@ -36,6 +40,14 @@ public class SysConfigController {
     @ApiOperationSort(value = 1)
     @AuthIgnore
     public R<String> value(@RequestParam String code) {
-        return R.ok(sysConfigService.getValueByCode(code));
+        MsfConfigEntity msfConfigEntity = msfConfigService.getConfigByCode(code);
+        if (msfConfigEntity != null) {
+
+            if (ConfigAccessEnum.INNER.equals(msfConfigEntity.getAccess())) {
+                throw new JrsfException(BaseExceptionEnum.NO_PERMISSION_EXCEPTION);
+            }
+            return R.ok(msfConfigEntity.getValue());
+        }
+        return R.ok();
     }
 }

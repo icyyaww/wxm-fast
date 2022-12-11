@@ -1,4 +1,4 @@
-package com.wxm.msfast.base.auth.service;
+package com.wxm.msfast.base.auth.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
@@ -12,6 +12,7 @@ import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.WxAppletOpenResponse;
 import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.common.config.AliSmsConfig;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
@@ -24,6 +25,7 @@ import com.wxm.msfast.base.common.utils.JwtUtils;
 import com.wxm.msfast.base.common.utils.SecurityUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Service;
@@ -193,10 +195,7 @@ public class TokenServiceImpl implements TokenService {
     public LoginUserResponse wxAppletLogin(LoginRequest request) {
 
         WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(request.getCode());
-        request.setOpenId(wxAppletOpenResponse.getOpenid());
-        request.setSessionKey(wxAppletOpenResponse.getSessionKey());
-        request.setUnionId(wxAppletOpenResponse.getUnionId());
-
+        BeanUtils.copyProperties(wxAppletOpenResponse, request);
         return login(request);
     }
 
@@ -238,9 +237,6 @@ public class TokenServiceImpl implements TokenService {
     private void setWxAppletParam(RegisterRequest request) {
 
         WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(request.getCode());
-        request.setOpenId(wxAppletOpenResponse.getOpenid());
-        request.setSessionKey(wxAppletOpenResponse.getSessionKey());
-        request.setUnionId(wxAppletOpenResponse.getUnionId());
-
+        BeanUtils.copyProperties(wxAppletOpenResponse, request);
     }
 }

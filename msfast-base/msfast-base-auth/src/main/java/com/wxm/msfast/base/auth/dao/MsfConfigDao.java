@@ -1,15 +1,15 @@
-package com.wxm.msfast.nostalgia.dao;
+package com.wxm.msfast.base.auth.dao;
 
-import com.wxm.msfast.nostalgia.entity.MsfConfigEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 系统配置
+ * 
  * 
  * @author wanglei
  * @email 378526425@qq.com
- * @date 2022-12-01 20:27:10
+ * @date 2022-10-10 15:45:08
  */
 @Mapper
 public interface MsfConfigDao extends BaseMapper<MsfConfigEntity> {

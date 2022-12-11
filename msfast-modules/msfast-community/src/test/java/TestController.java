@@ -1,10 +1,10 @@
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.msfast.MsfastCommunityApplication;
+import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
+import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.community.entity.FrUserEntity;
-import com.wxm.msfast.community.entity.SysConfigEntity;
 import com.wxm.msfast.community.service.FrUserService;
-import com.wxm.msfast.community.service.SysConfigService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +23,7 @@ public class TestController {
     FrUserService frUserService;
 
     @Autowired
-    SysConfigService sysConfigService;
+    MsfConfigService msfConfigService;
 
     @Test
     public void test() {
@@ -31,8 +31,8 @@ public class TestController {
         FrUserEntity frUserEntity = frUserService.getOne(frUserEntityWrapper);
         System.out.println(frUserEntity);
 
-        Wrapper<SysConfigEntity> sysConfigEntityWrapper = new QueryWrapper<SysConfigEntity>().lambda().eq(SysConfigEntity::getCode, "");
-        SysConfigEntity sysConfigEntity = sysConfigService.getOne(sysConfigEntityWrapper);
-        System.out.println(sysConfigEntity);
+        Wrapper<MsfConfigEntity> sysConfigEntityWrapper = new QueryWrapper<MsfConfigEntity>().lambda().eq(MsfConfigEntity::getCode, "");
+        MsfConfigEntity msfConfigEntity = msfConfigService.getOne(sysConfigEntityWrapper);
+        System.out.println(msfConfigEntity);
     }
 }

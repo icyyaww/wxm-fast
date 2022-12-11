@@ -1,21 +1,20 @@
-package com.wxm.msfast.nostalgia.entity;
+package com.wxm.msfast.base.auth.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.wxm.msfast.base.auth.common.enums.ConfigAccessEnum;
 import com.wxm.msfast.base.common.entity.BaseEntity;
 import lombok.Data;
 
 
 /**
- * 系统配置
- *
  * @author wanglei
  * @email 378526425@qq.com
- * @date 2022-12-01 20:27:10
+ * @date 2022-10-10 15:45:08
  */
 @Data
-@TableName(value = "msf_config", autoResultMap = true)
+@TableName("msf_config")
 public class MsfConfigEntity extends BaseEntity {
-
 
     /**
      * 设置编号
@@ -33,4 +32,7 @@ public class MsfConfigEntity extends BaseEntity {
     @TableField("descr")
     private String descr;
 
+    
+    @TableField("access")
+    private ConfigAccessEnum access;
 }
