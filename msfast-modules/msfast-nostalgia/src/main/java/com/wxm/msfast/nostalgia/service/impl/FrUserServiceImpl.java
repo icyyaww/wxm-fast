@@ -74,7 +74,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
             param.put("size", numSize);
 
-
             return getRecommendUserInfoByParam(param, numSize);
         }
     }

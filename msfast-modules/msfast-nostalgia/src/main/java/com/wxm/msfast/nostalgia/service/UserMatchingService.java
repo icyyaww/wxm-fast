@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 
 
@@ -21,5 +22,7 @@ public interface UserMatchingService extends IService<UserMatchingEntity> {
      * @Date: 2022/12/12 下午2:31
      */
     Long matchingNum();
+
+    void match(ChoiceRequest request);
 }
 

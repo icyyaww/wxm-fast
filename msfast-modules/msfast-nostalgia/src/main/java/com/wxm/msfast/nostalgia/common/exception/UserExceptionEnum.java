@@ -5,7 +5,7 @@ import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
 public enum UserExceptionEnum implements BaseExceptionEnumInterface {
 
     SEARCH_PARAM_EMPTY_EXCEPTION(12001, "查询条件不可为空"),
-    ;
+    MATCHING_BEYOND_LIMIT_EXCEPTION(12002, "匹配数限额");
 
     private Integer code;
     private String msg;

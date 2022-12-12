@@ -31,6 +31,7 @@ public class UserMatchingController {
     @ApiOperationSort(value = 1)
     @PostMapping("/match")
     public R<Void> match(@RequestBody ChoiceRequest request) {
+        userMatchingService.match(request);
         return R.ok();
     }
 }
