@@ -87,11 +87,11 @@
                 and fu.gender!=#{gender}
             </if>
             <if test="selfId!=null and selfId!=''">
-                and fu.id!=#{selfId}
+                and fu.id!=#{selfId} and (select count(1) from user_matching um where um.del_flag=0 and um.user_id=#{selfId} and um.other_user=fu.id)&lt;=0
             </if>
         </where>
         order by fu.id desc
-        <if test="size!=null and size!=''">
+        <if test="size!=null">
             limit #{size}
         </if>
 
