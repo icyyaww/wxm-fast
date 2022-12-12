@@ -5,6 +5,8 @@ import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 
+import java.util.List;
+
 
 /**
  * 前台用户
@@ -19,6 +21,6 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     FrUserEntity getFrUserByOpenId(String openId);
 
-    RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request);
+    List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request);
 }
 

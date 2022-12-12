@@ -143,6 +143,9 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
      * @return
      **/
     public static Integer getAgeByBirth(Date birthDay) {
+        if (birthDay == null) {
+            return 0;
+        }
         int age = 0;
         Calendar cal = Calendar.getInstance();
         if (cal.before(birthDay)) { //出生日期晚于当前时间，无法计算
@@ -190,5 +193,55 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         } else {
             return "刚刚";
         }
+    }
+
+
+    public static String getConstellation(Date birthday) {
+        String xingzuo = "";
+        if (birthday == null)
+            return xingzuo;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(birthday);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        switch (month) {
+            case 1:
+                xingzuo = day < 21 ? "摩羯座" : "水瓶座";
+                break;
+            case 2:
+                xingzuo = day < 20 ? "水瓶座" : "双鱼座";
+                break;
+            case 3:
+                xingzuo = day < 21 ? "双鱼座" : "白羊座";
+                break;
+            case 4:
+                xingzuo = day < 21 ? "白羊座" : "金牛座";
+                break;
+            case 5:
+                xingzuo = day < 22 ? "金牛座" : "双子座";
+                break;
+            case 6:
+                xingzuo = day < 22 ? "双子座" : "巨蟹座";
+                break;
+            case 7:
+                xingzuo = day < 23 ? "巨蟹座" : "狮子座";
+                break;
+            case 8:
+                xingzuo = day < 24 ? "狮子座" : "处女座";
+                break;
+            case 9:
+                xingzuo = day < 24 ? "处女座" : "天秤座";
+                break;
+            case 10:
+                xingzuo = day < 24 ? "天秤座" : "天蝎座";
+                break;
+            case 11:
+                xingzuo = day < 23 ? "天蝎座" : "射手座";
+                break;
+            case 12:
+                xingzuo = day < 22 ? "射手座" : "摩羯座";
+                break;
+        }
+        return xingzuo;
     }
 }

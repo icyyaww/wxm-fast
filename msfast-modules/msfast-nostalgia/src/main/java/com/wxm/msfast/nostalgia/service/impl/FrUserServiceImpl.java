@@ -7,12 +7,12 @@ import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +23,7 @@ import com.wxm.msfast.nostalgia.service.FrUserService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service("frUserService")
@@ -44,7 +45,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
-    public RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request) {
+    public List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request) {
 
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         if (loginUser == null) {
@@ -52,13 +53,18 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             if (request == null || request.getAge() == null || request.getGender() == null) {
                 throw new JrsfException(UserExceptionEnum.SEARCH_PARAM_EMPTY_EXCEPTION);
             }
+            AtomicReference<Integer> num = new AtomicReference<>(Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name())));
             Map<String, Object> param = new HashMap<>();
             param.put("gender", request.getGender().name());
+            param.put("size", num.get());
             //todo 增加年龄筛选
 
-            RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
-            if (userInfoResponse != null) {
-                userInfoResponse.setSurplusNum(Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name())));
+            List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param);
+            if (CollectionUtil.isNotEmpty(userInfoResponse)) {
+
+                userInfoResponse.forEach(model -> {
+                    model.setSurplusNum(num.getAndSet(num.get() - 1));
+                });
             }
             return userInfoResponse;
 
@@ -71,14 +77,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         }
     }
 
-    private RecommendUserInfoResponse getRecommendUserInfoByParam(Map<String, Object> param) {
+    private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param) {
 
         List<RecommendUserInfoResponse> list = this.baseMapper.getRecommendUserInfo(param);
         if (CollectionUtil.isNotEmpty(list)) {
-            RecommendUserInfoResponse recommendUserInfo = new RecommendUserInfoResponse();
-            BeanUtils.copyProperties(list.get(0), recommendUserInfo);
-            return recommendUserInfo;
+            list.forEach(model -> {
+                model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
+                model.setConstellation(DateUtils.getConstellation(model.getBirthday()));
+            });
         }
-        return null;
+        return list;
     }
 }

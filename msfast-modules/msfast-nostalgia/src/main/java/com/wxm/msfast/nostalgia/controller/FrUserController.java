@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 
 /**
  * 前台用户
@@ -36,7 +38,7 @@ public class FrUserController {
     @ApiOperationSort(value = 1)
     @GetMapping("/recommendUserInfo")
     @AuthIgnore
-    public R<RecommendUserInfoResponse> recommendUserInfo(RecommendUserRequest request) {
+    public R<List<RecommendUserInfoResponse>> recommendUserInfo(RecommendUserRequest request) {
         return R.ok(frUserService.getRecommendUserInfo(request));
     }
 

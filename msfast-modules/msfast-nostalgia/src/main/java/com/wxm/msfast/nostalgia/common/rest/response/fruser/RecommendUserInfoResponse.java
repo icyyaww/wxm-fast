@@ -5,6 +5,7 @@ import com.wxm.msfast.nostalgia.common.enums.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -137,4 +138,7 @@ public class RecommendUserInfoResponse {
 
     @ApiModelProperty(value = "剩余推荐次数")
     private Integer surplusNum;
+
+    private Date birthday;
+
 }

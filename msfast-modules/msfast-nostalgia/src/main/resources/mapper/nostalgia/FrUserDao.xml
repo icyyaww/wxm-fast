@@ -77,7 +77,8 @@
         fu.emotional,
         fu.annual_salary,
         fu.img_list,
-        fu.character_type
+        fu.character_type,
+        fu.birthday
         from
         fr_user fu
         <where>
@@ -89,5 +90,10 @@
                 and fu.id!=#{selfId}
             </if>
         </where>
+        order by fu.id desc
+        <if test="size!=null and size!=''">
+            limit #{size}
+        </if>
+
     </select>
 </mapper>
