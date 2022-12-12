@@ -13,6 +13,7 @@ import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -32,6 +33,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Autowired
     MsfConfigService msfConfigService;
 
+    @Autowired
+    UserMatchingService userMatchingService;
+
     @Override
     public Long countByOpenId(String openId) {
         Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getOpenId, openId);
@@ -48,24 +52,18 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request) {
 
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
+        Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
         if (loginUser == null) {
             //未登陆
             if (request == null || request.getAge() == null || request.getGender() == null) {
                 throw new JrsfException(UserExceptionEnum.SEARCH_PARAM_EMPTY_EXCEPTION);
             }
-            AtomicReference<Integer> num = new AtomicReference<>(Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name())));
             Map<String, Object> param = new HashMap<>();
             param.put("gender", request.getGender().name());
-            param.put("size", num.get());
+            param.put("size", num);
             //todo 增加年龄筛选
 
-            List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param);
-            if (CollectionUtil.isNotEmpty(userInfoResponse)) {
-
-                userInfoResponse.forEach(model -> {
-                    model.setSurplusNum(num.getAndSet(num.get() - 1));
-                });
-            }
+            List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
 
         } else {
@@ -73,17 +71,23 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             Map<String, Object> param = new HashMap<>();
             param.put("gender", loginUser.getInfo().getGender().name());
             param.put("selfId", loginUser.getId());
-            return getRecommendUserInfoByParam(param);
+            Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+            param.put("size", numSize);
+
+
+            return getRecommendUserInfoByParam(param, numSize);
         }
     }
 
-    private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param) {
+    private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {
 
         List<RecommendUserInfoResponse> list = this.baseMapper.getRecommendUserInfo(param);
+        AtomicReference<Integer> numAt = new AtomicReference<>(num);
         if (CollectionUtil.isNotEmpty(list)) {
             list.forEach(model -> {
                 model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
                 model.setConstellation(DateUtils.getConstellation(model.getBirthday()));
+                model.setSurplusNum(numAt.getAndSet(numAt.get() - 1));
             });
         }
         return list;

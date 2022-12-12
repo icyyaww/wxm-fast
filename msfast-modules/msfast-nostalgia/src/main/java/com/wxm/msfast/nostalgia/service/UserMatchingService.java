@@ -13,5 +13,13 @@ import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
  */
 public interface UserMatchingService extends IService<UserMatchingEntity> {
 
+    /**
+     * @Description: 查询已经匹配的数量
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2022/12/12 下午2:31
+     */
+    Long matchingNum();
 }
 

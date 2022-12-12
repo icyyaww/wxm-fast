@@ -135,6 +135,47 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
         return day + "天" + hour + "小时" + min + "分钟";
     }
 
+    /**
+     * 获取某一天的开始时间
+     *
+     * @param date，不能为null
+     * @return
+     */
+    public static Date getStartTimeOfDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return new Calendar.Builder()
+                .setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+                .build()
+                .getTime();
+    }
+
+    /**
+     * 获取某一天的结束时间
+     *
+     * @param date，不能为null
+     * @return
+     */
+    public static Date getEndTimeOfDay(Date date) {
+        Date startTimeOfNextDay = getStartTimeOfNextDay(date);
+        return new Date(startTimeOfNextDay.getTime() - 1L);
+    }
+
+    /**
+     * 获取某一天的第二天的开始时间
+     *
+     * @param date，不能为null
+     * @return
+     */
+    public static Date getStartTimeOfNextDay(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return new Calendar.Builder()
+                .setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH) + 1)
+                .build()
+                .getTime();
+    }
+
     /*
      * @Author 根据出生日期计算年龄
      * @Description

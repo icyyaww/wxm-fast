@@ -31,7 +31,7 @@ public class WxAppletServiceImpl implements WxAppletService {
         WxAppletOpenResponse response = new WxAppletOpenResponse();
 
         //todo 测试数据需要删除
-        response.setOpenid("abc");
+        response.setOpenId("abc");
         response.setSessionKey("dfg");
         response.setUnionId("hjk");
         if (true) {
@@ -45,7 +45,7 @@ public class WxAppletServiceImpl implements WxAppletService {
             JSONObject jsonObject = JSONObject.parseObject(result);
             Integer errcode = jsonObject.getInteger("errcode");
             if (errcode == 0) {
-                response.setOpenid(jsonObject.getString("openid"));
+                response.setOpenId(jsonObject.getString("openid"));
                 response.setSessionKey(jsonObject.getString("session_key"));
                 response.setUnionId(jsonObject.getString("unionid"));
             } else {

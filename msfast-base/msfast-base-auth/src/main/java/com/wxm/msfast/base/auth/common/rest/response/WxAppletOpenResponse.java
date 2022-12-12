@@ -15,7 +15,7 @@ public class WxAppletOpenResponse {
     /*
      * @Description  登录方式为 WX_Applet 时
      **/
-    private String openid; //
+    private String openId; //
 
     /*
      * @Description  登录方式为 WX_Applet 时
