@@ -80,6 +80,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {
 
+        Integer max = 2;
+        if (num > max) {
+            param.put("size", max);
+        }
         List<RecommendUserInfoResponse> list = this.baseMapper.getRecommendUserInfo(param);
         AtomicReference<Integer> numAt = new AtomicReference<>(num);
         if (CollectionUtil.isNotEmpty(list)) {
