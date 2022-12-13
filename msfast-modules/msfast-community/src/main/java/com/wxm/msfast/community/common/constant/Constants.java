@@ -15,4 +15,6 @@ public class Constants {
 
     public static final String MATCHING_SUCCESS = "TANXIAO_MATCHING_SUCCESS_";
 
+    public static final String FOLLOW_USER="FOLLOW_USER_";
+
 }

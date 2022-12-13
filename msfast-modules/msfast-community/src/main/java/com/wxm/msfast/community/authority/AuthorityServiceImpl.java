@@ -92,6 +92,9 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<UserLoginRequest
         }
 
         //todo 校验密码是否正确
+        if (!loginRequest.getPassword().equals(frUserEntity.getPassword())) {
+            throw new JrsfException(BaseUserExceptionEnum.PASSWORD_ERROR_EXCEPTION);
+        }
 
         loginUser.setId(frUserEntity.getId());
         LoginResponse loginResponse = new LoginResponse();

@@ -2,6 +2,7 @@ package com.wxm.msfast.community.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
@@ -20,20 +21,25 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.file.annotation.FileSaveService;
 import com.wxm.msfast.community.common.constant.Constants;
 import com.wxm.msfast.community.common.constant.PropertiesConstants;
+import com.wxm.msfast.community.common.enums.FollowStatus;
 import com.wxm.msfast.community.common.enums.SysConfigEnum;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.request.user.UserLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.dao.FrUserDao;
 import com.wxm.msfast.community.entity.FrUserEntity;
+import com.wxm.msfast.community.entity.FrUserFollowEntity;
 import com.wxm.msfast.community.service.FrBlogService;
 import com.wxm.msfast.community.service.FrUserFollowService;
 import com.wxm.msfast.community.service.FrUserService;
 import com.wxm.msfast.community.utils.TLSSigAPIv2;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -59,6 +65,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Resource
     private RedisService redisService;
 
+    @Autowired
+    RedissonClient redissonClient;
 
     /**
      * @Description: 根据手机号查询数量
@@ -189,18 +197,65 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
-    public void cancelFollow(Integer id) {
+    @Transactional
+    public FollowStatus cancelFollow(Integer id) {
 
+        Wrapper<FrUserFollowEntity> wrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, TokenUtils.getOwnerId())
+                .eq(FrUserFollowEntity::getFollowId, id);
+        this.frUserFollowService.remove(wrapper);
+
+        Wrapper<FrUserFollowEntity> fansWrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, id)
+                .eq(FrUserFollowEntity::getFollowId, TokenUtils.getOwnerId());
+        Long count = this.frUserFollowService.count(fansWrapper);
+        if (count > 0) {
+            return FollowStatus.FANS;
+        } else {
+            return FollowStatus.STRANGER;
+        }
     }
 
     @Override
-    public void followUser(Integer id) {
-
+    @Transactional
+    public FollowStatus followUser(Integer id) {
+        RLock lock = redissonClient.getLock(Constants.FOLLOW_USER + TokenUtils.getOwnerId());
+        try {
+            lock.lock();
+            Wrapper<FrUserFollowEntity> wrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, TokenUtils.getOwnerId())
+                    .eq(FrUserFollowEntity::getFollowId, id);
+            Long count = this.frUserFollowService.count(wrapper);
+            if (count == 0) {
+                FrUserFollowEntity frUserFollowEntity = new FrUserFollowEntity();
+                frUserFollowEntity.setFollowId(id);
+                frUserFollowEntity.setUserId(TokenUtils.getOwnerId());
+            }
+        } finally {
+            lock.unlock();
+        }
+        Wrapper<FrUserFollowEntity> fansWrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, id)
+                .eq(FrUserFollowEntity::getFollowId, TokenUtils.getOwnerId());
+        Long count = this.frUserFollowService.count(fansWrapper);
+        if (count > 0) {
+            return FollowStatus.FRIEND;
+        } else {
+            return FollowStatus.FOLLOW;
+        }
     }
 
     @Override
-    public void removeFans(Integer id) {
+    @Transactional
+    public FollowStatus removeFans(Integer id) {
+        Wrapper<FrUserFollowEntity> wrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, id)
+                .eq(FrUserFollowEntity::getFollowId, TokenUtils.getOwnerId());
+        this.frUserFollowService.remove(wrapper);
 
+        Wrapper<FrUserFollowEntity> fansWrapper = new QueryWrapper<FrUserFollowEntity>().lambda().eq(FrUserFollowEntity::getUserId, TokenUtils.getOwnerId())
+                .eq(FrUserFollowEntity::getFollowId, id);
+        Long count = this.frUserFollowService.count(fansWrapper);
+        if (count > 0) {
+            return FollowStatus.FOLLOW;
+        } else {
+            return FollowStatus.STRANGER;
+        }
     }
 
     @Override

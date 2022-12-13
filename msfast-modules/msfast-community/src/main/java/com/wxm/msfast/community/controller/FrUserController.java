@@ -114,31 +114,28 @@ public class FrUserController {
     @ApiOperationSort(value = 10)
     @GetMapping("/cancel/follow/{id}")
     public R<FollowStatus> cancelFollow(@PathVariable Integer id) {
-        //TODO 接口实现
-        this.frUserService.cancelFollow(id);
-        return R.ok();
+        return R.ok(this.frUserService.cancelFollow(id));
     }
 
     @ApiOperation("我的-关注列表-关注用户")
     @ApiOperationSort(value = 11)
     @GetMapping("/follow/user/{id}")
     public R<FollowStatus> followUser(@PathVariable Integer id) {
-        this.frUserService.followUser(id);
-        return R.ok();
+        return R.ok(this.frUserService.followUser(id));
     }
 
     @ApiOperation("我的-粉丝列表-移除粉丝")
     @ApiOperationSort(value = 12)
     @GetMapping("/remove/fans/{id}")
     public R<FollowStatus> removeFans(@PathVariable Integer id) {
-        this.frUserService.removeFans(id);
-        return R.ok();
+        return R.ok(this.frUserService.removeFans(id));
     }
 
     @ApiOperation("我的-查询个人资料")
     @ApiOperationSort(value = 13)
     @GetMapping("/personal/data")
     public R<PersonalDataResponse> personalData() {
+        //TODO 接口实现
         return R.ok(new PersonalDataResponse());
     }
 
@@ -146,6 +143,7 @@ public class FrUserController {
     @ApiOperationSort(value = 14)
     @PutMapping("/edit/personal")
     public R<Void> editPersonal(@RequestBody @Valid EditPersonalDataRequest request) {
+        //TODO 接口实现
         return R.ok();
     }
 
@@ -154,6 +152,7 @@ public class FrUserController {
     @GetMapping("/user/info/{id}")
     @AuthIgnore
     public R<UserInfoResponse> userInfo(@PathVariable Integer id) {
+        //TODO 接口实现
         return R.ok(new UserInfoResponse());
     }
 

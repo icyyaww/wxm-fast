@@ -3,6 +3,7 @@ package com.wxm.msfast.community.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.common.utils.PageResult;
+import com.wxm.msfast.community.common.enums.FollowStatus;
 import com.wxm.msfast.community.common.rest.request.user.SmsLoginRequest;
 import com.wxm.msfast.community.common.rest.response.user.*;
 import com.wxm.msfast.community.entity.FrUserEntity;
@@ -80,7 +81,7 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @Param
      * @return
      **/
-    void cancelFollow(Integer id);
+    FollowStatus cancelFollow(Integer id);
 
     /*
      * @Author wanglei
@@ -89,7 +90,7 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @Param
      * @return
      **/
-    void followUser(Integer id);
+    FollowStatus followUser(Integer id);
 
     /*
      * @Author wanglei
@@ -98,7 +99,7 @@ public interface FrUserService extends IService<FrUserEntity> {
      * @Param
      * @return
      **/
-    void removeFans(Integer id);
+    FollowStatus removeFans(Integer id);
 
     /*
      * @Author wanglei
