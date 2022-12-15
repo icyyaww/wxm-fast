@@ -39,6 +39,7 @@ public class TokenUtils {
      * @Date: 2022/10/10 下午3:17
      */
     public static <T> LoginUser<T> info(Class<T> cls) {
+        //todo 增加过期校验
         Claims claims = JwtUtils.parseToken(SecurityUtils.getToken());
         if (claims == null) {
             return null;

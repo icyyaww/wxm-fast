@@ -1,20 +1,29 @@
 package com.wxm.msfast.base.file.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.file.rest.response.FileResponse;
 import com.wxm.msfast.base.file.service.IFileService;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 文件请求处理
@@ -29,6 +38,7 @@ public class FileController {
 
     @Autowired
     private IFileService sysFileService;
+
 
     /**
      * 文件上传请求
@@ -81,6 +91,37 @@ public class FileController {
             log.error("文件删除失败", e);
             throw e;
         }
+    }
+
+    /**
+     * 静态资源上传 todo 线上需要屏蔽该接口或增加权限校验
+     */
+    @PostMapping("/static/upload")
+    @ApiOperation(value = "静态资源上传")
+    @AuthIgnore
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "path", value = "images/user", required = true)
+    })
+    public R<FileResponse> staticUpload(@RequestPart MultipartFile file, @ApiIgnore @RequestParam String path) {
+        // 上传并返回访问地址
+        String url = sysFileService.staticUpload(file, path);
+        FileResponse sysFile = new FileResponse();
+        sysFile.setName(FileUtils.getName(url));
+        sysFile.setUrl(url);
+        return R.ok(sysFile);
+    }
+
+    /**
+     * 静态资源上传 todo 线上需要屏蔽该接口或增加权限校验
+     */
+    @DeleteMapping("/static/delete")
+    @ApiOperation(value = "静态资源删除")
+    @AuthIgnore
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "path", value = "images/user/logo.jpg", required = true)
+    })
+    public R<Boolean> staticDelete(@ApiIgnore @RequestParam String path) {
+        return R.ok(sysFileService.staticDelete(path));
     }
 
 }

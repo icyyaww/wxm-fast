@@ -56,6 +56,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.file.temp-time:30}")
     private int fileTempTime;
 
+    @Value("${wxmfast.config.file.static-path:}")
+    private String fileStaticPath;
+
     @Value("${wxmfast.config.websocket.port:8888}")
     private int webSocketPort;
 
@@ -143,6 +146,17 @@ public class ConfigConstants {
      **/
     public static int FILE_TEMP_TIME() {
         return SpringUtils.getBean(ConfigConstants.class).getFileTempTime();
+    }
+
+    /*
+     * @Author wanglei
+     * @Description  文件静态路径
+     * @Date 15:29 2022/12/15
+     * @Param
+     * @return
+     **/
+    public static String FILE_STATIC_PATH() {
+        return SpringUtils.getBean(ConfigConstants.class).getFileStaticPath();
     }
 
     /**

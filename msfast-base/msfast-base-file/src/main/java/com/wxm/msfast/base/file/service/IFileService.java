@@ -40,4 +40,22 @@ public interface IFileService {
      * @Date: 2022/9/9 下午3:39
      */
     void deleteFile(String filePath) throws Exception;
+
+    /*
+     * @Author wanglei
+     * @Description  静态文件上传
+     * @Date 14:40 2022/12/15
+     * @Param
+     * @return
+     **/
+    String staticUpload(MultipartFile file, String path);
+
+    /*
+     * @Author
+     * @Description  删除静态文件
+     * @Date 15:49 2022/12/15
+     * @Param
+     * @return
+     **/
+    Boolean staticDelete(String path);
 }

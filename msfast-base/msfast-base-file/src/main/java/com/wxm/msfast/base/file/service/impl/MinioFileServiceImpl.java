@@ -1,6 +1,9 @@
 package com.wxm.msfast.base.file.service.impl;
 
+import com.wxm.msfast.base.common.constant.ConfigConstants;
+import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.file.config.MinioConfig;
+import com.wxm.msfast.base.file.exception.FileExceptionEnum;
 import com.wxm.msfast.base.file.service.IFileService;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.DelayTaskProducer;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -57,7 +61,7 @@ public class MinioFileServiceImpl implements IFileService {
         client.putObject(args);
         String url = minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + filePath;
         //保存文件 此时文件为临时文件 会被定期删除
-        fileService.saveFile(url,filePath, FileUtils.getName(file.getOriginalFilename()));
+        fileService.saveFile(url, filePath, FileUtils.getName(file.getOriginalFilename()));
         return url;
     }
 
@@ -105,5 +109,37 @@ public class MinioFileServiceImpl implements IFileService {
     public void deleteFile(String filePath) throws Exception {
         client.removeObject(
                 RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filePath).build());
+    }
+
+    @Override
+    public String staticUpload(MultipartFile file, String path) {
+        String staticPath = FileUtils.getPath(path) + File.separator + file.getOriginalFilename();
+        String uploadpath = ConfigConstants.FILE_STATIC_PATH() + File.separator + staticPath;
+
+        File fileOld = new File(uploadpath);
+        if (fileOld.exists()) {
+            throw new JrsfException(FileExceptionEnum.File_Exists_Exception);
+        }
+        mkdirs(uploadpath);
+        //上传
+        try {
+            file.transferTo(new File(uploadpath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return staticPath.replaceAll("\\\\", "/");
+    }
+
+    @Override
+    public Boolean staticDelete(String path) {
+       return FileUtils.deleteFile(ConfigConstants.FILE_STATIC_PATH() + File.separator + FileUtils.getPath(path));
+    }
+
+    private void mkdirs(String uploadpath) {
+        File file1 = new File(uploadpath);
+        File parent = file1.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
+        }
     }
 }

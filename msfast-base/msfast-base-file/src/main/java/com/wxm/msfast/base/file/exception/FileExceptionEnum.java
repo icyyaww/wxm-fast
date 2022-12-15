@@ -5,7 +5,8 @@ import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
 public enum FileExceptionEnum implements BaseExceptionEnumInterface {
     FileNameLengthLimitExceeded_Exception(11001, "文件名称超长限制异常类"),
     InvalidExtension_Exception(11002, "文件格式校验异常"),
-    FileSizeLimitExceededException(11003, "超出最大大小");
+    FileSizeLimitExceededException(11003, "超出最大大小"),
+    File_Exists_Exception(11004, "文件已存在");
 
     private Integer code;
     private String msg;
@@ -18,11 +19,11 @@ public enum FileExceptionEnum implements BaseExceptionEnumInterface {
 
     @Override
     public Integer getCode() {
-        return null;
+        return code;
     }
 
     @Override
     public String getMessage() {
-        return null;
+        return msg;
     }
 }
