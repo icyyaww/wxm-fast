@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.msfast.base.auth.entity.LoginUser;
@@ -21,6 +22,7 @@ import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,8 +63,14 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             Map<String, Object> param = new HashMap<>();
             param.put("gender", request.getGender().name());
             param.put("size", num);
-            //todo 增加年龄筛选
 
+            Calendar calendarStart = Calendar.getInstance();
+            calendarStart.add(Calendar.YEAR, -(request.getAge() + 3));
+            param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
+
+            Calendar calendarEnd = Calendar.getInstance();
+            calendarEnd.add(Calendar.YEAR, -(request.getAge() - 3));
+            param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
             List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
 
