@@ -10,10 +10,12 @@ import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
+import com.wxm.msfast.nostalgia.common.enums.EducationalTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.UserTypeEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.AppletRegisterRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
+import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,10 +87,13 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         frUserEntity.setStatus(FrUserStatusEnum.ENABLE);
         frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
         frUserEntity.setUserType(UserTypeEnum.Normal);
+        frUserEntity.setEducationalType(EducationalTypeEnum.FullTime);
         this.frUserService.save(frUserEntity);
 
         //保存头像
         fileService.changeTempFile(request.getHeadPortrait());
+        //保存地址配置信息
+        frUserService.saveRecommendConfig(frUserEntity);
 
     }
 }

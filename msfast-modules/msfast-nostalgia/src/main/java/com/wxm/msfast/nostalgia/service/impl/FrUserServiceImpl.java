@@ -14,18 +14,20 @@ import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
+import com.wxm.msfast.nostalgia.service.RecommendConfigService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 
@@ -37,6 +39,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     UserMatchingService userMatchingService;
+
+    @Autowired
+    RecommendConfigService recommendConfigService;
 
     @Override
     public Long countByOpenId(String openId) {
@@ -73,22 +78,79 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
             List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
-
         } else {
             //已登录
+            FrUserEntity frUserEntity = this.getById(loginUser.getId());
             Map<String, Object> param = new HashMap<>();
-            param.put("gender", loginUser.getInfo().getGender().name());
-            param.put("selfId", loginUser.getId());
+            param.put("gender", frUserEntity.getGender().name());
+            param.put("selfId", frUserEntity.getId());
             Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
             param.put("size", numSize);
+
+            //默认配置信息
+            Calendar calendarStart = Calendar.getInstance();
+            calendarStart.setTime(frUserEntity.getBirthday());
+            calendarStart.add(Calendar.YEAR, -3);
+            param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
+            Calendar calendarEnd = Calendar.getInstance();
+            calendarEnd.setTime(frUserEntity.getBirthday());
+            calendarEnd.add(Calendar.YEAR, 3);
+            param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
+
+            if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+                List<String> city = new ArrayList<>();
+                city.add(frUserEntity.getCity());
+                param.put("city", city);
+            }
+
+            //根据配置信息搜索
+            RecommendConfigEntity recommendConfigEntity = this.recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
+            if (recommendConfigEntity != null) {
+                if (CollectionUtil.isNotEmpty(recommendConfigEntity.getCity())) {
+                    param.put("city", recommendConfigEntity.getCity());
+                }
+
+                if (recommendConfigEntity.getMinAge() != null) {
+                    Calendar calendarEndConfig = Calendar.getInstance();
+                    calendarEndConfig.add(Calendar.YEAR, -recommendConfigEntity.getMinAge());
+                    param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEndConfig.getTime())));
+                }
+
+                if (recommendConfigEntity.getMaxAge() != null) {
+                    Calendar calendarStartConfig = Calendar.getInstance();
+                    calendarStartConfig.add(Calendar.YEAR, -recommendConfigEntity.getMaxAge());
+                    param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
+                }
+            }
 
             return getRecommendUserInfoByParam(param, numSize);
         }
     }
 
+    @Override
+    @Transactional
+    @Async
+    public void saveRecommendConfig(FrUserEntity frUserEntity) {
+        RecommendConfigEntity recommendConfigEntity = new RecommendConfigEntity();
+        recommendConfigEntity.setUserId(frUserEntity.getId());
+        if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+            List<String> city = new ArrayList<>();
+            city.add(frUserEntity.getCity());
+            recommendConfigEntity.setCity(city);
+        }
+
+        if (frUserEntity.getBirthday() != null) {
+            Integer age = DateUtils.getAgeByBirth(frUserEntity.getBirthday());
+            recommendConfigEntity.setMinAge(age - 3);
+            recommendConfigEntity.setMaxAge(age + 3);
+        }
+        recommendConfigService.save(recommendConfigEntity);
+    }
+
     private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {
 
         Integer max = 2;
+        //todo 测试为2 正式时为10
         if (num > max) {
             param.put("size", max);
         }

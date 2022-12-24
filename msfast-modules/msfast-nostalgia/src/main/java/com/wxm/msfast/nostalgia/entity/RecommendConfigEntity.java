@@ -1,8 +1,12 @@
 package com.wxm.msfast.nostalgia.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.wxm.msfast.base.common.entity.BaseEntity;
+import com.wxm.msfast.nostalgia.common.handle.UserCityListTypeHandler;
 import lombok.Data;
+
+import java.util.List;
 
 
 /**
@@ -19,8 +23,8 @@ public class RecommendConfigEntity extends BaseEntity {
     /**
      * 地址
      */
-    @TableField("city")
-    private String city;
+    @TableField(value = "city", typeHandler = UserCityListTypeHandler.class)
+    private List<String> city;
     /**
      * 最小年龄
      */
@@ -31,5 +35,11 @@ public class RecommendConfigEntity extends BaseEntity {
      */
     @TableField("max_age")
     private Integer maxAge;
+
+    /**
+     * 用户id
+     */
+    @TableField("user_id")
+    private Integer userId;
 
 }

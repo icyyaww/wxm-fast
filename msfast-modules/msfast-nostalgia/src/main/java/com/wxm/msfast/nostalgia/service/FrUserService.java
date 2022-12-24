@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
+import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 
 import java.util.List;
 
@@ -22,5 +23,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     FrUserEntity getFrUserByOpenId(String openId);
 
     List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request);
+
+    void saveRecommendConfig(FrUserEntity frUserEntity);
 }
 

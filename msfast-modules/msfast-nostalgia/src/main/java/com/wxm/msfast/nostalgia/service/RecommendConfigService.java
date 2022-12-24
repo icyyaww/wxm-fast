@@ -13,5 +13,6 @@ import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
  */
 public interface RecommendConfigService extends IService<RecommendConfigEntity> {
 
+    RecommendConfigEntity getRecommendConfigByUserId(Integer userId);
 }
 

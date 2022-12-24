@@ -87,13 +87,20 @@
                 and fu.gender!=#{gender}
             </if>
             <if test="selfId!=null and selfId!=''">
-                and fu.id!=#{selfId} and (select count(1) from user_matching um where um.del_flag=0 and um.user_id=#{selfId} and um.other_user=fu.id)&lt;=0
+                and fu.id!=#{selfId} and (select count(1) from user_matching um where um.del_flag=0 and
+                um.user_id=#{selfId} and um.other_user=fu.id)&lt;=0
             </if>
             <if test="startDate!=null and startDate!=''">
                 <![CDATA[ and DATE_FORMAT(fu.birthday, '%Y-%m-%d %T')>=  DATE_FORMAT(#{startDate}, '%Y-%m-%d %T') ]]>
             </if>
             <if test="endDate!=null and endDate!=''">
                 <![CDATA[ and DATE_FORMAT(fu.birthday, '%Y-%m-%d %T')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d %T') ]]>
+            </if>
+            <if test="city!=null">
+                and fu.city in
+                <foreach collection="city" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
             </if>
         </where>
         order by fu.id desc
