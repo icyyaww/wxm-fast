@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
 
+import javax.validation.Valid;
+
 
 /**
  * 用户匹配
@@ -30,7 +32,7 @@ public class UserMatchingController {
     @ApiOperation("用户匹配")
     @ApiOperationSort(value = 1)
     @PostMapping("/match")
-    public R<Void> match(@RequestBody ChoiceRequest request) {
+    public R<Void> match(@RequestBody @Valid ChoiceRequest request) {
         userMatchingService.match(request);
         return R.ok();
     }

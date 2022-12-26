@@ -4,6 +4,7 @@ package com.wxm.msfast.nostalgia.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
@@ -12,10 +13,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -48,6 +48,14 @@ public class FrUserController {
     @GetMapping("/user/configInfo")
     public R<RecommendConfigResponse> userConfigInfo() {
         return R.ok(frUserService.getRecommendConfig());
+    }
+
+    @ApiOperation("修改用户配置")
+    @ApiOperationSort(value = 3)
+    @PutMapping("/update/configInfo")
+    public R<Void> updateConfigInfo(@RequestBody @Valid RecommendConfigRequest request) {
+        frUserService.updateConfigInfo(request);
+        return R.ok();
     }
 
 }

@@ -1,11 +1,11 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
-import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 
 import java.util.List;
 
@@ -28,5 +28,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     void saveRecommendConfig(FrUserEntity frUserEntity);
 
     RecommendConfigResponse getRecommendConfig();
+
+    void updateConfigInfo(RecommendConfigRequest request);
 }
 

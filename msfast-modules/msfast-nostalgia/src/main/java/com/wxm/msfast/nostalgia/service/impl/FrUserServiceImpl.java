@@ -12,6 +12,7 @@ import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
@@ -174,6 +175,23 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             BeanUtils.copyProperties(recommendConfigEntity, response);
         }
         return response;
+    }
+
+    @Override
+    @Transactional
+    public void updateConfigInfo(RecommendConfigRequest request) {
+
+        if (request.getMinAge().compareTo(request.getMaxAge()) > 0) {
+            throw new JrsfException(UserExceptionEnum.MIN_AGE_GREATER);
+        }
+        RecommendConfigEntity recommendConfigEntity = recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
+        if (recommendConfigEntity == null) {
+            recommendConfigEntity = new RecommendConfigEntity();
+            recommendConfigEntity.setUserId(TokenUtils.getOwnerId());
+        }
+
+        BeanUtils.copyProperties(request, recommendConfigEntity);
+        recommendConfigService.saveOrUpdate(recommendConfigEntity);
     }
 
     private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {
