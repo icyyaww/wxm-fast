@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 
 
@@ -14,5 +15,7 @@ import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 public interface RecommendConfigService extends IService<RecommendConfigEntity> {
 
     RecommendConfigEntity getRecommendConfigByUserId(Integer userId);
+
+
 }
 

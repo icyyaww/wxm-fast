@@ -11,4 +11,6 @@ public class Constants {
 
     public static final String MATCHING = "SIJUNYI_MATCHING_USERID";
 
+    public static final Integer AGE_DIFFER= 3;
+
 }

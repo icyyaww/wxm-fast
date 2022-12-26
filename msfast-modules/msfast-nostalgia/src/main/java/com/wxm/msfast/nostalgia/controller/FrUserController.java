@@ -5,6 +5,7 @@ package com.wxm.msfast.nostalgia.controller;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.Api;
@@ -40,6 +41,13 @@ public class FrUserController {
     @AuthIgnore
     public R<List<RecommendUserInfoResponse>> recommendUserInfo(RecommendUserRequest request) {
         return R.ok(frUserService.getRecommendUserInfo(request));
+    }
+
+    @ApiOperation("查看用户配置")
+    @ApiOperationSort(value = 2)
+    @GetMapping("/user/configInfo")
+    public R<RecommendConfigResponse> userConfigInfo() {
+        return R.ok(frUserService.getRecommendConfig());
     }
 
 }
