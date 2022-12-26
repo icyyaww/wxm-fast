@@ -70,10 +70,18 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
             if (num.compareTo(count) <= 0) {
                 throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
             }
-            UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
-            BeanUtils.copyProperties(request, userMatchingEntity);
-            userMatchingEntity.setUserId(TokenUtils.getOwnerId());
-            this.baseMapper.insert(userMatchingEntity);
+
+            Integer userId = TokenUtils.getOwnerId();
+            Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                    .eq(UserMatchingEntity::getUserId, userId)
+                    .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
+            Long matchingCount = this.baseMapper.selectCount(wrapper);
+            if (matchingCount == 0) {
+                UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
+                BeanUtils.copyProperties(request, userMatchingEntity);
+                userMatchingEntity.setUserId(userId);
+                this.baseMapper.insert(userMatchingEntity);
+            }
         } finally {
             lock.unlock();
         }
