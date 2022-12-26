@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
@@ -192,6 +193,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
         BeanUtils.copyProperties(request, recommendConfigEntity);
         recommendConfigService.saveOrUpdate(recommendConfigEntity);
+    }
+
+    @Override
+    public void updateLatelyTime(Integer userId) {
+
+        this.update(null, new LambdaUpdateWrapper<FrUserEntity>()
+                .set(FrUserEntity::getLatelyTime, new Date())
+                .eq(FrUserEntity::getId, userId)
+        );
     }
 
     private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {

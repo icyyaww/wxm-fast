@@ -45,6 +45,7 @@
         <result property="unionId" column="union_id"/>
         <result property="characterType" column="character_type"
                 typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+        <result property="latelyTime" column="lately_time"/>
     </resultMap>
 
 
@@ -78,7 +79,9 @@
         fu.annual_salary,
         fu.img_list,
         fu.character_type,
-        fu.birthday
+        fu.birthday,
+        (select count(1) from user_matching um where um.del_flag=0 and
+        um.user_id=fu.id and um.other_user=#{selfId} and um.result=true) as mattrue
         from
         fr_user fu
         <where>
@@ -103,7 +106,7 @@
                 </foreach>
             </if>
         </where>
-        order by fu.id desc
+        order by mattrue desc,fu.lately_time desc
         <if test="size!=null">
             limit #{size}
         </if>

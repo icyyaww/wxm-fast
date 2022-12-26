@@ -176,4 +176,8 @@ public class FrUserEntity extends BaseEntity {
     @TableField(value = "character_type", typeHandler = CharacterTypeHandler.class)
     private CharacterTypeResponse characterType;
 
+    @TableField("lately_time")
+    private Date latelyTime;
+
+
 }

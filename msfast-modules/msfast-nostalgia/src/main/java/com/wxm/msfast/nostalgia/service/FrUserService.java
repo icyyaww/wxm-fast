@@ -6,6 +6,7 @@ import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 
@@ -30,5 +31,8 @@ public interface FrUserService extends IService<FrUserEntity> {
     RecommendConfigResponse getRecommendConfig();
 
     void updateConfigInfo(RecommendConfigRequest request);
+
+    @Async
+    void updateLatelyTime(Integer userId);
 }
 
