@@ -26,8 +26,17 @@ Windows
 
 startup.cmd -m standalone
 
-2.  xxxx
-3.  xxxx
+文件系统nginx 配置
+
+   location /devminio {
+     proxy_pass http://81.69.247.192:9000;
+     proxy_set_header Host $http_host;
+    }
+
+   location /devminio/files {
+     proxy_pass http://81.69.247.192:9000/files;
+     proxy_set_header Host $http_host;
+    }
 
 #### 使用说明
 
