@@ -5,8 +5,10 @@ import com.wxm.msfast.base.common.entity.BaseEntity;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.*;
+import com.wxm.msfast.nostalgia.common.handle.AdditionalHandler;
 import com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler;
 import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.AdditionalResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.CharacterTypeResponse;
 import lombok.Data;
 
@@ -179,5 +181,6 @@ public class FrUserEntity extends BaseEntity {
     @TableField("lately_time")
     private Date latelyTime;
 
-
+    @TableField(value = "additional", typeHandler = AdditionalHandler.class)
+    private AdditionalResponse additional;
 }

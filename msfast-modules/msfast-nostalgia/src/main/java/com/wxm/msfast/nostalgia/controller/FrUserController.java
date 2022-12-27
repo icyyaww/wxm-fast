@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalCenterResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -28,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("nostalgia/fruser")
-@Api(tags = "前台-首页")
+@Api(tags = "前台-用户")
 public class FrUserController {
 
     @Autowired
@@ -56,6 +57,13 @@ public class FrUserController {
     public R<Void> updateConfigInfo(@RequestBody @Valid RecommendConfigRequest request) {
         frUserService.updateConfigInfo(request);
         return R.ok();
+    }
+
+    @ApiOperation("我的-个人中心")
+    @ApiOperationSort(value = 4)
+    @GetMapping("/personalCenter")
+    public R<PersonalCenterResponse> personalCenter() {
+        return R.ok(frUserService.getPersonalCenter());
     }
 
 }

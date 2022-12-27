@@ -1,5 +1,6 @@
 package com.wxm.msfast.nostalgia.dao;
 
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.LikeResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -19,4 +20,6 @@ import java.util.Map;
 public interface FrUserDao extends BaseMapper<FrUserEntity> {
 
     List<RecommendUserInfoResponse> getRecommendUserInfo(Map<String, Object> param);
+
+    LikeResponse getPersonalLike(Integer userId);
 }

@@ -15,9 +15,7 @@ import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
@@ -32,6 +30,8 @@ import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -202,6 +202,56 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 .set(FrUserEntity::getLatelyTime, new Date())
                 .eq(FrUserEntity::getId, userId)
         );
+    }
+
+    @Override
+    public PersonalCenterResponse getPersonalCenter() {
+
+        PersonalCenterResponse response = new PersonalCenterResponse();
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, response);
+            if (frUserEntity.getAdditional() != null) {
+                response.setIdentityAuth(frUserEntity.getAdditional().getIdentityAuth());
+                response.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
+            }
+
+            response.setCompletionRatio(getRatio(frUserEntity));
+            LikeResponse likeResponse = this.baseMapper.getPersonalLike(frUserEntity.getId());
+            if (likeResponse != null) {
+                BeanUtils.copyProperties(likeResponse, response);
+            }
+
+        }
+        return response;
+    }
+
+    private Integer getRatio(FrUserEntity frUserEntity) {
+
+        BigDecimal total = new BigDecimal("5");
+        BigDecimal completion = new BigDecimal("0");
+
+        if (frUserEntity.getMarriage() != null) {
+            completion = completion.add(new BigDecimal("1"));
+        }
+
+        if (frUserEntity.getLoveGoal() != null) {
+            completion = completion.add(new BigDecimal("1"));
+        }
+
+        if (frUserEntity.getEmotional() != null) {
+            completion = completion.add(new BigDecimal("1"));
+        }
+
+        if (frUserEntity.getAnnualSalary() != null) {
+            completion = completion.add(new BigDecimal("1"));
+        }
+
+        if (frUserEntity.getCharacterType() != null) {
+            completion = completion.add(new BigDecimal("1"));
+        }
+
+        return completion.divide(total).multiply(new BigDecimal("100")).setScale(0, RoundingMode.DOWN).intValue();
     }
 
     private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {

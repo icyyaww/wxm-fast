@@ -46,6 +46,8 @@
         <result property="characterType" column="character_type"
                 typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
         <result property="latelyTime" column="lately_time"/>
+        <result property="additional" column="additional"
+                typeHandler="com.wxm.msfast.nostalgia.common.handle.AdditionalHandler"/>
     </resultMap>
 
 
@@ -111,5 +113,16 @@
             limit #{size}
         </if>
 
+    </select>
+
+    <resultMap id="likeResponse"
+               type="com.wxm.msfast.nostalgia.common.rest.response.fruser.LikeResponse">
+    </resultMap>
+
+    <select id="getPersonalLike" resultMap="likeResponse" parameterType="int">
+select
+(select count(1) from user_matching um where um.del_flag=0 and um.user_id=#{id} and um.result=true) as ilike,
+(select count(1) from user_matching um where um.del_flag=0 and um.other_user =#{id} and um.result=true) as likeMe,
+(select count(1) from user_matching umm where umm.del_flag=0 and umm.user_id=#{id} and umm.result=true and (select count(1) from user_matching um where um.del_flag=0 and um.other_user =#{id} and um.user_id =umm.other_user and um.result=true)>0) as lovers
     </select>
 </mapper>
