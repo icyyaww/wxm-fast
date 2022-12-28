@@ -30,12 +30,12 @@ public class WxAppletServiceImpl implements WxAppletService {
 
         WxAppletOpenResponse response = new WxAppletOpenResponse();
         //todo 测试数据需要删除
-        response.setOpenId("abc");
+       /* response.setOpenId("abc");
         response.setSessionKey("dfg");
         response.setUnionId("hjk");
         if (true) {
             return response;
-        }
+        }*/
 
         if (StringUtils.isNotBlank(code)) {
             String appId = ConfigConstants.WX_APPLET_APPID();
@@ -43,7 +43,7 @@ public class WxAppletServiceImpl implements WxAppletService {
             String result = restTemplate.getForObject(wxAppletHost + "?appid=" + appId + "&secret=" + secret + "&js_code=" + code + "&grant_type=authorization_code", String.class);
             JSONObject jsonObject = JSONObject.parseObject(result);
             Integer errcode = jsonObject.getInteger("errcode");
-            if (errcode == 0) {
+            if (errcode == null) {
                 response.setOpenId(jsonObject.getString("openid"));
                 response.setSessionKey(jsonObject.getString("session_key"));
                 response.setUnionId(jsonObject.getString("unionid"));
