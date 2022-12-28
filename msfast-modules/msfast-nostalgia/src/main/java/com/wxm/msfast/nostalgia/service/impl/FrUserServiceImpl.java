@@ -226,6 +226,22 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         return response;
     }
 
+    @Override
+    public PersonalInfoResponse personalInfo() {
+
+        PersonalInfoResponse personalInfo = new PersonalInfoResponse();
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, personalInfo);
+            if (frUserEntity.getBirthday() != null) {
+                personalInfo.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
+                personalInfo.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+            }
+        }
+
+        return personalInfo;
+    }
+
     private Integer getRatio(FrUserEntity frUserEntity) {
 
         BigDecimal total = new BigDecimal("5");

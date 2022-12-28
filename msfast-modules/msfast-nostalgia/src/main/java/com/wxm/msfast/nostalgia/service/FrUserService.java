@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalCenterResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
@@ -37,5 +38,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     void updateLatelyTime(Integer userId);
 
     PersonalCenterResponse getPersonalCenter();
+
+    PersonalInfoResponse personalInfo();
 }
 

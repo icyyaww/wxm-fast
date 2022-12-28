@@ -15,6 +15,7 @@ import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.PageResult;
@@ -227,6 +228,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 FrUserFollowEntity frUserFollowEntity = new FrUserFollowEntity();
                 frUserFollowEntity.setFollowId(id);
                 frUserFollowEntity.setUserId(TokenUtils.getOwnerId());
+                frUserFollowService.save(frUserFollowEntity);
             }
         } finally {
             lock.unlock();

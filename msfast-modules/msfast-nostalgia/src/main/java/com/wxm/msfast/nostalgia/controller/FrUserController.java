@@ -7,6 +7,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalCenterResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -64,6 +65,13 @@ public class FrUserController {
     @GetMapping("/personalCenter")
     public R<PersonalCenterResponse> personalCenter() {
         return R.ok(frUserService.getPersonalCenter());
+    }
+
+    @ApiOperation("我的-个人中心-资料编辑详情")
+    @ApiOperationSort(value = 5)
+    @GetMapping("/personalInfo")
+    public R<PersonalInfoResponse> personalInfo() {
+        return R.ok(frUserService.personalInfo());
     }
 
 }

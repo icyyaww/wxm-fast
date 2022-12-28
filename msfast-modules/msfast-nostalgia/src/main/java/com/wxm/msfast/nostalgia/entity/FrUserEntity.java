@@ -149,7 +149,7 @@ public class FrUserEntity extends BaseEntity {
     private List<String> imgList;
 
     /**
-     * 用户认证状态
+     * 用户资料状态
      */
     @TableField("auth_status")
     private AuthStatusEnum authStatus;
