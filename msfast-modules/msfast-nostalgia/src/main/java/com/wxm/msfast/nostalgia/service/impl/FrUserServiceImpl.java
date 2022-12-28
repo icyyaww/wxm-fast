@@ -3,6 +3,7 @@ package com.wxm.msfast.nostalgia.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.wxm.msfast.base.auth.entity.LoginUser;
@@ -11,12 +12,16 @@ import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
+import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
+import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
+import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
+import com.wxm.msfast.nostalgia.service.FrUserExamineService;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +52,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     RecommendConfigService recommendConfigService;
+
+    @Autowired
+    FrUserExamineService frUserExamineService;
 
     @Override
     public Long countByOpenId(String openId) {
@@ -230,12 +238,28 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public PersonalInfoResponse personalInfo() {
 
         PersonalInfoResponse personalInfo = new PersonalInfoResponse();
-        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        Integer ownerId = TokenUtils.getOwnerId();
+        FrUserEntity frUserEntity = this.getById(ownerId);
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, personalInfo);
             if (frUserEntity.getBirthday() != null) {
                 personalInfo.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
                 personalInfo.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+            }
+
+            if (AuthStatusEnum.EXAMINE.equals(frUserEntity.getAuthStatus())) {
+                personalInfo.setRemarks(AuthStatusEnum.EXAMINE.getDesc());
+            } else if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAuthStatus())) {
+                LambdaQueryWrapper<FrUserExamineEntity> queryWrapper = new QueryWrapper<FrUserExamineEntity>().lambda()
+                        .eq(FrUserExamineEntity::getUserId, ownerId)
+                        .eq(FrUserExamineEntity::getAuthType, AuthTypeEnum.InfoAuth)
+                        .eq(FrUserExamineEntity::getAuthStatus, AuthStatusEnum.REFUSE)
+                        .orderByDesc(FrUserExamineEntity::getId)
+                        .last("limit 1");
+                FrUserExamineEntity userExamineEntity = frUserExamineService.getOne(queryWrapper);
+                if (userExamineEntity != null) {
+                    personalInfo.setRemarks(userExamineEntity.getRemarks());
+                }
             }
         }
 
