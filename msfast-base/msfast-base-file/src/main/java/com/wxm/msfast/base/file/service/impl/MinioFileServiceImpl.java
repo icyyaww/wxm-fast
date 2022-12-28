@@ -11,6 +11,7 @@ import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,7 @@ public class MinioFileServiceImpl implements IFileService {
                 .contentType(file.getContentType())
                 .build();
         client.putObject(args);
-        String url = minioConfig.getEndpoint() + "/" + minioConfig.getBucketName() + "/" + filePath;
+        String url = (StringUtils.isNotBlank(minioConfig.getUrl()) ? minioConfig.getUrl() : minioConfig.getEndpoint()) + "/" + minioConfig.getBucketName() + "/" + filePath;
         //保存文件 此时文件为临时文件 会被定期删除
         fileService.saveFile(url, filePath, FileUtils.getName(file.getOriginalFilename()));
         return url;
@@ -132,7 +133,7 @@ public class MinioFileServiceImpl implements IFileService {
 
     @Override
     public Boolean staticDelete(String path) {
-       return FileUtils.deleteFile(ConfigConstants.FILE_STATIC_PATH() + File.separator + FileUtils.getPath(path));
+        return FileUtils.deleteFile(ConfigConstants.FILE_STATIC_PATH() + File.separator + FileUtils.getPath(path));
     }
 
     private void mkdirs(String uploadpath) {

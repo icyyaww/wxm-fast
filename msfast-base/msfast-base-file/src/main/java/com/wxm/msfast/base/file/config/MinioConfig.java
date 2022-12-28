@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class MinioConfig
 {
     /**
-     * 连接url
+     * 连接地址
      */
     private String endpoint;
     /**
@@ -34,6 +34,11 @@ public class MinioConfig
      * 存储桶名称
      */
     private String bucketName;
+
+    /**
+    * @Description: url
+    */
+    private String url;
 
     @Bean
     public MinioClient getMinioClient()
