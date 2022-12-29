@@ -30,6 +30,8 @@ import com.wxm.msfast.nostalgia.service.FrUserExamineService;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import org.apache.commons.lang.StringUtils;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -63,6 +65,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     MsfFileService msfFileService;
+
+    @Autowired
+    RedissonClient redissonClient;
 
     @Override
     public Long countByOpenId(String openId) {
@@ -275,29 +280,70 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
+    @Transactional
     public void photoEdit(PhotoEditRequest request) {
-
-        msfFileService.deleteFileByUrl(request.getOldUrl());
-
-        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
-        if (frUserEntity == null) {
-            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
-        }
-
-        if (PhotoEditTypeEnum.DELETE.equals(request.getPhotoEditType())) {
-            if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
-
-                if (frUserEntity.getWaitApprovedImg().get(0).equals(request.getOldUrl())) {
-                    throw new JrsfException(UserExceptionEnum.FIRST_PHOTO_NOT_DELETE_EXCEPTION);
-                }
-
-                frUserEntity.getWaitApprovedImg().removeIf(p -> p.equals(request.getOldUrl()));
-
-                if (CollectionUtil.isEmpty(frUserEntity.getImgList()) || !frUserEntity.getImgList().contains(request.getOldUrl())) {
-
-                }
+        RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + TokenUtils.getOwnerId());
+        try {
+            lock.lock();
+            FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
             }
 
+            if (PhotoEditTypeEnum.DELETE.equals(request.getPhotoEditType())) {
+
+                if (StringUtils.isBlank(request.getOldUrl())) {
+                    throw new JrsfException(UserExceptionEnum.OLD_URL_NOT_EMPTY_EXCEPTION);
+                }
+
+                if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
+
+                    if (frUserEntity.getWaitApprovedImg().get(0).equals(request.getOldUrl())) {
+                        throw new JrsfException(UserExceptionEnum.FIRST_PHOTO_NOT_DELETE_EXCEPTION);
+                    }
+
+                    frUserEntity.getWaitApprovedImg().removeIf(p -> p.equals(request.getOldUrl()));
+                    if (CollectionUtil.isEmpty(frUserEntity.getImgList()) || !frUserEntity.getImgList().contains(request.getOldUrl())) {
+                        msfFileService.deleteFileByUrl(request.getOldUrl());
+                    }
+
+                }
+            } else if (PhotoEditTypeEnum.REPLACE.equals(request.getPhotoEditType())) {
+                if (StringUtils.isBlank(request.getNewUrl())) {
+                    throw new JrsfException(UserExceptionEnum.NEW_URL_NOT_EMPTY_EXCEPTION);
+                }
+
+                if (StringUtils.isBlank(request.getOldUrl())) {
+                    throw new JrsfException(UserExceptionEnum.OLD_URL_NOT_EMPTY_EXCEPTION);
+                }
+
+                if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
+                    Collections.replaceAll(frUserEntity.getWaitApprovedImg(), request.getOldUrl(), request.getNewUrl());
+                    if (CollectionUtil.isEmpty(frUserEntity.getImgList()) || !frUserEntity.getImgList().contains(request.getOldUrl())) {
+                        msfFileService.deleteFileByUrl(request.getOldUrl());
+                    }
+                    frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+                }
+            } else if (PhotoEditTypeEnum.ADD.equals(request.getPhotoEditType())) {
+
+                if (StringUtils.isBlank(request.getNewUrl())) {
+                    throw new JrsfException(UserExceptionEnum.NEW_URL_NOT_EMPTY_EXCEPTION);
+                }
+
+                if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
+                    frUserEntity.getWaitApprovedImg().add(request.getNewUrl());
+                } else {
+                    List<String> urlList = new ArrayList<>();
+                    urlList.add(request.getNewUrl());
+                    frUserEntity.setWaitApprovedImg(urlList);
+                }
+                frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+            }
+
+            this.updateById(frUserEntity);
+
+        } finally {
+            lock.unlock();
         }
     }
 

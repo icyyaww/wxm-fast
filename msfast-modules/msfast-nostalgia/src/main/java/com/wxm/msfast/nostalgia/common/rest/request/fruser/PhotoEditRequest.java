@@ -1,5 +1,6 @@
 package com.wxm.msfast.nostalgia.common.rest.request.fruser;
 
+import com.wxm.msfast.base.file.annotation.FileSave;
 import com.wxm.msfast.nostalgia.common.enums.PhotoEditTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -18,14 +19,15 @@ import javax.validation.constraints.NotNull;
 public class PhotoEditRequest {
 
     @ApiModelProperty("旧的url")
-    @NotBlank
     private String oldUrl;
 
     @ApiModelProperty("新的url")
+    @FileSave
     private String newUrl;
 
     @ApiModelProperty("编辑类型 REPLACE(\"替换\"),\n" +
-            "    DELETE(\"删除\")")
+            "    DELETE(\"删除\"),\n" +
+            "    ADD(\"新增\")")
     @NotNull
     private PhotoEditTypeEnum photoEditType;
 }

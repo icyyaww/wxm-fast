@@ -2,7 +2,8 @@ package com.wxm.msfast.nostalgia.common.enums;
 
 public enum PhotoEditTypeEnum {
     REPLACE("替换"),
-    DELETE("删除");
+    DELETE("删除"),
+    ADD("新增");
     private String desc;
 
     PhotoEditTypeEnum(String desc) {
