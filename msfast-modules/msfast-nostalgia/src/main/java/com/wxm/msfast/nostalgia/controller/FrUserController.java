@@ -84,8 +84,7 @@ public class FrUserController {
     @ApiOperationSort(value = 7)
     @GetMapping("/baseInfo")
     public R<BaseInfoResponse> baseInfo() {
-        //frUserService.photoEdit(request);
-        return R.ok();
+        return R.ok(frUserService.baseInfo());
     }
 
 

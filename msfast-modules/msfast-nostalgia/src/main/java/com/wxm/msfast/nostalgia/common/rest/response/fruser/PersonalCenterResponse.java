@@ -24,10 +24,19 @@ public class PersonalCenterResponse {
     @ApiModelProperty(value = "昵称")
     private String nickName;
 
-    @ApiModelProperty(value = "身份认证")
+    @ApiModelProperty(value = "资料认证  EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
+    private AuthStatusEnum authStatus;
+
+    @ApiModelProperty(value = "身份认证  EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
     private AuthStatusEnum identityAuth;
 
-    @ApiModelProperty(value = "学历认证")
+    @ApiModelProperty(value = "学历认证  EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
     private AuthStatusEnum educationAuth;
 
     @ApiModelProperty(value = "完成度")

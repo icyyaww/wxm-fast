@@ -347,6 +347,17 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         }
     }
 
+    @Override
+    public BaseInfoResponse baseInfo() {
+        BaseInfoResponse response = new BaseInfoResponse();
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, response);
+            response.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
+        }
+        return response;
+    }
+
     private Integer getRatio(FrUserEntity frUserEntity) {
 
         BigDecimal total = new BigDecimal("5");

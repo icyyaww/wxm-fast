@@ -185,7 +185,7 @@ public class DateUtils extends org.apache.commons.lang.time.DateUtils {
      **/
     public static Integer getAgeByBirth(Date birthDay) {
         if (birthDay == null) {
-            return 0;
+            return null;
         }
         int age = 0;
         Calendar cal = Calendar.getInstance();
