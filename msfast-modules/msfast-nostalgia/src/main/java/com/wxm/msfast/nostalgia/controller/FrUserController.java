@@ -79,8 +79,7 @@ public class FrUserController {
     @ApiOperationSort(value = 6)
     @PutMapping("/photoEdit")
     public R<Void> photoEdit(@RequestBody PhotoEditRequest request) {
-
-        //frUserService.updateConfigInfo(request);
+        frUserService.photoEdit(request);
         return R.ok();
     }
 }

@@ -17,6 +17,7 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.DelayTaskProducer;
 import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
+import io.minio.errors.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
@@ -24,7 +25,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -107,16 +111,14 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Async
     @Transactional
     public void deleteTempFile(String filePath, String url) {
-        try {
-            Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
-                    .eq(MsfFileEntity::getUrl, url)
-                    .eq(MsfFileEntity::getStatus, FileStatusEnum.TEMP);
-            Long tempCount = this.getBaseMapper().selectCount(wrapper);
-            if (tempCount > 0) {
-                deleteFile(filePath);
-                this.remove(wrapper);
-            }
-        } catch (Exception e) {
+
+        Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
+                .eq(MsfFileEntity::getUrl, url)
+                .eq(MsfFileEntity::getStatus, FileStatusEnum.TEMP);
+        Long tempCount = this.getBaseMapper().selectCount(wrapper);
+        if (tempCount > 0) {
+            deleteFileByPath(filePath);
+            this.remove(wrapper);
         }
     }
 
@@ -129,9 +131,36 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
      * @Date: 2022/9/9 下午3:39
      */
     @Override
-    public void deleteFile(String filePath) throws Exception {
-        client.removeObject(
-                RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filePath).build());
+    public void deleteFileByPath(String filePath) {
+        try {
+            client.removeObject(
+                    RemoveObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filePath).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteFileByUrl(String url) {
+        if (StringUtils.isNotBlank(url)) {
+            String pre = getPrePath();
+            int index = url.indexOf(pre);
+            if (index >= 0) {
+                String path = url.substring(pre.length());
+                deleteFileByPath(path);
+                Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
+                        .eq(MsfFileEntity::getUrl, url);
+                this.remove(wrapper);
+            }
+
+        }
+    }
+
+    @Override
+    public String getPrePath() {
+
+        return (StringUtils.isNotBlank(minioConfig.getUrl()) ? minioConfig.getUrl() : minioConfig.getEndpoint()) + "/" + minioConfig.getBucketName() + "/";
     }
 
     private void changeTempUrl(String url) {

@@ -60,7 +60,7 @@ public class MinioFileServiceImpl implements IFileService {
                 .contentType(file.getContentType())
                 .build();
         client.putObject(args);
-        String url = (StringUtils.isNotBlank(minioConfig.getUrl()) ? minioConfig.getUrl() : minioConfig.getEndpoint()) + "/" + minioConfig.getBucketName() + "/" + filePath;
+        String url = fileService.getPrePath() + filePath;
         //保存文件 此时文件为临时文件 会被定期删除
         fileService.saveFile(url, filePath, FileUtils.getName(file.getOriginalFilename()));
         return url;

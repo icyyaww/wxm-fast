@@ -3,6 +3,7 @@ package com.wxm.msfast.base.file.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.file.entity.MsfFileEntity;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  * 备注
@@ -20,7 +21,7 @@ public interface MsfFileService extends IService<MsfFileEntity> {
      * @Param
      * @return
      **/
-    void saveFile(String url,String filePath, String fileName);
+    void saveFile(String url, String filePath, String fileName);
 
     /*
      * @Author wanglei
@@ -47,7 +48,7 @@ public interface MsfFileService extends IService<MsfFileEntity> {
      * @Param
      * @return
      **/
-    void deleteTempFile(String filePath,String url);
+    void deleteTempFile(String filePath, String url);
 
     /**
      * @Description: 删除文件 物理删除
@@ -56,6 +57,11 @@ public interface MsfFileService extends IService<MsfFileEntity> {
      * @Author: Mr.Wang
      * @Date: 2022/9/9 下午3:39
      */
-    void deleteFile(String filename) throws Exception;
+    void deleteFileByPath(String filePath);
+
+    @Async
+    void deleteFileByUrl(String url);
+
+    String getPrePath();
 }
 

@@ -9,13 +9,18 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
+import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
+import com.wxm.msfast.nostalgia.common.enums.PhotoEditTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
@@ -55,6 +60,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     FrUserExamineService frUserExamineService;
+
+    @Autowired
+    MsfFileService msfFileService;
 
     @Override
     public Long countByOpenId(String openId) {
@@ -191,7 +199,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public void updateConfigInfo(RecommendConfigRequest request) {
 
         if (request.getMinAge().compareTo(request.getMaxAge()) > 0) {
-            throw new JrsfException(UserExceptionEnum.MIN_AGE_GREATER);
+            throw new JrsfException(UserExceptionEnum.MIN_AGE_GREATER_EXCEPTION);
         }
         RecommendConfigEntity recommendConfigEntity = recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
         if (recommendConfigEntity == null) {
@@ -264,6 +272,33 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         }
 
         return personalInfo;
+    }
+
+    @Override
+    public void photoEdit(PhotoEditRequest request) {
+
+        msfFileService.deleteFileByUrl(request.getOldUrl());
+
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity == null) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+
+        if (PhotoEditTypeEnum.DELETE.equals(request.getPhotoEditType())) {
+            if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
+
+                if (frUserEntity.getWaitApprovedImg().get(0).equals(request.getOldUrl())) {
+                    throw new JrsfException(UserExceptionEnum.FIRST_PHOTO_NOT_DELETE_EXCEPTION);
+                }
+
+                frUserEntity.getWaitApprovedImg().removeIf(p -> p.equals(request.getOldUrl()));
+
+                if (CollectionUtil.isEmpty(frUserEntity.getImgList()) || !frUserEntity.getImgList().contains(request.getOldUrl())) {
+
+                }
+            }
+
+        }
     }
 
     private Integer getRatio(FrUserEntity frUserEntity) {
