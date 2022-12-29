@@ -4,6 +4,7 @@ package com.wxm.msfast.nostalgia.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
@@ -87,5 +88,11 @@ public class FrUserController {
         return R.ok(frUserService.baseInfo());
     }
 
-
+    @ApiOperation("个人中心-基础资料编辑")
+    @ApiOperationSort(value = 8)
+    @PutMapping("/baseInfo/edit")
+    public R<Void> baseInfoEdit(@RequestBody BaseInfoEditRequest request) {
+        frUserService.baseInfoEdit(request);
+        return R.ok();
+    }
 }

@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.profession.ProfessionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.university.UniversityListResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,5 +41,13 @@ public class UniversityController {
     @AuthIgnore
     public R<List<UniversityListResponse>> nameSelect(@RequestParam String name) {
         return R.ok(universityService.nameSelect(name));
+    }
+
+    @ApiOperation("行业下拉列表")
+    @ApiOperationSort(value = 2)
+    @GetMapping("/professionSelect")
+    @AuthIgnore
+    public R<List<ProfessionResponse>> professionSelect() {
+        return R.ok(universityService.professionSelect());
     }
 }

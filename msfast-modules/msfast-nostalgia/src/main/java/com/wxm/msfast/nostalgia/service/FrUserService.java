@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
@@ -42,5 +43,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     void photoEdit(PhotoEditRequest request);
 
     BaseInfoResponse baseInfo();
+
+    void baseInfoEdit(BaseInfoEditRequest request);
 }
 

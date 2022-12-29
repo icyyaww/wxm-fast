@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
-import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
@@ -20,13 +20,17 @@ import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.PhotoEditTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
+import com.wxm.msfast.nostalgia.dao.FrUserDao;
+import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 import com.wxm.msfast.nostalgia.service.FrUserExamineService;
+import com.wxm.msfast.nostalgia.service.FrUserService;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import org.apache.commons.lang.StringUtils;
@@ -36,10 +40,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wxm.msfast.nostalgia.dao.FrUserDao;
-import com.wxm.msfast.nostalgia.entity.FrUserEntity;
-import com.wxm.msfast.nostalgia.service.FrUserService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -356,6 +356,16 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             response.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
         }
         return response;
+    }
+
+    @Override
+    public void baseInfoEdit(BaseInfoEditRequest request) {
+
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(request, frUserEntity);
+            this.updateById(frUserEntity);
+        }
     }
 
     private Integer getRatio(FrUserEntity frUserEntity) {
