@@ -7,10 +7,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalCenterResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.PersonalInfoResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -82,4 +79,14 @@ public class FrUserController {
         frUserService.photoEdit(request);
         return R.ok();
     }
+
+    @ApiOperation("我的-个人中心-资料编辑-基础资料编辑详情")
+    @ApiOperationSort(value = 7)
+    @GetMapping("/baseInfo")
+    public R<BaseInfoResponse> baseInfo() {
+        //frUserService.photoEdit(request);
+        return R.ok();
+    }
+
+
 }
