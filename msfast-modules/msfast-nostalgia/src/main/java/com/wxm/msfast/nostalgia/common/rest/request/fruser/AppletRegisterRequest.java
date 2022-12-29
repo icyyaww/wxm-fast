@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -98,6 +99,7 @@ public class AppletRegisterRequest extends RegisterRequest {
      */
     @ApiModelProperty(value = "关于我")
     @NotBlank
+    @Size(min = 10,max = 200)
     private String aboutMe;
 
     /**
@@ -105,6 +107,7 @@ public class AppletRegisterRequest extends RegisterRequest {
      */
     @ApiModelProperty(value = "兴趣爱好")
     @NotBlank
+    @Size(min = 10,max = 200)
     private String interest;
 
     /**
@@ -112,6 +115,7 @@ public class AppletRegisterRequest extends RegisterRequest {
      */
     @ApiModelProperty(value = "择偶要求")
     @NotBlank
+    @Size(min = 10,max = 200)
     private String loveRequirement;
 
     /**

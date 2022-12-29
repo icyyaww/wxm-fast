@@ -31,14 +31,14 @@ public class BaseInfoEditRequest {
      * 城市
      */
     @ApiModelProperty(value = "城市")
-    @Size(min = 1,max = 10)
+    @Size(min = 1, max = 10)
     private String city;
 
     /**
      * 职业
      */
     @ApiModelProperty(value = "职业")
-    @Size(min = 1,max = 10)
+    @Size(min = 1, max = 10)
     private String profession;
 
     /**
@@ -81,7 +81,7 @@ public class BaseInfoEditRequest {
      * 微信号
      */
     @ApiModelProperty(value = "微信号")
-    @Size(min = 1,max = 50)
+    @Size(min = 1, max = 50)
     private String weChatNumber;
 
 
@@ -89,7 +89,7 @@ public class BaseInfoEditRequest {
      * 毕业学校
      */
     @ApiModelProperty(value = "毕业学校")
-    @Size(min = 1,max = 30)
+    @Size(min = 1, max = 30)
     private String school;
 
     /**
@@ -107,4 +107,28 @@ public class BaseInfoEditRequest {
     @ApiModelProperty(value = "学历类型 FullTime(\"全日制\"),\n" +
             "    NOFullTime(\"非全日制\")")
     private EducationalTypeEnum educationalType;
+
+
+    /**
+     * 关于我
+     */
+    @ApiModelProperty(value = "关于我")
+    @Size(min = 10, max = 200)
+    private String aboutMe;
+
+    /**
+     * 兴趣爱好
+     */
+    @ApiModelProperty(value = "兴趣爱好")
+    @Size(min = 10, max = 200)
+    private String interest;
+
+    /**
+     * 择偶要求
+     */
+    @ApiModelProperty(value = "心议的他")
+    @Size(min = 10, max = 200)
+    private String loveRequirement;
+
+
 }
