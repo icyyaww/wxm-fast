@@ -53,4 +53,7 @@ public class PersonalCenterResponse {
 
     @ApiModelProperty(value = "相互喜欢")
     private Long lovers;
+
+    @ApiModelProperty(value = "喜欢我的头像")
+    private String likeMeheadPortrait;
 }

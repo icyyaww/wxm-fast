@@ -23,6 +23,7 @@ import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
+import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.wxm.msfast.nostalgia.service.FrUserExamineService;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
@@ -235,6 +236,20 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             LikeResponse likeResponse = this.baseMapper.getPersonalLike(frUserEntity.getId());
             if (likeResponse != null) {
                 BeanUtils.copyProperties(likeResponse, response);
+                if (likeResponse.getLikeMe() > 0) {
+                    LambdaQueryWrapper<UserMatchingEntity> queryWrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                            .eq(UserMatchingEntity::getOtherUser, frUserEntity.getId())
+                            .eq(UserMatchingEntity::getResult, true)
+                            .orderByDesc(UserMatchingEntity::getId)
+                            .last("limit 1");
+                    UserMatchingEntity userMatchingEntity = this.userMatchingService.getBaseMapper().selectOne(queryWrapper);
+                    if (userMatchingEntity != null) {
+                        FrUserEntity likeMe = this.getById(userMatchingEntity.getUserId());
+                        if (likeMe != null) {
+                            response.setLikeMeheadPortrait(likeMe.getHeadPortrait());
+                        }
+                    }
+                }
             }
 
         }
@@ -361,10 +376,18 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public void baseInfoEdit(BaseInfoEditRequest request) {
 
-        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
-        if (frUserEntity != null) {
-            BeanUtils.copyProperties(request, frUserEntity);
-            this.updateById(frUserEntity);
+        RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + TokenUtils.getOwnerId());
+        try {
+            lock.lock();
+            FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+            if (frUserEntity != null) {
+                BeanUtils.copyProperties(request, frUserEntity);
+                frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+                this.updateById(frUserEntity);
+            }
+
+        } finally {
+            lock.unlock();
         }
     }
 
