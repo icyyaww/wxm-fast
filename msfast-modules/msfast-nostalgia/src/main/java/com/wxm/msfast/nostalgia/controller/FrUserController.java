@@ -101,5 +101,11 @@ public class FrUserController {
         return R.ok();
     }
 
+    @ApiOperation("我的-个人中心-双重认证")
+    @ApiOperationSort(value = 10)
+    @GetMapping("/doubleAuth")
+    public R<DoubleAuthResponse> doubleAuth() {
+        return R.ok(frUserService.doubleAuth());
+    }
 
 }

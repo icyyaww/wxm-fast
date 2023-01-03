@@ -249,6 +249,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         FrUserEntity frUserEntity = this.getById(ownerId);
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, personalInfo);
+            if (frUserEntity.getAdditional() != null) {
+                personalInfo.setIdentityAuth(frUserEntity.getAdditional().getIdentityAuth());
+                personalInfo.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
+            }
             if (frUserEntity.getBirthday() != null) {
                 personalInfo.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
                 personalInfo.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
@@ -268,6 +272,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     personalInfo.setRemarks(userExamineEntity.getRemarks());
                 }
             }
+
+
         }
 
         return personalInfo;
@@ -378,6 +384,17 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             frUserEntity.setCharacterType(characterType);
             this.updateById(frUserEntity);
         }
+    }
+
+    @Override
+    public DoubleAuthResponse doubleAuth() {
+        DoubleAuthResponse response = new DoubleAuthResponse();
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null && frUserEntity.getAdditional() != null) {
+            response.setIdentityAuth(frUserEntity.getAdditional().getIdentityAuth());
+            response.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
+        }
+        return response;
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
