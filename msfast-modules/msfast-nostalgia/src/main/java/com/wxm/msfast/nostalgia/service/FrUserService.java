@@ -1,10 +1,7 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -45,5 +42,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     BaseInfoResponse baseInfo();
 
     void baseInfoEdit(BaseInfoEditRequest request);
+
+    void characterEdit(CharacterRequest request);
 }
 

@@ -4,10 +4,7 @@ package com.wxm.msfast.nostalgia.controller;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.Api;
@@ -95,4 +92,14 @@ public class FrUserController {
         frUserService.baseInfoEdit(request);
         return R.ok();
     }
+
+    @ApiOperation("个人中心-性格编辑")
+    @ApiOperationSort(value = 9)
+    @PutMapping("/character/edit")
+    public R<Void> characterEdit(@RequestBody CharacterRequest request) {
+        frUserService.characterEdit(request);
+        return R.ok();
+    }
+
+
 }

@@ -15,15 +15,9 @@ import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
-import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
-import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
-import com.wxm.msfast.nostalgia.common.enums.PhotoEditTypeEnum;
-import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
+import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.PhotoEditRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendConfigRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
@@ -366,6 +360,75 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             BeanUtils.copyProperties(request, frUserEntity);
             this.updateById(frUserEntity);
         }
+    }
+
+    @Override
+    public void characterEdit(CharacterRequest request) {
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (frUserEntity != null) {
+            CharacterTypeResponse characterType = new CharacterTypeResponse();
+
+            characterType.setExtroversionScore(getCharacter(request.getExtroversionScore()));
+            characterType.setImagineScore(getCharacter(request.getImagineScore()));
+            characterType.setPerceptualScore(getCharacter(request.getPerceptualScore()));
+            characterType.setPlanScore(getCharacter(request.getPlanScore()));
+
+            characterType.setName(getCharacterName(characterType));
+
+            frUserEntity.setCharacterType(characterType);
+            this.updateById(frUserEntity);
+        }
+    }
+
+    private String getCharacterName(CharacterTypeResponse characterType) {
+        String name = "";
+        if (characterType != null) {
+            if (characterType.getExtroversionScore() != null) {
+                name += (CharacterPosition.LEFT.equals(characterType.getExtroversionScore().getPosition()) ? "E" : "I");
+            }
+
+            if (characterType.getImagineScore() != null) {
+                name += (CharacterPosition.LEFT.equals(characterType.getImagineScore().getPosition()) ? "N" : "S");
+            }
+
+            if (characterType.getPerceptualScore() != null) {
+                name += (CharacterPosition.LEFT.equals(characterType.getPerceptualScore().getPosition()) ? "F" : "T");
+            }
+
+            if (characterType.getPlanScore() != null) {
+                name += (CharacterPosition.LEFT.equals(characterType.getPlanScore().getPosition()) ? "J" : "P");
+            }
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("INTP", "思绪飞扬的学者");
+        map.put("INTJ", "独立自主的专家");
+        map.put("ENTP", "大雄的机器猫");
+        map.put("ENTJ", "天生的领导者");
+        map.put("ENFJ", "谆谆教诲的教育家");
+        map.put("INFJ", "精神世界的引路人");
+        map.put("INFP", "完美主义的知心人");
+        map.put("ENFP", "追梦人");
+        map.put("ESFP", "不可或缺的大活宝");
+        map.put("ISFP", "静美的艺术家");
+        map.put("ISTP", "谦逊的手艺人");
+        map.put("ESTP", "活在当下的践行者");
+        map.put("ISFJ", "具奉献精神的保护者");
+        map.put("ISTJ", "一丝不苟的检查者");
+        map.put("ESFJ", "盛情难却的东道主");
+        map.put("ESTJ", "天生的管理者");
+
+        name += ("-" + map.get(name));
+        return name;
+    }
+
+
+    private CharacterResponse getCharacter(Integer score) {
+
+        CharacterResponse characterResponse = new CharacterResponse();
+        characterResponse.setScore(score);
+        characterResponse.setPosition(score >= 5 ? CharacterPosition.LEFT : CharacterPosition.RIGHT);
+        return characterResponse;
+
     }
 
     private Integer getRatio(FrUserEntity frUserEntity) {
