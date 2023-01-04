@@ -32,7 +32,7 @@ public class FrUserAuthController {
     @PostMapping("/add")
     public R<Void> addAurh(@RequestBody DoubleAuthRequest request) {
 
-        frUserAuthService.addAurh(request);
+        frUserAuthService.addAuth(request);
         return R.ok();
     }
 }

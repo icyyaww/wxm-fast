@@ -37,4 +37,7 @@ public class FrUserAuthEntity extends BaseEntity {
     @TableField(value = "img_list", typeHandler = UserAuthImgListHandler.class)
     private List<String> imgList;
 
+    @TableField("user_id")
+    private Integer userId;
+
 }

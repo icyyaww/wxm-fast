@@ -9,10 +9,12 @@ package com.wxm.msfast.nostalgia.common.constant;
 
 public class Constants {
 
-    public static final String MATCHING = "SIJUNYI_MATCHING_USERID";
+    public static final String MATCHING = "SIJUNYI_MATCHING_USERID_";
 
-    public static final String PHOTO_EDIT = "PHOTO_EDIT_USERID";
+    public static final String PHOTO_EDIT = "PHOTO_EDIT_USERID_";
 
-    public static final Integer AGE_DIFFER= 3;
+    public static final String ADD_AUTH = "ADD_AUTH_";
+
+    public static final Integer AGE_DIFFER = 3;
 
 }

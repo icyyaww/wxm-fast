@@ -14,6 +14,6 @@ import com.wxm.msfast.nostalgia.entity.FrUserAuthEntity;
  */
 public interface FrUserAuthService extends IService<FrUserAuthEntity> {
 
-    void addAurh(DoubleAuthRequest request);
+    void addAuth(DoubleAuthRequest request);
 }
 
