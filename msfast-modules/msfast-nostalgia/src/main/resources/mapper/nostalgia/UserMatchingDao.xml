@@ -15,7 +15,7 @@
         <result property="userId" column="user_id"/>
         <result property="result" column="result"/>
         <result property="otherUser" column="other_user"/>
-        <result property="describe" column="describe"/>
+        <result property="descInfo" column="desc_info"/>
     </resultMap>
 
     <resultMap id="likeMePageResponse" type="com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse">
@@ -29,7 +29,7 @@
 	case (select count(1) from user_matching um1 where um1.del_flag=0 and um1.`result` and um1.user_id=1 and um1.other_user=fu.id)
 	when 0 then 'LIKE_ME'
 	else 'SUCCESS' end as matchingStatus,
-	um.`describe`
+	um.desc_info
 from
 	user_matching um
 left join fr_user fu on

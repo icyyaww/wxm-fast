@@ -32,7 +32,7 @@ public class UserMatchingEntity extends BaseEntity {
     @TableField("other_user")
     private Integer otherUser;
 
-    @TableField("describe")
-    private Integer describe;
+    @TableField("desc_info")
+    private String descInfo;
 
 }

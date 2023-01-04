@@ -1,19 +1,26 @@
 package com.wxm.msfast.nostalgia.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
+import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.common.utils.PageResult;
+import com.wxm.msfast.base.common.utils.SpringBeanUtils;
+import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
+import com.wxm.msfast.nostalgia.entity.FrUserEntity;
+import com.wxm.msfast.nostalgia.service.FrUserService;
+import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -37,6 +44,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
     @Autowired
     RedissonClient redissonClient;
+
 
     @Override
     public Long matchingNum() {
@@ -84,6 +92,31 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                 UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
                 BeanUtils.copyProperties(request, userMatchingEntity);
                 userMatchingEntity.setUserId(userId);
+
+                if (userMatchingEntity.getResult()) {
+                    int random = RandomUtil.randomInt(0, 3);
+                    FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
+                    FrUserEntity frUserEntity = frUserService.getById(userId);
+                    if (frUserEntity != null) {
+                        String gender = GenderEnum.MALE.equals(frUserEntity.getGender()) ? "小哥哥" : "小姐姐";
+                        switch (random) {
+                            case 0:
+                                if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+                                    userMatchingEntity.setDescInfo("一个" + frUserEntity.getCity() + "的" + gender);
+                                }
+                                break;
+                            case 1:
+                                userMatchingEntity.setDescInfo("一个" + DateUtils.getConstellation(frUserEntity.getBirthday()) + "的" + gender);
+                                break;
+                            default:
+                                if (frUserEntity.getBirthday() != null) {
+                                    userMatchingEntity.setDescInfo("一个" + DateUtils.getAgeByBirth(frUserEntity.getBirthday()) + "岁的" + gender);
+                                }
+                        }
+                    }
+
+                }
+
                 this.baseMapper.insert(userMatchingEntity);
             }
         } finally {

@@ -1,3 +1,4 @@
+import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.msfast.MsfastCommunityApplication;
@@ -27,12 +28,17 @@ public class TestController {
 
     @Test
     public void test() {
-        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, "15902393423");
+
+        for (int i = 0; i < 20; i++) {
+            int random = RandomUtil.randomInt(0, 3);
+            System.out.println(random + "\n");
+        }
+       /* Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getPhone, "15902393423");
         FrUserEntity frUserEntity = frUserService.getOne(frUserEntityWrapper);
         System.out.println(frUserEntity);
 
         Wrapper<MsfConfigEntity> sysConfigEntityWrapper = new QueryWrapper<MsfConfigEntity>().lambda().eq(MsfConfigEntity::getCode, "");
         MsfConfigEntity msfConfigEntity = msfConfigService.getOne(sysConfigEntityWrapper);
-        System.out.println(msfConfigEntity);
+        System.out.println(msfConfigEntity);*/
     }
 }

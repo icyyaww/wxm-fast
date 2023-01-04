@@ -25,5 +25,5 @@ public class LikeMePageResponse {
     private MatchingStatusEnum matchingStatus;
 
     @ApiModelProperty(value = "描述信息")
-    private String describe;
+    private String descInfo;
 }
