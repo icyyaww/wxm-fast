@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @program: wxm-fast
  * @description:
@@ -84,9 +87,13 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         }
 
         frUserEntity.setStatus(FrUserStatusEnum.ENABLE);
-        frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+        frUserEntity.setAuthStatus(AuthStatusEnum.FIRST_EXAMINE);
         frUserEntity.setUserType(UserTypeEnum.Normal);
         frUserEntity.setEducationalType(EducationalTypeEnum.FullTime);
+
+        List<String> waitApprovedImg = new ArrayList<>();
+        waitApprovedImg.add(request.getHeadPortrait());
+        frUserEntity.setWaitApprovedImg(waitApprovedImg);
         this.frUserService.save(frUserEntity);
 
         //保存头像

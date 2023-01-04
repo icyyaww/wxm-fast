@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
 public enum AuthStatusEnum {
+    FIRST_EXAMINE("首次审核中"),
     EXAMINE("审核中"),
     PASS("通过"),
     REFUSE("拒绝");

@@ -87,7 +87,7 @@
         from
         fr_user fu
         <where>
-            fu.del_flag=0 and fu.status='ENABLE' and fu.img_list is not null
+            fu.del_flag=0 and fu.status='ENABLE' and (fu.auth_status='PASS' or fu.auth_status='EXAMINE') and fu.img_list is not null
             <if test="gender!=null and gender!=''">
                 and fu.gender!=#{gender}
             </if>
