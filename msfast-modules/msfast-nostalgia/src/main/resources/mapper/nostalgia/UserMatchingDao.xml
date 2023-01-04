@@ -3,7 +3,7 @@
 
 <mapper namespace="com.wxm.msfast.nostalgia.dao.UserMatchingDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.wxm.msfast.nostalgia.entity.UserMatchingEntity" id="userMatchingMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
@@ -15,7 +15,33 @@
         <result property="userId" column="user_id"/>
         <result property="result" column="result"/>
         <result property="otherUser" column="other_user"/>
+        <result property="describe" column="describe"/>
     </resultMap>
 
+    <resultMap id="likeMePageResponse" type="com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse">
+    </resultMap>
+
+    <!--个人中心 我的关注列表-->
+    <select id="getLikeMePage" resultMap="likeMePageResponse" parameterType="Integer">
+             select
+	fu.id,
+	fu.head_portrait,
+	case (select count(1) from user_matching um1 where um1.del_flag=0 and um1.`result` and um1.user_id=1 and um1.other_user=fu.id)
+	when 0 then 'LIKE_ME'
+	else 'SUCCESS' end as matchingStatus,
+	um.`describe`
+from
+	user_matching um
+left join fr_user fu on
+	fu.id = um.user_id
+where
+	um.del_flag = 0
+	and um.`result`
+	and fu.del_flag = 0
+	and fu.status = 'ENABLE'
+	and um.user_id != #{id}
+	and um.other_user = #{id}
+order by um.id desc
+    </select>
 
 </mapper>

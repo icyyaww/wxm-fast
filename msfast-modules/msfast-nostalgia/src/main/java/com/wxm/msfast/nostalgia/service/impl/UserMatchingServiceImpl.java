@@ -2,14 +2,18 @@ package com.wxm.msfast.nostalgia.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -86,5 +90,14 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
             lock.unlock();
         }
 
+    }
+
+    @Override
+    public PageResult<LikeMePageResponse> likeMePage(Integer pageIndex, Integer pageSize) {
+        Page<LikeMePageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.getBaseMapper().getLikeMePage(TokenUtils.getOwnerId());
+        PageResult<LikeMePageResponse> result = new PageResult<>(page);
+
+        return result;
     }
 }

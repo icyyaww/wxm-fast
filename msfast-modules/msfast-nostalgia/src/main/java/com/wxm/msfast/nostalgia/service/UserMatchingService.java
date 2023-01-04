@@ -1,8 +1,11 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -24,5 +27,7 @@ public interface UserMatchingService extends IService<UserMatchingEntity> {
     Long matchingNum();
 
     void match(ChoiceRequest request);
+
+    PageResult<LikeMePageResponse> likeMePage(Integer pageIndex, Integer pageSize);
 }
 

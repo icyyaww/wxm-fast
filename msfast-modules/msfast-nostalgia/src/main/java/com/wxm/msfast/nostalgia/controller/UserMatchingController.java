@@ -2,11 +2,12 @@ package com.wxm.msfast.nostalgia.controller;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSort;
+import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
@@ -35,5 +36,17 @@ public class UserMatchingController {
     public R<Void> match(@RequestBody @Valid ChoiceRequest request) {
         userMatchingService.match(request);
         return R.ok();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("个人中心-喜欢我的")
+    @ApiOperationSort(value = 2)
+    @GetMapping("/likeMe/page")
+    public R<PageResult<LikeMePageResponse>> likeMePage(@RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+                                                        @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(userMatchingService.likeMePage(pageIndex, pageSize));
     }
 }
