@@ -18,6 +18,7 @@ import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.matching.LikePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -142,7 +143,19 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
         result.getRows().forEach(model -> {
             if (model.getBirthday() != null) {
                 model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
-                model.setConstellation(DateUtils.getConstellation(model.getBirthday()));
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public PageResult<LikePageResponse> likePage(Integer pageIndex, Integer pageSize) {
+        Page<LikePageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.getBaseMapper().getLikePage(TokenUtils.getOwnerId());
+        PageResult<LikePageResponse> result = new PageResult<>(page);
+        result.getRows().forEach(model -> {
+            if (model.getBirthday() != null) {
+                model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
             }
         });
         return result;

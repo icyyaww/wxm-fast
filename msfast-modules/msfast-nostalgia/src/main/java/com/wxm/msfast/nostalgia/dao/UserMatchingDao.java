@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.dao;
 
 import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.matching.LikePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -21,4 +22,6 @@ public interface UserMatchingDao extends BaseMapper<UserMatchingEntity> {
     List<LikeMePageResponse> getLikeMePage(Integer userId);
 
     List<SuccessPageResponse> getSuccessPage(Integer userId);
+
+    List<LikePageResponse> getLikePage(Integer userId);
 }
