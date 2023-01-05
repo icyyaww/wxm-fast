@@ -20,4 +20,7 @@ public class AdditionalResponse {
     @ApiModelProperty(value = "学历认证")
     private AuthStatusEnum educationAuth;
 
+    @ApiModelProperty(value = "资料待审核")
+    private AuthStatusEnum waitApprovedStatus;
+
 }

@@ -13,6 +13,7 @@ import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.EducationalTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.UserTypeEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.AppletRegisterRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.fruser.AdditionalResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.fruser.LoginResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -87,9 +88,13 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         }
 
         frUserEntity.setStatus(FrUserStatusEnum.ENABLE);
-        frUserEntity.setAuthStatus(AuthStatusEnum.FIRST_EXAMINE);
+        frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
         frUserEntity.setUserType(UserTypeEnum.Normal);
         frUserEntity.setEducationalType(EducationalTypeEnum.FullTime);
+
+        AdditionalResponse additionalResponse = new AdditionalResponse();
+        additionalResponse.setWaitApprovedStatus(AuthStatusEnum.EXAMINE);
+        frUserEntity.setAdditional(additionalResponse);
 
         List<String> waitApprovedImg = new ArrayList<>();
         waitApprovedImg.add(request.getHeadPortrait());

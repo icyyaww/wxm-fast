@@ -5,18 +5,17 @@ import com.wxm.msfast.nostalgia.common.enums.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * @program: wxm-fast
  * @description:
  * @author: Mr.Wang
- * @create: 2022-12-28 16:48
+ * @create: 2023-01-05 16:05
  **/
 
 @Data
-public class PersonalInfoResponse {
+public class UserInfoResponse {
 
     @ApiModelProperty(value = "主键")
     private Integer id;
@@ -24,7 +23,7 @@ public class PersonalInfoResponse {
     @ApiModelProperty(value = "资料认证状态 EXAMINE(\"审核中\"),\n" +
             "    PASS(\"通过\"),\n" +
             "    REFUSE(\"拒绝\")")
-    private AuthStatusEnum waitApprovedStatus;
+    private AuthStatusEnum authStatus;
 
     @ApiModelProperty(value = "审核理由")
     private String remarks;
@@ -152,6 +151,4 @@ public class PersonalInfoResponse {
 
     @ApiModelProperty(value = "性格测试")
     private CharacterTypeResponse characterType;
-
-
 }

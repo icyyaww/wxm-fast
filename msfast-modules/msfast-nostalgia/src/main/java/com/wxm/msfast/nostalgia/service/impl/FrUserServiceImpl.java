@@ -228,8 +228,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, response);
             if (frUserEntity.getAdditional() != null) {
-                response.setIdentityAuth(frUserEntity.getAdditional().getIdentityAuth());
-                response.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
+                BeanUtils.copyProperties(frUserEntity.getAdditional(), response);
             }
 
             response.setCompletionRatio(getRatio(frUserEntity));
@@ -259,14 +258,14 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public PersonalInfoResponse personalInfo() {
 
+
         PersonalInfoResponse personalInfo = new PersonalInfoResponse();
         Integer ownerId = TokenUtils.getOwnerId();
         FrUserEntity frUserEntity = this.getById(ownerId);
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, personalInfo);
             if (frUserEntity.getAdditional() != null) {
-                personalInfo.setIdentityAuth(frUserEntity.getAdditional().getIdentityAuth());
-                personalInfo.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
+                BeanUtils.copyProperties(frUserEntity.getAdditional(),personalInfo);
             }
             if (frUserEntity.getBirthday() != null) {
                 personalInfo.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));

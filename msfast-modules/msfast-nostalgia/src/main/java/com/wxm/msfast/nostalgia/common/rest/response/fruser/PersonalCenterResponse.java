@@ -27,7 +27,7 @@ public class PersonalCenterResponse {
     @ApiModelProperty(value = "资料认证  EXAMINE(\"审核中\"),\n" +
             "    PASS(\"通过\"),\n" +
             "    REFUSE(\"拒绝\")")
-    private AuthStatusEnum authStatus;
+    private AuthStatusEnum waitApprovedStatus;
 
     @ApiModelProperty(value = "身份认证  EXAMINE(\"审核中\"),\n" +
             "    PASS(\"通过\"),\n" +
