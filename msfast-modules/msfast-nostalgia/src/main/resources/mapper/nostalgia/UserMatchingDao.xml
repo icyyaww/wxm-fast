@@ -21,7 +21,7 @@
     <resultMap id="likeMePageResponse" type="com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse">
     </resultMap>
 
-    <!--个人中心 我的关注列表-->
+    <!--个人中心 我的喜欢列表-->
     <select id="getLikeMePage" resultMap="likeMePageResponse" parameterType="Integer">
              select
 	fu.id,
@@ -43,5 +43,32 @@ where
 	and um.other_user = #{id}
 order by um.id desc
     </select>
+
+    <resultMap id="successPageResponse"
+               type="com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse">
+    </resultMap>
+
+    <!--个人中心 相互喜欢列表-->
+    <select id="getSuccessPage" resultMap="successPageResponse" parameterType="Integer">
+              select
+	fu.id,
+	fu.head_portrait,
+	fu.nick_name,
+	fu.birthday,
+	fu.gender
+from
+	user_matching um
+left join fr_user fu on
+	fu.id = um.other_user
+where
+	um.del_flag = 0
+	and um.`result`
+	and fu.del_flag = 0
+	and fu.status = 'ENABLE'
+	and um.user_id = #{id}
+	and (select count(1) from user_matching um1 where um1.del_flag=0 and um1.`result` and um1.user_id=um.other_user and um1.other_user=#{id})>0
+order by um.id desc
+    </select>
+
 
 </mapper>
