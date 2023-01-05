@@ -46,5 +46,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     void characterEdit(CharacterRequest request);
 
     DoubleAuthResponse doubleAuth();
+
+    UserInfoResponse userInfo(Integer id);
 }
 

@@ -2,6 +2,7 @@ package com.wxm.msfast.nostalgia.controller;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
@@ -106,6 +107,13 @@ public class FrUserController {
     @GetMapping("/doubleAuth")
     public R<DoubleAuthResponse> doubleAuth() {
         return R.ok(frUserService.doubleAuth());
+    }
+
+    @ApiOperation("用户详情")
+    @ApiOperationSort(value = 11)
+    @GetMapping("/userInfo/{id}")
+    public R<UserInfoResponse> userInfo(@PathVariable Integer id) {
+        return R.ok(frUserService.userInfo(id));
     }
 
 }

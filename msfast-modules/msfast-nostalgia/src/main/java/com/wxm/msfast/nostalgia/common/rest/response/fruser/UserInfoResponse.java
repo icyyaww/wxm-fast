@@ -25,10 +25,6 @@ public class UserInfoResponse {
             "    REFUSE(\"拒绝\")")
     private AuthStatusEnum authStatus;
 
-    @ApiModelProperty(value = "审核理由")
-    private String remarks;
-
-
     @ApiModelProperty(value = "身份认证  EXAMINE(\"审核中\"),\n" +
             "    PASS(\"通过\"),\n" +
             "    REFUSE(\"拒绝\")")
@@ -146,9 +142,16 @@ public class UserInfoResponse {
 
 
     @ApiModelProperty(value = "相册")
-    private List<String> waitApprovedImg;
-
+    private List<String> imgList;
 
     @ApiModelProperty(value = "性格测试")
     private CharacterTypeResponse characterType;
+
+    @ApiModelProperty(value = "匹配状态 SUCCESS(\"匹配成功\"),\n" +
+            "    LIKE_ME(\"喜欢我的\"),\n" +
+            "    LIKE(\"我喜欢的\"),\n" +
+            "    NOT_LIKE(\"我不喜欢\"),\n" +
+            "    NOT_LIKE_ME(\"对我无感\"),\n" +
+            "    NULL(\"未操作\")")
+    private MatchingStatusEnum matchingStatus;
 }

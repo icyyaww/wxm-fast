@@ -265,7 +265,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, personalInfo);
             if (frUserEntity.getAdditional() != null) {
-                BeanUtils.copyProperties(frUserEntity.getAdditional(),personalInfo);
+                BeanUtils.copyProperties(frUserEntity.getAdditional(), personalInfo);
             }
             if (frUserEntity.getBirthday() != null) {
                 personalInfo.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
@@ -417,6 +417,26 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             response.setEducationAuth(frUserEntity.getAdditional().getEducationAuth());
         }
         return response;
+    }
+
+    @Override
+    public UserInfoResponse userInfo(Integer id) {
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        FrUserEntity frUserEntity = this.getById(id);
+        if (frUserEntity == null) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+
+        BeanUtils.copyProperties(frUserEntity, userInfoResponse);
+        if (frUserEntity.getAdditional() != null) {
+            BeanUtils.copyProperties(frUserEntity.getAdditional(), userInfoResponse);
+        }
+        if (frUserEntity.getBirthday() != null) {
+            userInfoResponse.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+            userInfoResponse.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
+        }
+
+        return userInfoResponse;
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
