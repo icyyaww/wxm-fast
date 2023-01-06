@@ -476,6 +476,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
+    @Transactional
     public void examine(UserExamineRequest request) {
 
         RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + TokenUtils.getOwnerId());
@@ -490,9 +491,33 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 throw new JrsfException(UserExceptionEnum.USER_VERSION_DIFFERENT_EXCEPTION);
             }
 
+            if (AuthStatusEnum.PASS.equals(request.getResult())) {
+                frUserEntity.setAuthStatus(request.getResult());
+                //复制图片
+                List<String> imgList = frUserEntity.getImgList();
+                frUserEntity.setImgList(frUserEntity.getWaitApprovedImg());
+                deleteImg(imgList, frUserEntity.getImgList());
+            }
+
+            if (frUserEntity.getAdditional() == null) {
+                AdditionalResponse additional = new AdditionalResponse();
+                additional.setWaitApprovedStatus(request.getResult());
+                frUserEntity.setAdditional(additional);
+            } else {
+                frUserEntity.getAdditional().setWaitApprovedStatus(request.getResult());
+            }
+
+            this.updateById(frUserEntity);
+
         } finally {
             lock.unlock();
         }
+    }
+
+    @Async
+    void deleteImg(List<String> oldImg, List<String> imgList) {
+
+        //todo 删除图片
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
