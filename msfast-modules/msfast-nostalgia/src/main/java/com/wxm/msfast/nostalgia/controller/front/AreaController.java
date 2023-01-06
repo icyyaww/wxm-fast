@@ -4,9 +4,7 @@ package com.wxm.msfast.nostalgia.controller.front;
 
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.area.AreaResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.area.AreaResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;

@@ -18,7 +18,7 @@
         <result property="descInfo" column="desc_info"/>
     </resultMap>
 
-    <resultMap id="likeMePageResponse" type="com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse">
+    <resultMap id="likeMePageResponse" type="com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse">
     </resultMap>
 
     <!--个人中心 我的喜欢列表-->
@@ -45,7 +45,7 @@ order by um.id desc
     </select>
 
     <resultMap id="successPageResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse">
+               type="com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse">
     </resultMap>
 
     <!--个人中心 相互喜欢列表-->
@@ -73,7 +73,7 @@ order by um.id desc
     </select>
 
 	<resultMap id="likePageResponse"
-			   type="com.wxm.msfast.nostalgia.common.rest.response.matching.LikePageResponse">
+			   type="com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse">
 	</resultMap>
 
 	<!--个人中心 相互喜欢列表-->

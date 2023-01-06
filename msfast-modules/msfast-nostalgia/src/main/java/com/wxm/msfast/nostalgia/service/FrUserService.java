@@ -2,7 +2,8 @@ package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
 
@@ -48,5 +49,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     DoubleAuthResponse doubleAuth();
 
     UserInfoResponse userInfo(Integer id);
+
+    void examine(UserExamineRequest request);
 }
 

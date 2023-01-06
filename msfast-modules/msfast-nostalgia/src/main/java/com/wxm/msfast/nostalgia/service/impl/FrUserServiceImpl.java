@@ -18,7 +18,8 @@ import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
@@ -472,6 +473,26 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             userInfoResponse.setMatchingStatus(MatchingStatusEnum.NULL);
         }
         return userInfoResponse;
+    }
+
+    @Override
+    public void examine(UserExamineRequest request) {
+
+        RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + TokenUtils.getOwnerId());
+        try {
+            lock.lock();
+            FrUserEntity frUserEntity = this.getById(request.getUserId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+
+            if (frUserEntity.getVersion() != request.getVersion()) {
+                throw new JrsfException(UserExceptionEnum.USER_VERSION_DIFFERENT_EXCEPTION);
+            }
+
+        } finally {
+            lock.unlock();
+        }
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {

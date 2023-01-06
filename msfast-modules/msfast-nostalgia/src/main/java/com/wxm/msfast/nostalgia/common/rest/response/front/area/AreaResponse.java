@@ -1,6 +1,5 @@
-package com.wxm.msfast.nostalgia.common.rest.response.area;
+package com.wxm.msfast.nostalgia.common.rest.response.front.area;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

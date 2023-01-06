@@ -1,10 +1,9 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.nostalgia.common.rest.response.profession.ProfessionResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.university.UniversityListResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.profession.ProfessionResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.university.UniversityListResponse;
 import com.wxm.msfast.nostalgia.entity.UniversityEntity;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 

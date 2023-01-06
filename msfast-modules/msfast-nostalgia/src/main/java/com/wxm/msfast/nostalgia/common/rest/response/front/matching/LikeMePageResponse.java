@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.rest.response.matching;
+package com.wxm.msfast.nostalgia.common.rest.response.front.matching;
 
 import com.wxm.msfast.nostalgia.common.enums.MatchingStatusEnum;
 import io.swagger.annotations.ApiModelProperty;

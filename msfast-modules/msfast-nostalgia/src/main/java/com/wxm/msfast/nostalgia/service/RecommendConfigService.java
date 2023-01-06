@@ -1,7 +1,6 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
 import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
 
 

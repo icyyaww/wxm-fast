@@ -1,25 +1,64 @@
-package com.wxm.msfast.nostalgia.common.rest.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.front.fruser;
 
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
 /**
  * @program: wxm-fast
  * @description:
  * @author: Mr.Wang
- * @create: 2022-12-08 16:16
+ * @create: 2022-12-28 16:48
  **/
 
 @Data
-public class RecommendUserInfoResponse {
+public class PersonalInfoResponse {
 
     @ApiModelProperty(value = "主键")
     private Integer id;
+
+    @ApiModelProperty(value = "资料认证状态 EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
+    private AuthStatusEnum waitApprovedStatus;
+
+    @ApiModelProperty(value = "审核理由")
+    private String remarks;
+
+
+    @ApiModelProperty(value = "身份认证  EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
+    private AuthStatusEnum identityAuth;
+
+    @ApiModelProperty(value = "学历认证  EXAMINE(\"审核中\"),\n" +
+            "    PASS(\"通过\"),\n" +
+            "    REFUSE(\"拒绝\")")
+    private AuthStatusEnum educationAuth;
+
+    /**
+     * 毕业学校
+     */
+    @ApiModelProperty(value = "毕业学校")
+    private String school;
+    /**
+     * 最高学历
+     */
+    @ApiModelProperty(value = "最高学历 Specialty(\"专科\"),\n" +
+            "    Undergraduate(\"本科\"),\n" +
+            "    Master(\"硕士\"),\n" +
+            "    Doctor(\"博士\"")
+    private HighestEducationEnum education;
+
+    /**
+     * @Description: 学历类型
+     */
+    @ApiModelProperty(value = "学历类型 FullTime(\"全日制\"),\n" +
+            "    NOFullTime(\"非全日制\")")
+    private EducationalTypeEnum educationalType;
 
     /**
      * 昵称
@@ -52,27 +91,6 @@ public class RecommendUserInfoResponse {
             "    FEMALE(\"女\")")
     private GenderEnum gender;
 
-    /**
-     * 毕业学校
-     */
-    @ApiModelProperty(value = "毕业学校")
-    private String school;
-
-    /**
-     * 最高学历
-     */
-    @ApiModelProperty(value = "最高学历 Specialty(\"专科\"),\n" +
-            "    Undergraduate(\"本科\"),\n" +
-            "    Master(\"硕士\"),\n" +
-            "    Doctor(\"博士\")")
-    private HighestEducationEnum education;
-
-    /**
-     * @Description: 学历类型
-     */
-    @ApiModelProperty(value = "学历类型 FullTime(\"全日制\"),\n" +
-            "    NOFullTime(\"非全日制\")")
-    private EducationalTypeEnum educationalType;
 
     /**
      * 关于我
@@ -126,19 +144,13 @@ public class RecommendUserInfoResponse {
             "    Secrecy(\"保密\")")
     private AnnualSalaryEnum annualSalary;
 
-    /**
-     * 相册
-     */
+
     @ApiModelProperty(value = "相册")
-    private List<String> imgList;
+    private List<String> waitApprovedImg;
 
 
     @ApiModelProperty(value = "性格测试")
     private CharacterTypeResponse characterType;
 
-    @ApiModelProperty(value = "剩余推荐次数")
-    private Integer surplusNum;
-
-    private Date birthday;
 
 }

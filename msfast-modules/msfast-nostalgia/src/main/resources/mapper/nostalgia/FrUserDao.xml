@@ -52,7 +52,7 @@
 
 
     <resultMap id="recommendUserInfo"
-               type="com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse">
+               type="com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse">
         <result property="imgList" column="img_list"
                 typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
         <result property="characterType" column="character_type"
@@ -116,7 +116,7 @@
     </select>
 
     <resultMap id="likeResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.fruser.LikeResponse">
+               type="com.wxm.msfast.nostalgia.common.rest.response.front.fruser.LikeResponse">
     </resultMap>
 
     <select id="getPersonalLike" resultMap="likeResponse" parameterType="int">

@@ -1,6 +1,6 @@
 package com.wxm.msfast.nostalgia.dao;
 
-import com.wxm.msfast.nostalgia.common.rest.response.area.AreaResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.area.AreaResponse;
 import com.wxm.msfast.nostalgia.entity.AreaEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

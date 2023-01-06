@@ -1,6 +1,6 @@
 package com.wxm.msfast.nostalgia.dao;
 
-import com.wxm.msfast.nostalgia.common.rest.response.university.UniversityListResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.university.UniversityListResponse;
 import com.wxm.msfast.nostalgia.entity.UniversityEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

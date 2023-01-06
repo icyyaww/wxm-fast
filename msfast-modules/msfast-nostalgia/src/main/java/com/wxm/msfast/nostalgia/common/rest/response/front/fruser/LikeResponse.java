@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.rest.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.front.fruser;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

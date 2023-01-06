@@ -2,21 +2,11 @@ package com.wxm.msfast.nostalgia.controller.front;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 
-import com.wxm.msfast.base.common.annotation.AuthIgnore;
-import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendConfigResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.wxm.msfast.nostalgia.service.RecommendConfigService;
-
-import java.util.List;
 
 
 /**

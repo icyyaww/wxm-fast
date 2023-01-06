@@ -17,7 +17,7 @@
 
 
     <resultMap id="universityListResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.university.UniversityListResponse">
+               type="com.wxm.msfast.nostalgia.common.rest.response.front.university.UniversityListResponse">
     </resultMap>
 
     <select id="nameSelect" resultMap="universityListResponse" parameterType="String">

@@ -19,7 +19,7 @@
     </resultMap>
 
     <resultMap id="areaResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.area.AreaResponse">
+               type="com.wxm.msfast.nostalgia.common.rest.response.front.area.AreaResponse">
     </resultMap>
 
     <select id="province" resultMap="areaResponse" parameterType="map">

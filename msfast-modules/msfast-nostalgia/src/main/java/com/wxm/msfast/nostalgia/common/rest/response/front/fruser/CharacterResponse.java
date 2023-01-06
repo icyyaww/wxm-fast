@@ -1,7 +1,6 @@
-package com.wxm.msfast.nostalgia.common.rest.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.front.fruser;
 
 import com.wxm.msfast.nostalgia.common.enums.CharacterPosition;
-import com.wxm.msfast.nostalgia.common.enums.CharacterTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

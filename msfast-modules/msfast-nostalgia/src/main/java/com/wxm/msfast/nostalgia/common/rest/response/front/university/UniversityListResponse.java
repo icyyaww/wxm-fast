@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.rest.response.university;
+package com.wxm.msfast.nostalgia.common.rest.response.front.university;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

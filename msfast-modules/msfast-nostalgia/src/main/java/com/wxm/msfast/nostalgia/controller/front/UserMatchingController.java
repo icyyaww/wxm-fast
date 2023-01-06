@@ -6,15 +6,13 @@ import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.matching.LikePageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
-
-import javax.validation.Valid;
 
 
 /**
@@ -35,7 +33,7 @@ public class UserMatchingController {
     @ApiOperation("用户匹配")
     @ApiOperationSort(value = 1)
     @PostMapping("/match")
-    public R<Void> match(@RequestBody @Valid ChoiceRequest request) {
+    public R<Void> match(@RequestBody ChoiceRequest request) {
         userMatchingService.match(request);
         return R.ok();
     }

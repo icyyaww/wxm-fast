@@ -10,7 +10,8 @@ public enum UserExceptionEnum implements BaseExceptionEnumInterface {
     MIN_AGE_GREATER_EXCEPTION(12003, "最小年龄大于最大年龄"),
     FIRST_PHOTO_NOT_DELETE_EXCEPTION(12004, "头像不能删除"),
     NEW_URL_NOT_EMPTY_EXCEPTION(12005, "新图片地址不可为空"),
-    OLD_URL_NOT_EMPTY_EXCEPTION(12006, "旧图片地址不可为空");
+    OLD_URL_NOT_EMPTY_EXCEPTION(12006, "旧图片地址不可为空"),
+    USER_VERSION_DIFFERENT_EXCEPTION(12007, "用户信息已变更");
 
     private Integer code;
     private String msg;

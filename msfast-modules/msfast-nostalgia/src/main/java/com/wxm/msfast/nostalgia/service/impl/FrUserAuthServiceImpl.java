@@ -6,7 +6,7 @@ import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.auth.DoubleAuthRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.AdditionalResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.AdditionalResponse;
 import com.wxm.msfast.nostalgia.dao.FrUserAuthDao;
 import com.wxm.msfast.nostalgia.entity.FrUserAuthEntity;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;

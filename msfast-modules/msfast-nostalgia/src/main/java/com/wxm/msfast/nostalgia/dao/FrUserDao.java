@@ -1,7 +1,7 @@
 package com.wxm.msfast.nostalgia.dao;
 
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.LikeResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.RecommendUserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.LikeResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

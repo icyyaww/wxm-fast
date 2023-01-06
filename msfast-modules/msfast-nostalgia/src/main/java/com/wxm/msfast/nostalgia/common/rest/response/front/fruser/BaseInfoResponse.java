@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.rest.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.front.fruser;
 
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.*;

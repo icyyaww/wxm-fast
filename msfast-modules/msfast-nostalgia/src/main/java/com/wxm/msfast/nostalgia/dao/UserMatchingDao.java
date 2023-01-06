@@ -1,8 +1,8 @@
 package com.wxm.msfast.nostalgia.dao;
 
-import com.wxm.msfast.nostalgia.common.rest.response.matching.LikeMePageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.matching.LikePageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.matching.SuccessPageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

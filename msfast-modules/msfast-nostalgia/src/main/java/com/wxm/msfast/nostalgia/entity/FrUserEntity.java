@@ -8,8 +8,8 @@ import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.handle.AdditionalHandler;
 import com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler;
 import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.AdditionalResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.CharacterTypeResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.AdditionalResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.CharacterTypeResponse;
 import lombok.Data;
 
 import java.util.Date;

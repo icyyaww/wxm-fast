@@ -1,6 +1,5 @@
-package com.wxm.msfast.nostalgia.common.rest.response.fruser;
+package com.wxm.msfast.nostalgia.common.rest.response.front.fruser;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.wxm.msfast.nostalgia.common.handle;
 
 import com.wxm.msfast.base.common.handler.BaseObjectTypeHandler;
-import com.wxm.msfast.nostalgia.common.rest.response.fruser.AdditionalResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.AdditionalResponse;
 
 /**
  * @program: wxm-fast
