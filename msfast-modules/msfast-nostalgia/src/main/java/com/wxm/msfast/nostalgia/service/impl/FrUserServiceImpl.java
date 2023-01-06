@@ -64,6 +64,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Autowired
     RedissonClient redissonClient;
 
+
     @Override
     public Long countByOpenId(String openId) {
         Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getOpenId, openId);
@@ -435,7 +436,41 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             userInfoResponse.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
             userInfoResponse.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
         }
+        Integer ownerId = TokenUtils.getOwnerId();
 
+        Wrapper<UserMatchingEntity> queryWrapper = new QueryWrapper<UserMatchingEntity>()
+                .lambda()
+                .eq(UserMatchingEntity::getUserId, ownerId)
+                .eq(UserMatchingEntity::getOtherUser, id);
+
+        UserMatchingEntity userMatchingEntity = userMatchingService.getBaseMapper().selectOne(queryWrapper);
+        if (userMatchingEntity != null) {
+            if (userMatchingEntity.getResult()) {
+                Wrapper<UserMatchingEntity> queryWrapperOther = new QueryWrapper<UserMatchingEntity>()
+                        .lambda()
+                        .eq(UserMatchingEntity::getUserId, id)
+                        .eq(UserMatchingEntity::getOtherUser, ownerId);
+                UserMatchingEntity userMatchingEntityOther = userMatchingService.getBaseMapper().selectOne(queryWrapperOther);
+                if (userMatchingEntityOther == null) {
+                    userInfoResponse.setMatchingStatus(MatchingStatusEnum.LIKE);
+                } else {
+                    if (userMatchingEntityOther.getResult()) {
+                        userInfoResponse.setMatchingStatus(MatchingStatusEnum.SUCCESS);
+                    } else {
+                        userInfoResponse.setMatchingStatus(MatchingStatusEnum.NOT_LIKE_ME);
+
+                    }
+                }
+
+            } else {
+
+                userInfoResponse.setMatchingStatus(MatchingStatusEnum.NOT_LIKE);
+            }
+
+
+        } else {
+            userInfoResponse.setMatchingStatus(MatchingStatusEnum.NULL);
+        }
         return userInfoResponse;
     }
 

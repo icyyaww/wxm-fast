@@ -137,6 +137,7 @@ public class FrUserEntity extends BaseEntity {
      */
     @TableField("annual_salary")
     private AnnualSalaryEnum annualSalary;
+
     /**
      * 微信号
      */

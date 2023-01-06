@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.controller;
+package com.wxm.msfast.nostalgia.controller.front;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
