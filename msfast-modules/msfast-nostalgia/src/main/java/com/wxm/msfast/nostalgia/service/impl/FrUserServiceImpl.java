@@ -518,6 +518,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     void deleteImg(List<String> oldImg, List<String> imgList) {
 
         //todo 删除图片
+        if (CollectionUtil.isNotEmpty(oldImg)) {
+
+            oldImg.forEach(model -> {
+                Long count = imgList.stream().filter(p -> StringUtils.isNotBlank(p) && p.equals(model)).count();
+                if (count == 0) {
+                    msfFileService.deleteFileByUrl(model);
+                }
+            });
+        }
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
