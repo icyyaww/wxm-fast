@@ -4,21 +4,19 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONException;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.utils.SpringBeanUtils;
+import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.websocket.common.enums.MessageTypeEnum;
+import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
 import com.wxm.msfast.base.websocket.common.rest.request.WebSocketMessage;
 import com.wxm.msfast.base.websocket.service.IWebSocketService;
+import com.wxm.msfast.base.websocket.service.IMessageService;
+import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import io.netty.channel.*;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.util.concurrent.GlobalEventExecutor;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.net.SocketAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
@@ -66,18 +64,35 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
 
     //服务器接受客户端的数据信息，
     @Override
-    @Transactional
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) {
         String text = msg.text();
         WebSocketMessage message = null;
+        ChannelUtil channelUtil = SpringUtils.getBean(ChannelUtil.class);
         try {
             message = JSON.parseObject(text, WebSocketMessage.class);
         } catch (JSONException e) {
+            message = new WebSocketMessage();
+            message.setMessageType(MessageTypeEnum.IM_MESSAGE);
+            message.setInfo(JSON.toJSONString(new BaseMessageInfo()));
+            channelUtil.sendText(ctx.channel(), "消息格式错误 例：" + JSON.toJSONString(message));
         }
+
         if (message != null && MessageTypeEnum.CONNECT.equals(message.getMessageType())) {
             if (StringUtils.isNotBlank(message.getInfo())) {
                 ChannelMap.put(Integer.valueOf(message.getInfo()), ctx.channel());
                 System.out.println("建立连接完成，关联数量为" + ChannelMap.getManager().size());
+            }
+        } else if (message != null && MessageTypeEnum.ALIVE.equals(message.getMessageType())) {
+            //心跳检测
+            return;
+        } else if (message != null && MessageTypeEnum.IM_MESSAGE.equals(message.getMessageType())) {
+
+            try {
+                BaseMessageInfo messageInfo = JSON.parseObject(message.getInfo(), BaseMessageInfo.class);
+                IMessageService IMessageService = SpringUtils.getBean(IMessageService.class);
+                IMessageService.send(messageInfo);
+            } catch (JSONException e) {
+                channelUtil.sendText(ctx.channel(), "info格式错误 例：" + JSON.toJSONString(new BaseMessageInfo()));
             }
         } else {
             IWebSocketService webSocketService = SpringBeanUtils.getBean(IWebSocketService.class);

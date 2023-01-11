@@ -35,6 +35,11 @@
             <artifactId>msfast-base-file</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.wxm.msfast</groupId>
+            <artifactId>msfast-base-websocket</artifactId>
+            <version>${msfast.base.common.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
