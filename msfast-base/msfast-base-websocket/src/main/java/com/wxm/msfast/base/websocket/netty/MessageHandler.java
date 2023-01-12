@@ -71,10 +71,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         try {
             message = JSON.parseObject(text, WebSocketMessage.class);
         } catch (JSONException e) {
-            message = new WebSocketMessage();
-            message.setMessageType(MessageTypeEnum.IM_MESSAGE);
-            message.setInfo(JSON.toJSONString(new BaseMessageInfo()));
-            channelUtil.sendText(ctx.channel(), "消息格式错误 例：" + JSON.toJSONString(message));
+            channelUtil.sendText(ctx.channel(), "消息格式错误 例：{\"messageType\":\"IM_MESSAGE\",\"info\":\"{'sendUserId':'1','acceptUserId':'2','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}\"}");
         }
 
         if (message != null && MessageTypeEnum.CONNECT.equals(message.getMessageType())) {
@@ -86,13 +83,12 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
             //心跳检测
             return;
         } else if (message != null && MessageTypeEnum.IM_MESSAGE.equals(message.getMessageType())) {
-
             try {
                 BaseMessageInfo messageInfo = JSON.parseObject(message.getInfo(), BaseMessageInfo.class);
                 IMessageService IMessageService = SpringUtils.getBean(IMessageService.class);
                 IMessageService.send(messageInfo);
             } catch (JSONException e) {
-                channelUtil.sendText(ctx.channel(), "info格式错误 例：" + JSON.toJSONString(new BaseMessageInfo()));
+                channelUtil.sendText(ctx.channel(), "info格式错误 例：{'sendUserId':'1','acceptUserId':'2','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}");
             }
         } else {
             IWebSocketService webSocketService = SpringBeanUtils.getBean(IWebSocketService.class);

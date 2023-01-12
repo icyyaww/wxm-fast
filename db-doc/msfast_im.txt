@@ -1,0 +1,6 @@
+1 建立连接 ws://127.0.0.1:8888/ws
+2 连接建立成功的回调中立刻发送用户连接请求发送一次 {"messageType":"CONNECT","info":"1"}
+3 建立心跳
+ 发送消息：
+{"messageType":"IM_MESSAGE","info":"{'sendUserId':'2','acceptUserId':'1','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}"}
+
