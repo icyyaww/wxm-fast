@@ -35,4 +35,16 @@ public class ChannelUtil {
         redisTemplate.convertAndSend(Constants.REDIS_CHANNEL_MESSAGE, JSON.toJSONString(userSendMessage));
     }
 
+    public String getMessageInfoKey(Integer sendUserId, Integer acceptUserId) {
+        if (sendUserId != null && acceptUserId != null) {
+            if (sendUserId < acceptUserId) {
+                return sendUserId + Constants.MSG_INFO + acceptUserId;
+            } else {
+                return acceptUserId + Constants.MSG_INFO + sendUserId;
+            }
+        }
+        return Constants.MSG_INFO;
+    }
+
+
 }

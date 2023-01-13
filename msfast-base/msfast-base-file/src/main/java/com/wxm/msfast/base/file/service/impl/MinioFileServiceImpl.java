@@ -6,12 +6,10 @@ import com.wxm.msfast.base.file.config.MinioConfig;
 import com.wxm.msfast.base.file.exception.FileExceptionEnum;
 import com.wxm.msfast.base.file.service.IFileService;
 import com.wxm.msfast.base.file.service.MsfFileService;
-import com.wxm.msfast.base.file.utils.DelayTaskProducer;
 import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
-import java.util.Calendar;
 
 /**
  * Minio 文件存储

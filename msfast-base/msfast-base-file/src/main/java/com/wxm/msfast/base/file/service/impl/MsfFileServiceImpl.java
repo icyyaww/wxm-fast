@@ -1,6 +1,5 @@
 package com.wxm.msfast.base.file.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -15,10 +14,8 @@ import com.wxm.msfast.base.file.dao.MsfFileDao;
 import com.wxm.msfast.base.file.entity.MsfFileEntity;
 import com.wxm.msfast.base.file.exception.TempFileNoExistException;
 import com.wxm.msfast.base.file.service.MsfFileService;
-import com.wxm.msfast.base.file.utils.DelayTaskProducer;
 import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
-import io.minio.errors.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Retryable;
@@ -26,11 +23,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +36,6 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Autowired
     private MinioConfig minioConfig;
 
-
     @Override
     @Transactional
     @Async
@@ -54,10 +46,20 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
         msfFileEntity.setFileName(fileName);
         msfFileEntity.setStatus(FileStatusEnum.TEMP);
         this.save(msfFileEntity);
+        delayDeleteFile(filePath, url);
+    }
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, ConfigConstants.FILE_TEMP_TIME());//30分钟后文件删除
-        DelayTaskProducer.put(filePath, url, calendar.getTimeInMillis());
+    @Async
+    void delayDeleteFile(String filePath, String url) {
+        ThreadUtil.getInstance().scheduledThreadPool.schedule(() -> {
+            Wrapper<MsfFileEntity> wrapper = new QueryWrapper<MsfFileEntity>().lambda()
+                    .eq(MsfFileEntity::getUrl, url)
+                    .eq(MsfFileEntity::getStatus, FileStatusEnum.TEMP);
+            Long count = count(wrapper);
+            if (count > 0) {
+                deleteTempFile(filePath, url);
+            }
+        }, ConfigConstants.FILE_TEMP_TIME(), TimeUnit.MINUTES);
     }
 
     @Override
@@ -179,8 +181,6 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                 e.printStackTrace();
             }
             throw new TempFileNoExistException();
-        } else {
-            DelayTaskProducer.remove(url);
         }
     }
 
