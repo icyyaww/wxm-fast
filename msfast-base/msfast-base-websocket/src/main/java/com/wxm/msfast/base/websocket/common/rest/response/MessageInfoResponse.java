@@ -6,23 +6,18 @@ import lombok.Data;
  * @program: wxm-fast
  * @description:
  * @author: Mr.Wang
- * @create: 2023-01-12 11:24
+ * @create: 2023-01-13 17:09
  **/
 
 @Data
-public class BaseMessageInfoResponse {
+public class MessageInfoResponse {
 
     private Integer sendUserId;
+
+    private Integer acceptUserId;
 
     private String content;
 
     private String messageFormat;
-
-    private String sendName;
-
-    private String sendPortrait;
-
-    private String msgNo;
-
 
 }

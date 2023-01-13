@@ -7,6 +7,7 @@ import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.websocket.common.constant.Constants;
 import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
 import com.wxm.msfast.base.websocket.common.rest.response.BaseMessageInfoResponse;
+import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -44,10 +45,16 @@ public class SendRunnable implements Runnable {
         BaseMessageInfoResponse baseMessageInfoResponse = new BaseMessageInfoResponse();
         BeanUtils.copyProperties(messageInfo, baseMessageInfoResponse);
         baseMessageInfoResponse.setMsgNo(UUID.fastUUID().toString());
+
+        //消息持久化
+        MessageInfoResponse messageInfoResponse = new MessageInfoResponse();
+        BeanUtils.copyProperties(messageInfo, messageInfoResponse);
+        redisService.redisTemplate.opsForZSet().add(channelUtil.getMessageInfoKey(messageInfo.getSendUserId(), messageInfo.getAcceptUserId()), messageInfoResponse, System.currentTimeMillis());
+
         //发送消息
-        redisService.redisTemplate.opsForZSet().add(channelUtil.getMessageInfoKey(messageInfo.getSendUserId(),messageInfo.getAcceptUserId()),messageInfo,System.currentTimeMillis());
         channelUtil.sendText(messageInfo.getAcceptUserId(), JSON.toJSONString(baseMessageInfoResponse));
-        redisService.setCacheObject(baseMessageInfoResponse.getMsgNo(), Constants.MSG_ANSWER, Long.parseLong(String.valueOf(ConfigConstants.HEART_BEAT_TIME())), TimeUnit.SECONDS);
+
+       /* redisService.setCacheObject(baseMessageInfoResponse.getMsgNo(), Constants.MSG_ANSWER, Long.parseLong(String.valueOf(ConfigConstants.HEART_BEAT_TIME())), TimeUnit.SECONDS);
         while (true) {
             try {
                 Thread.sleep(1000);
@@ -60,7 +67,7 @@ public class SendRunnable implements Runnable {
             } else {
                 break;
             }
-        }
+        }*/
 
 
     }
