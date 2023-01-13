@@ -3,6 +3,7 @@ package com.wxm.msfast.base.websocket.netty;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONException;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
+import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.SpringBeanUtils;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.websocket.common.enums.MessageTypeEnum;
@@ -89,6 +90,11 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
                 IMessageService.send(messageInfo);
             } catch (JSONException e) {
                 channelUtil.sendText(ctx.channel(), "info格式错误 例：{'sendUserId':'1','acceptUserId':'2','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}");
+            }
+        } else if (message != null && MessageTypeEnum.ANSWER.equals(message.getMessageType())) {
+            RedisService redisService = SpringUtils.getBean(RedisService.class);
+            if (StringUtils.isNotBlank(message.getInfo())) {
+                redisService.deleteObject(message.getInfo());
             }
         } else {
             IWebSocketService webSocketService = SpringBeanUtils.getBean(IWebSocketService.class);
