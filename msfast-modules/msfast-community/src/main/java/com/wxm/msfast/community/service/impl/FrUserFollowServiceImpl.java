@@ -3,7 +3,7 @@ package com.wxm.msfast.community.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wxm.msfast.base.auth.utils.TokenUtils;
+import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.community.dao.FrUserFollowDao;
 import com.wxm.msfast.community.entity.FrUserFollowEntity;
 import com.wxm.msfast.community.service.FrUserFollowService;

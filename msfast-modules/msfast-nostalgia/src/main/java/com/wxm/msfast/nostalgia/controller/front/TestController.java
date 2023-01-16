@@ -2,8 +2,8 @@ package com.wxm.msfast.nostalgia.controller.front;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
+import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;

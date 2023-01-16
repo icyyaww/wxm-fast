@@ -1,7 +1,7 @@
 package com.wxm.msfast.nostalgia.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wxm.msfast.base.auth.utils.TokenUtils;
+import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;

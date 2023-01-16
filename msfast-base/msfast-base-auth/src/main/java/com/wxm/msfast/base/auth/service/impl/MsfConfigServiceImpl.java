@@ -7,9 +7,9 @@ import com.wxm.msfast.base.auth.common.enums.ConfigAccessEnum;
 import com.wxm.msfast.base.auth.dao.MsfConfigDao;
 import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
-import com.wxm.msfast.base.auth.utils.TokenUtils;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
 

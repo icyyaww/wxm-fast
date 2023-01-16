@@ -1,10 +1,8 @@
-package com.wxm.msfast.base.auth.utils;
+package com.wxm.msfast.base.common.utils;
 
 import cn.hutool.core.map.MapUtil;
-import com.wxm.msfast.base.auth.entity.LoginUser;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
-import com.wxm.msfast.base.common.utils.JwtUtils;
-import com.wxm.msfast.base.common.utils.SecurityUtils;
+import com.wxm.msfast.base.common.entity.LoginUser;
 import io.jsonwebtoken.Claims;
 
 import java.util.Map;

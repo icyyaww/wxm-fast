@@ -3,7 +3,7 @@ package com.wxm.msfast.nostalgia.authority;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityServiceImpl;
 import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
-import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;

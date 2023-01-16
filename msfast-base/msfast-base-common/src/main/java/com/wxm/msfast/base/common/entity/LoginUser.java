@@ -1,4 +1,4 @@
-package com.wxm.msfast.base.auth.entity;
+package com.wxm.msfast.base.common.entity;
 
 import lombok.Data;
 

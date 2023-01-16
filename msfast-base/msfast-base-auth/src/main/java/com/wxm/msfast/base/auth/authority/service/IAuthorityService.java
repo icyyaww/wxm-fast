@@ -3,7 +3,7 @@ package com.wxm.msfast.base.auth.authority.service;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
-import com.wxm.msfast.base.auth.entity.LoginUser;
+import com.wxm.msfast.base.common.entity.LoginUser;
 
 /*
  * @Author

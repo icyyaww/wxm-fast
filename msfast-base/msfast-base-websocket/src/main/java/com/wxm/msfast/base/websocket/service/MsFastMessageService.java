@@ -6,5 +6,5 @@ import java.util.Set;
 
 public interface MsFastMessageService {
 
-    Set<MessageInfoResponse> getMessageInfoRange(String key, Long start, Long end);
+    Set<MessageInfoResponse> getMessageInfoRange(Integer userId, Long start, Long end);
 }

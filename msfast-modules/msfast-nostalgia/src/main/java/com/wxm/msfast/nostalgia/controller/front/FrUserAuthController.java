@@ -4,13 +4,15 @@ package com.wxm.msfast.nostalgia.controller.front;
 
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.auth.DoubleAuthRequest;
-import com.wxm.msfast.nostalgia.common.rest.request.fruser.BaseInfoEditRequest;
+import com.wxm.msfast.nostalgia.service.FrUserAuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import com.wxm.msfast.nostalgia.service.FrUserAuthService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 /**
