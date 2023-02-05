@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.MatchingResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 
@@ -27,7 +28,7 @@ public interface UserMatchingService extends IService<UserMatchingEntity> {
      */
     Long matchingNum();
 
-    void match(ChoiceRequest request);
+    MatchingResponse match(ChoiceRequest request);
 
     PageResult<LikeMePageResponse> likeMePage(Integer pageIndex, Integer pageSize);
 

@@ -6,14 +6,13 @@ import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
+import com.wxm.msfast.nostalgia.service.TestService;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: wxm-fast
@@ -30,6 +29,9 @@ public class TestController {
     @Autowired
     UserMatchingService userMatchingService;
 
+    @Autowired
+    TestService testService;
+
     @ApiOperation("重置匹配结果")
     @ApiOperationSort(value = 1)
     @PostMapping("/reload/matching")
@@ -40,4 +42,14 @@ public class TestController {
         userMatchingService.remove(wrapper);
         return R.ok();
     }
+
+    @ApiOperation("删除前台用户")
+    @ApiOperationSort(value = 1)
+    @GetMapping("/delete/fruser/{id}")
+    @AuthIgnore
+    public R<Void> deleteFruser(@PathVariable Integer id) {
+        testService.deleteFruser(id);
+        return R.ok();
+    }
+
 }

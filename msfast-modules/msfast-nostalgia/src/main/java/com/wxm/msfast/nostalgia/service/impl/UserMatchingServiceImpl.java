@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
@@ -13,11 +14,13 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
+import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.MatchingResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -72,11 +75,22 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
     @Override
     @Transactional
-    public void match(ChoiceRequest request) {
+    public MatchingResponse match(ChoiceRequest request) {
 
+        MatchingResponse matchingResponse = new MatchingResponse(false);
         RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
         try {
             lock.lock();
+            Integer userId = TokenUtils.getOwnerId();
+            FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
+            FrUserEntity frUserEntity = frUserService.getById(userId);
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+
+            if (!AuthStatusEnum.PASS.equals(frUserEntity.getAuthStatus())) {
+                throw new JrsfException(UserExceptionEnum.USER_AUTH_NOT_PASS_EXCEPTION);
+            }
 
             Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
             Integer count = Integer.parseInt(this.matchingNum().toString());
@@ -84,7 +98,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                 throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
             }
 
-            Integer userId = TokenUtils.getOwnerId();
+
             Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
                     .eq(UserMatchingEntity::getUserId, userId)
                     .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
@@ -96,8 +110,6 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
                 if (userMatchingEntity.getResult()) {
                     int random = RandomUtil.randomInt(0, 3);
-                    FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
-                    FrUserEntity frUserEntity = frUserService.getById(userId);
                     if (frUserEntity != null) {
                         String gender = GenderEnum.MALE.equals(frUserEntity.getGender()) ? "小哥哥" : "小姐姐";
                         switch (random) {
@@ -114,6 +126,27 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                                     userMatchingEntity.setDescInfo("一个" + DateUtils.getAgeByBirth(frUserEntity.getBirthday()) + "岁的" + gender);
                                 }
                         }
+
+                        //判断对方是否也喜欢我了
+                        matchingResponse.setSelfId(frUserEntity.getId());
+                        matchingResponse.setSelfHeadPortrait(frUserEntity.getHeadPortrait());
+                        matchingResponse.setSelfNickName(frUserEntity.getNickName());
+
+                        Wrapper<UserMatchingEntity> wrapperOther = new QueryWrapper<UserMatchingEntity>().lambda()
+                                .eq(UserMatchingEntity::getUserId, request.getOtherUser())
+                                .eq(UserMatchingEntity::getOtherUser, userId)
+                                .eq(UserMatchingEntity::getResult, true);
+                        Long matchingOtherCount = this.baseMapper.selectCount(wrapperOther);
+                        if (matchingOtherCount > 0) {
+                            matchingResponse.setResult(true);
+                            FrUserEntity otherUser = frUserService.getById(request.getOtherUser());
+                            if (otherUser != null) {
+                                matchingResponse.setOtherHeadPortrait(otherUser.getHeadPortrait());
+                                matchingResponse.setOtherId(otherUser.getId());
+                                matchingResponse.setOtherNickName(otherUser.getNickName());
+                            }
+
+                        }
                     }
 
                 }
@@ -123,7 +156,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
         } finally {
             lock.unlock();
         }
-
+        return matchingResponse;
     }
 
     @Override
