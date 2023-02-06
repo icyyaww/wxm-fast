@@ -1,7 +1,9 @@
 package com.wxm.msfast.base.websocket.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.github.pagehelper.Page;
 import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
@@ -29,14 +31,15 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
     ChannelUtil channelUtil;
 
     @Override
-    public Set<MessageInfoResponse> getMessageInfoRange(Integer userId, Long start, Long end) {
+    public PageResult<MessageInfoResponse> getMessageInfoRange(Integer userId, Integer pageIndex, Integer pageSize) {
 
-        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), userId), start, end);
+        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), userId), (pageIndex - 1) * pageSize, (pageIndex - 1) * pageSize + pageSize - 1);
+        Long total = redisService.redisTemplate.opsForZSet().size(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), userId));
         List<Integer> userIdList = reverseRange.stream().filter(p -> p.getSendUserId() != null).map(MessageInfoResponse::getSendUserId).collect(Collectors.toList());
         if (CollectionUtil.isNotEmpty(userIdList)) {
 
         }
-
-        return reverseRange;
+        PageResult<MessageInfoResponse> result = new PageResult<>(total, pageIndex, pageSize, reverseRange);
+        return result;
     }
 }

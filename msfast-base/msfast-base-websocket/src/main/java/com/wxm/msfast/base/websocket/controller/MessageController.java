@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.websocket.controller;
 
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
@@ -37,11 +38,11 @@ public class MessageController {
     @ApiOperation("对话框详情")
     @ApiOperationSort(value = 1)
     @GetMapping("/info/{userId}")
-    public R<Set<MessageInfoResponse>> messageInfoList(
+    public R<PageResult<MessageInfoResponse>> messageInfoList(
             @PathVariable Integer userId,
-            @RequestParam(value = "start", required = false, defaultValue = "0") Long start,
-            @RequestParam(value = "end", required = false, defaultValue = "10") Long end) {
-        return R.ok(msFastMessageService.getMessageInfoRange(userId, start, end));
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(msFastMessageService.getMessageInfoRange(userId, pageIndex, pageSize));
     }
 
 }

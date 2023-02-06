@@ -11,6 +11,7 @@ package com.wxm.msfast.base.common.utils;
 import com.github.pagehelper.Page;
 import lombok.Data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public class PageResult<T> {
     /**
      * 列表数据
      */
-    private List<T> rows;
+    private Collection<T> rows;
 
     /**
      * 分页
@@ -56,4 +57,13 @@ public class PageResult<T> {
         }
     }
 
+    public PageResult(long totalCount, int currPage, int pageSize, Collection<T> rows) {
+
+        this.totalCount = totalCount;
+        this.pageSize = pageSize;
+        this.currPage = currPage;
+        this.rows = rows;
+        this.totalPage = (int) ((totalCount + pageSize - 1) / pageSize);
+
+    }
 }
