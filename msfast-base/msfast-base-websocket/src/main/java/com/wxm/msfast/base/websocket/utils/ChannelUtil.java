@@ -1,7 +1,7 @@
 package com.wxm.msfast.base.websocket.utils;
 
 import com.alibaba.fastjson2.JSON;
-import com.wxm.msfast.base.websocket.common.constant.Constants;
+import com.wxm.msfast.base.websocket.common.constant.WebSocketConstants;
 import com.wxm.msfast.base.websocket.common.rest.request.UserSendMessage;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -32,18 +32,18 @@ public class ChannelUtil {
         UserSendMessage userSendMessage = new UserSendMessage();
         userSendMessage.setId(userId);
         userSendMessage.setContent(text);
-        redisTemplate.convertAndSend(Constants.REDIS_CHANNEL_MESSAGE, JSON.toJSONString(userSendMessage));
+        redisTemplate.convertAndSend(WebSocketConstants.REDIS_CHANNEL_MESSAGE, JSON.toJSONString(userSendMessage));
     }
 
     public String getMessageInfoKey(Integer sendUserId, Integer acceptUserId) {
         if (sendUserId != null && acceptUserId != null) {
             if (sendUserId < acceptUserId) {
-                return sendUserId + Constants.MSG_INFO + acceptUserId;
+                return sendUserId + WebSocketConstants.MSG_INFO + acceptUserId;
             } else {
-                return acceptUserId + Constants.MSG_INFO + sendUserId;
+                return acceptUserId + WebSocketConstants.MSG_INFO + sendUserId;
             }
         }
-        return Constants.MSG_INFO;
+        return WebSocketConstants.MSG_INFO;
     }
 
 

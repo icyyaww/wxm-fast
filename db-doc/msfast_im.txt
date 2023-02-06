@@ -3,6 +3,6 @@
 3 建立心跳 每秒发送一次 {"messageType":"ALIVE"}
 4 发送消息
   普通消息：
-  {"messageType":"IM_MESSAGE","info":"{'sendUserId':'2','acceptUserId':'1','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}"}
+  {"messageType":"IM_MESSAGE","info":"{'sendUserId':'2','acceptUserId':'1','content':'内容','messageFormat':'image/text/emote/voice/video'}"}
   消息应答：
   {"messageType":"ANSWER","info":"消息编号（该编号会在收到的消息msgNo中返回,收到的每条消息都需要应答 否则服务端会重复发送 收到消息也需要判断该消息之前是否收到过 避免重复显示）"}

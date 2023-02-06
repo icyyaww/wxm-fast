@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
+import com.wxm.msfast.base.websocket.common.rest.response.MessageListResponse;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import io.swagger.annotations.*;
@@ -32,8 +33,8 @@ public class MessageController {
 
 
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "start", value = "起始下标", defaultValue = "0"),
-            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "end", value = "结束下标", defaultValue = "10")
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页数", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "页码", defaultValue = "10")
     })
     @ApiOperation("对话框详情")
     @ApiOperationSort(value = 1)
@@ -43,6 +44,19 @@ public class MessageController {
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         return R.ok(msFastMessageService.getMessageInfoRange(userId, pageIndex, pageSize));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页数", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "页码", defaultValue = "10")
+    })
+    @ApiOperation("消息列表")
+    @ApiOperationSort(value = 2)
+    @GetMapping("/list")
+    public R<PageResult<MessageListResponse>> messageInfoList(
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(msFastMessageService.getMessageListRange(pageIndex, pageSize));
     }
 
 }

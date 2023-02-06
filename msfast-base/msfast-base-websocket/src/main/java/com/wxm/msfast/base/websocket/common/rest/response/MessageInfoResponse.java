@@ -20,7 +20,4 @@ public class MessageInfoResponse {
 
     private String messageFormat;
 
-    private String sendName;
-
-    private String sendPortrait;
 }
