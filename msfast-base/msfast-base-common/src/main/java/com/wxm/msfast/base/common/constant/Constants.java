@@ -90,6 +90,6 @@ public class Constants {
      */
     public static final String LOGIN_FAIL = "Error";
 
-    public static final String BASE_USER_ = "Error";
+    public static final String BASE_USER_INFO = "BASE_USER_INFO_";
 
 }

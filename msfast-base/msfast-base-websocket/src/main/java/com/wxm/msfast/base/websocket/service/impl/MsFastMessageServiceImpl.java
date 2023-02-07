@@ -1,7 +1,7 @@
 package com.wxm.msfast.base.websocket.service.impl;
 
-import cn.hutool.core.collection.CollectionUtil;
-import com.github.pagehelper.Page;
+import com.wxm.msfast.base.common.constant.Constants;
+import com.wxm.msfast.base.common.rest.response.BaseUserInfo;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.TokenUtils;
@@ -13,7 +13,7 @@ import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 

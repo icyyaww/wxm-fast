@@ -96,10 +96,10 @@ public class SendRunnable implements Runnable {
         messageList.setMessageDescribeFormat(messageInfo.getMessageFormat());
         messageList.setUnreadCount(redisService.getCacheObject(userId + WebSocketConstants.MSG_UN_READ + sendUserId));
 
-        BaseUserInfo baseUserInfo = redisService.getCacheObject(Constants.BASE_USER_ + sendUserId);
+        BaseUserInfo baseUserInfo = redisService.getCacheObject(Constants.BASE_USER_INFO + sendUserId);
         if (baseUserInfo != null && baseUserInfo.getExtra() != null) {
-            messageList.setHeadPortrait(baseUserInfo.getExtra().get("headPortrait") != null ? baseUserInfo.getExtra().get("headPortrait").toString() : "");
-            messageList.setNickName(baseUserInfo.getExtra().get("nickName") != null ? baseUserInfo.getExtra().get("nickName").toString() : "");
+            messageList.setHeadPortrait(baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT) != null ? baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT).toString() : "");
+            messageList.setNickName(baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME) != null ? baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME).toString() : "");
         }
         redisService.redisTemplate.opsForZSet().add(WebSocketConstants.MSG_LIST + userId, messageList, now.getTime());
 

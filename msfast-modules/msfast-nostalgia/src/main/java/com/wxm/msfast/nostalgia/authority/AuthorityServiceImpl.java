@@ -3,12 +3,18 @@ package com.wxm.msfast.nostalgia.authority;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityServiceImpl;
 import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
+import com.wxm.msfast.base.common.constant.Constants;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.rest.response.BaseUserInfo;
+import com.wxm.msfast.base.common.service.BaseCommonService;
+import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import com.wxm.msfast.base.websocket.common.constant.WebSocketConstants;
+import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.EducationalTypeEnum;
 import com.wxm.msfast.nostalgia.common.enums.UserTypeEnum;
@@ -23,7 +29,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: wxm-fast
@@ -42,6 +50,9 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
 
     @Autowired
     WxAppletService wxAppletService;
+
+    @Autowired
+    BaseCommonService baseCommonService;
 
     /*
      * @Author wanglei
@@ -67,6 +78,12 @@ public class AuthorityServiceImpl extends IAuthorityServiceImpl<LoginRequest, Ap
         LoginResponse loginResponse = new LoginResponse();
         BeanUtils.copyProperties(frUserEntity, loginResponse);
         loginUser.setInfo(loginResponse);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put(WebSocketConstants.HEAD_PORTRAIT, frUserEntity.getHeadPortrait());
+        map.put(WebSocketConstants.NICK_NAME, frUserEntity.getNickName());
+        baseCommonService.updateUser(frUserEntity.getId(), map);
+
         return loginUser;
     }
 
