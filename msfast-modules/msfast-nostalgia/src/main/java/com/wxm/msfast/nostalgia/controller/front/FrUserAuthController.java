@@ -11,10 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -42,7 +39,7 @@ public class FrUserAuthController {
 
     @ApiOperation("认证材料查询")
     @ApiOperationSort(value = 2)
-    @PostMapping("/info")
+    @GetMapping("/info")
     public R<AuthResponse> info() {
         return R.ok(frUserAuthService.info());
     }
