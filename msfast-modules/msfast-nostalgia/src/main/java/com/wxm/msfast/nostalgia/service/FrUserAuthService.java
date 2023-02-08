@@ -2,6 +2,7 @@ package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.nostalgia.common.rest.request.auth.DoubleAuthRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.front.auth.AuthResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserAuthEntity;
 
 
@@ -15,5 +16,7 @@ import com.wxm.msfast.nostalgia.entity.FrUserAuthEntity;
 public interface FrUserAuthService extends IService<FrUserAuthEntity> {
 
     void addAuth(DoubleAuthRequest request);
+
+    AuthResponse info();
 }
 

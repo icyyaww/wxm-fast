@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.file.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -165,6 +166,20 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     public String getPrePath() {
 
         return (StringUtils.isNotBlank(minioConfig.getUrl()) ? minioConfig.getUrl() : minioConfig.getEndpoint()) + "/" + minioConfig.getBucketName() + "/";
+    }
+
+    @Override
+    public void deleteImg(List<String> oldImg, List<String> imgList) {
+        //todo 删除图片
+        if (CollectionUtil.isNotEmpty(oldImg)) {
+
+            oldImg.forEach(model -> {
+                Long count = imgList.stream().filter(p -> StringUtils.isNotBlank(p) && p.equals(model)).count();
+                if (count == 0) {
+                    deleteFileByUrl(model);
+                }
+            });
+        }
     }
 
     private void changeTempUrl(String url) {

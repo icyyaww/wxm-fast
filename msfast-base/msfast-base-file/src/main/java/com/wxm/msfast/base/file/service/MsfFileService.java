@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.file.entity.MsfFileEntity;
 import org.springframework.scheduling.annotation.Async;
 
+import java.util.List;
+
 /**
  * 备注
  *
@@ -63,5 +65,9 @@ public interface MsfFileService extends IService<MsfFileEntity> {
     void deleteFileByUrl(String url);
 
     String getPrePath();
+
+
+    @Async
+    void deleteImg(List<String> oldImg, List<String> imgList);
 }
 
