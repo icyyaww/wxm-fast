@@ -6,11 +6,14 @@ import com.wxm.msfast.base.common.constant.Constants;
 import com.wxm.msfast.base.common.rest.response.BaseUserInfo;
 import com.wxm.msfast.base.common.service.RedisService;
 import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.base.common.utils.SpringBeanUtils;
 import com.wxm.msfast.base.websocket.common.constant.WebSocketConstants;
 import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
 import com.wxm.msfast.base.websocket.common.rest.response.BaseMessageInfoResponse;
+import com.wxm.msfast.base.websocket.common.rest.response.ImUserInfoResponse;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageListResponse;
+import com.wxm.msfast.base.websocket.service.IImService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import org.jacoco.agent.rt.internal_43f5073.core.internal.flow.IFrame;
 import org.springframework.beans.BeanUtils;
@@ -100,6 +103,13 @@ public class SendRunnable implements Runnable {
         if (baseUserInfo != null && baseUserInfo.getExtra() != null) {
             messageList.setHeadPortrait(baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT) != null ? baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT).toString() : "");
             messageList.setNickName(baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME) != null ? baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME).toString() : "");
+        } else {
+            IImService iImService = SpringBeanUtils.getBean(IImService.class);
+            if (iImService != null) {
+                ImUserInfoResponse imUserInfo = iImService.getImUser(sendUserId);
+                messageList.setHeadPortrait(imUserInfo.getHeadPortrait());
+                messageList.setNickName(imUserInfo.getNickName());
+            }
         }
         redisService.redisTemplate.opsForZSet().add(WebSocketConstants.MSG_LIST + userId, messageList, now.getTime());
 
