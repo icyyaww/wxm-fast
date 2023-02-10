@@ -64,7 +64,7 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
 
     @Override
     public PageResult<MessageListResponse> getMessageListRange(Integer pageIndex, Integer pageSize) {
-        Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().range(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), 0, -1);
+        Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().reverseRange(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), 0, -1);
         Long total = 0l;
         if (listResponses != null) {
             total = Long.valueOf(listResponses.size());
@@ -75,6 +75,17 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
                 .collect(Collectors.toSet());
         PageResult<MessageListResponse> result = new PageResult<>(total, pageIndex, pageSize, reverseRange);
         return result;
+    }
+
+    @Override
+    public void deleteList(Integer sendUserId) {
+
+        Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().range(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), 0, -1);
+        Optional<MessageListResponse> optional = listResponses.stream().filter(p -> p.getSendUserId() != null && p.getSendUserId().equals(sendUserId)).findFirst();
+        if (optional.isPresent()) {
+            MessageListResponse messageListResponse = optional.get();
+            redisService.redisTemplate.opsForZSet().remove(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), messageListResponse);
+        }
     }
 
 

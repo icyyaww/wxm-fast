@@ -55,4 +55,13 @@ public class MessageController {
         return R.ok(msFastMessageService.getMessageListRange(pageIndex, pageSize));
     }
 
+    @ApiOperation("删除消息")
+    @ApiOperationSort(value = 3)
+    @DeleteMapping("/list/delete/{sendUserId}")
+    public R<Void> deleteList(@PathVariable Integer sendUserId) {
+        msFastMessageService.deleteList(sendUserId);
+        return R.ok();
+    }
+
+
 }
