@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.websocket.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.wxm.msfast.base.common.constant.Constants;
 import com.wxm.msfast.base.common.rest.response.BaseUserInfo;
 import com.wxm.msfast.base.common.service.RedisService;
@@ -36,12 +37,12 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
 
 
     @Override
-    public PageResult<MessageInfoResponse> getMessageInfoRange(Integer userId, Integer pageIndex, Integer pageSize) {
+    public PageResult<MessageInfoResponse> getMessageInfoRange(Integer sendUserId, Integer pageIndex, Integer pageSize) {
 
-        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), userId), (pageIndex - 1) * pageSize, (pageIndex - 1) * pageSize + pageSize - 1);
-        Long total = redisService.redisTemplate.opsForZSet().size(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), userId));
+        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), sendUserId), (pageIndex - 1) * pageSize, (pageIndex - 1) * pageSize + pageSize - 1);
+        Long total = redisService.redisTemplate.opsForZSet().size(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), sendUserId));
         PageResult<MessageInfoResponse> result = new PageResult<>(total, pageIndex, pageSize, reverseRange);
-        updateUnRead(userId);
+        updateUnRead(sendUserId);
         return result;
     }
 
@@ -86,6 +87,15 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
             MessageListResponse messageListResponse = optional.get();
             redisService.redisTemplate.opsForZSet().remove(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), messageListResponse);
         }
+    }
+
+    @Override
+    public Integer unRead() {
+        Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().reverseRange(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), 0, -1);
+        if (CollectionUtil.isNotEmpty(listResponses)) {
+            return listResponses.stream().filter(p -> p.getUnreadCount() != null).mapToInt(MessageListResponse::getUnreadCount).sum();
+        }
+        return 0;
     }
 
 

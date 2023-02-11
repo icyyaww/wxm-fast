@@ -34,12 +34,12 @@ public class MessageController {
     })
     @ApiOperation("对话框详情")
     @ApiOperationSort(value = 1)
-    @GetMapping("/info/{userId}")
+    @GetMapping("/info/{sendUserId}")
     public R<PageResult<MessageInfoResponse>> messageInfoList(
-            @PathVariable Integer userId,
+            @PathVariable Integer sendUserId,
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
-        return R.ok(msFastMessageService.getMessageInfoRange(userId, pageIndex, pageSize));
+        return R.ok(msFastMessageService.getMessageInfoRange(sendUserId, pageIndex, pageSize));
     }
 
     @ApiImplicitParams({
@@ -61,6 +61,13 @@ public class MessageController {
     public R<Void> deleteList(@PathVariable Integer sendUserId) {
         msFastMessageService.deleteList(sendUserId);
         return R.ok();
+    }
+
+    @ApiOperation("消息未读总数")
+    @ApiOperationSort(value = 4)
+    @GetMapping("/un/read")
+    public R<Integer> unRead() {
+        return R.ok(msFastMessageService.unRead());
     }
 
 
