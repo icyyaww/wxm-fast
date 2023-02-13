@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.auth.common.rest.request;
 
+import com.wxm.msfast.base.auth.common.validtype.AdminLogin;
 import com.wxm.msfast.base.auth.common.validtype.PhoneLogin;
 import com.wxm.msfast.base.auth.common.validtype.WxAppletLogin;
 import lombok.Data;
@@ -17,13 +18,13 @@ public class LoginRequest {
     /**
      * 用户名
      */
-    @NotBlank(groups = {PhoneLogin.class})
+    @NotBlank(groups = {PhoneLogin.class, AdminLogin.class})
     private String username;
 
     /**
      * 用户密码
      */
-    @NotBlank(groups = {PhoneLogin.class})
+    @NotBlank(groups = {PhoneLogin.class,AdminLogin.class})
     private String password;
 
     /**

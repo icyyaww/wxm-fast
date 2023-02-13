@@ -16,5 +16,6 @@
         <module>msfast-base-auth</module>
         <module>msfast-base-file</module>
         <module>msfast-base-websocket</module>
+        <module>msfast-base-role</module>
     </modules>
 </project>

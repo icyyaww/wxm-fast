@@ -15,7 +15,6 @@
     <description>业务模块</description>
 
     <modules>
-        <module>msfast-role</module>
         <module>msfast-demo</module>
         <module>msfast-community</module>
         <module>msfast-nostalgia</module>

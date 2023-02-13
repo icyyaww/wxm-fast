@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.auth.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.wxm.msfast.base.auth.authority.service.IAdminAuthorityService;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
 import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
@@ -80,8 +81,8 @@ public class TokenServiceImpl implements TokenService {
         LoginUserResponse loginUserResponse = new LoginUserResponse();
 
         //用户登陆业务校验
-        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
-        LoginUser loginUser = IAuthorityService.login(request);
+        IAuthorityService iAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        LoginUser loginUser = iAuthorityService.login(request);
         if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
             //登陆失败
             throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
@@ -195,6 +196,25 @@ public class TokenServiceImpl implements TokenService {
         WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(request.getCode());
         BeanUtils.copyProperties(wxAppletOpenResponse, request);
         return login(request);
+    }
+
+    @Override
+    public LoginUserResponse adminLogin(LoginRequest request) {
+        LoginUserResponse loginUserResponse = new LoginUserResponse();
+
+        //用户登陆业务校验
+        IAdminAuthorityService adminAuthorityService = SpringUtils.getBean(IAdminAuthorityService.class);
+        LoginUser loginUser = adminAuthorityService.adminLogin(request);
+        if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
+            //登陆失败
+            throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
+        }
+
+        loginUserResponse.setInfo(loginUser.getInfo());
+
+        loginUserResponse.setToken(createToken(loginUser));
+
+        return loginUserResponse;
     }
 
 

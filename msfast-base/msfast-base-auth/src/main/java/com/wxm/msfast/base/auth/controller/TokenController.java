@@ -7,10 +7,7 @@ import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
 import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
 import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
-import com.wxm.msfast.base.auth.common.validtype.PhoneLogin;
-import com.wxm.msfast.base.auth.common.validtype.PhoneRegister;
-import com.wxm.msfast.base.auth.common.validtype.WxAppletLogin;
-import com.wxm.msfast.base.auth.common.validtype.WxAppletRegister;
+import com.wxm.msfast.base.auth.common.validtype.*;
 import com.wxm.msfast.base.auth.service.TokenService;
 import com.wxm.msfast.base.auth.utils.ReflexUtils;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
@@ -151,6 +148,27 @@ public class TokenController {
         ViolationUtils.violation(viewModel, WxAppletLogin.class);
         ViolationUtils.violation(viewModel);
         return R.ok(tokenService.wxAppletLogin(viewModel));
+    }
+
+    @AuthIgnore
+    @PostMapping("/admin/login")
+    @ApiOperation(value = "后台登陆")
+    @ApiOperationSort(8)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"username\":\"用户名 必填\",\"password\":\"登录密码 必填\"}", required = true)
+    })
+    public R<LoginUserResponse> adminLogin(@RequestBody @ApiIgnore String viewmodelJson) {
+
+        IAuthorityService IAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+
+        Class<? extends LoginRequest> clsViewModel = ReflexUtils.getServiceViewModel(IAuthorityService);
+
+        LoginRequest viewModel = JSONObject.parseObject(viewmodelJson, clsViewModel);
+
+        //数据校验
+        ViolationUtils.violation(viewModel, AdminLogin.class);
+        ViolationUtils.violation(viewModel);
+        return R.ok(tokenService.adminLogin(viewModel));
     }
 }
 
