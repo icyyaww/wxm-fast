@@ -1,16 +1,16 @@
 package com.wxm.msfast.nostalgia.controller.admin;
 
+import com.wxm.msfast.base.common.constant.ParamTypeConstants;
+import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiOperationSort;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: wxm-fast
@@ -26,8 +26,22 @@ public class UserAdminController {
     @Autowired
     FrUserService frUserService;
 
-    @ApiOperation("用户资料审核")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("用户资料审核列表")
     @ApiOperationSort(value = 1)
+    @GetMapping("/examine/page")
+    public R<PageResult<UserPageResponse>> examinePage(
+            UserPageRequest request,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(frUserService.examinePage(request, pageIndex, pageSize));
+    }
+
+    @ApiOperation("用户资料审核")
+    @ApiOperationSort(value = 2)
     @PutMapping("/examine")
     public R<Void> examine(@RequestBody UserExamineRequest request) {
 

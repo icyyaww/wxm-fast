@@ -125,4 +125,36 @@ select
 (select count(1) from user_matching um where um.del_flag=0 and um.other_user =#{id} and um.result=true) as likeMe,
 (select count(1) from user_matching umm where umm.del_flag=0 and umm.user_id=#{id} and umm.result=true and (select count(1) from user_matching um where um.del_flag=0 and um.other_user =#{id} and um.user_id =umm.other_user and um.result=true)>0) as lovers
     </select>
+
+
+    <resultMap id="userPageResponse"
+               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse">
+    </resultMap>
+
+    <select id="getExaminePage" resultMap="userPageResponse"
+            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+        select
+        fu.id,
+        fu.create_time,
+        fu.status,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.gender,
+        fu.city,
+        fu.additional->>'$.waitApprovedStatus' as auth_status,
+        fu.user_type,
+        fu.lately_time
+        from
+        fr_user fu
+        <where>
+            fu.del_flag=0
+            <if test="authStatus!=null">
+                and fu.additional->>'$.waitApprovedStatus'=#{authStatus}
+            </if>
+            <if test="userType!=null">
+                and fu.user_type=#{userType}
+            </if>
+        </where>
+        order by fu.lately_time desc
+    </select>
 </mapper>

@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.common.rest.response.admin.user;
+package com.wxm.msfast.nostalgia.common.rest.request.admin.user;
 
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import io.swagger.annotations.ApiModelProperty;
