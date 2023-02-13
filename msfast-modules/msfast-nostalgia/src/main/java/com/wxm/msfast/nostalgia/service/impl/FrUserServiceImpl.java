@@ -479,7 +479,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Transactional
     public void examine(UserExamineRequest request) {
 
-        RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + TokenUtils.getOwnerId());
+        RLock lock = redissonClient.getLock(Constants.PHOTO_EDIT + request.getUserId());
         try {
             lock.lock();
             FrUserEntity frUserEntity = this.getById(request.getUserId());

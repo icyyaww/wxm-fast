@@ -13,6 +13,9 @@ import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.TokenUtils;
+import com.wxm.msfast.base.websocket.common.enums.MessageFormatEnum;
+import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
+import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
@@ -29,6 +32,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.nostalgia.dao.UserMatchingDao;
@@ -48,6 +52,9 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
     @Autowired
     RedissonClient redissonClient;
+
+    @Autowired
+    MsFastMessageService msFastMessageService;
 
 
     @Override
@@ -146,6 +153,8 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                                 matchingResponse.setOtherNickName(otherUser.getNickName());
                             }
 
+                            //添加对话框
+                            addMessage(userId, request.getOtherUser());
                         }
                     }
 
@@ -157,6 +166,17 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
             lock.unlock();
         }
         return matchingResponse;
+    }
+
+    @Async
+    void addMessage(Integer userId, Integer otherUser) {
+
+        BaseMessageInfo baseMessageInfo = new BaseMessageInfo();
+        baseMessageInfo.setContent("配对成功");
+        baseMessageInfo.setMessageFormat(MessageFormatEnum.text.name());
+        msFastMessageService.addMessageList(baseMessageInfo, userId, otherUser);
+        msFastMessageService.addMessageList(baseMessageInfo, otherUser, userId);
+
     }
 
     @Override

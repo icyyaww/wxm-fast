@@ -4,17 +4,23 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.wxm.msfast.base.common.constant.Constants;
 import com.wxm.msfast.base.common.rest.response.BaseUserInfo;
 import com.wxm.msfast.base.common.service.RedisService;
+import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.common.utils.PageResult;
+import com.wxm.msfast.base.common.utils.SpringBeanUtils;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.websocket.common.constant.WebSocketConstants;
+import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
+import com.wxm.msfast.base.websocket.common.rest.response.ImUserInfoResponse;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageInfoResponse;
 import com.wxm.msfast.base.websocket.common.rest.response.MessageListResponse;
+import com.wxm.msfast.base.websocket.service.IImService;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -96,6 +102,32 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
             return listResponses.stream().filter(p -> p.getUnreadCount() != null).mapToInt(MessageListResponse::getUnreadCount).sum();
         }
         return 0;
+    }
+
+    @Override
+    public void addMessageList(BaseMessageInfo messageInfo, Integer userId, Integer sendUserId) {
+        Date now = new Date();
+        MessageListResponse messageList = new MessageListResponse();
+        messageList.setUserId(userId);
+        messageList.setSendUserId(sendUserId);
+        messageList.setLatelyTime(DateUtils.dateToStr(WebSocketConstants.DATE_FORMAT, now));
+        messageList.setMessageDescribe(messageInfo.getContent());
+        messageList.setMessageDescribeFormat(messageInfo.getMessageFormat());
+        messageList.setUnreadCount(redisService.getCacheObject(userId + WebSocketConstants.MSG_UN_READ + sendUserId));
+
+        BaseUserInfo baseUserInfo = redisService.getCacheObject(Constants.BASE_USER_INFO + sendUserId);
+        if (baseUserInfo != null && baseUserInfo.getExtra() != null) {
+            messageList.setHeadPortrait(baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT) != null ? baseUserInfo.getExtra().get(WebSocketConstants.HEAD_PORTRAIT).toString() : "");
+            messageList.setNickName(baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME) != null ? baseUserInfo.getExtra().get(WebSocketConstants.NICK_NAME).toString() : "");
+        } else {
+            IImService iImService = SpringBeanUtils.getBean(IImService.class);
+            if (iImService != null) {
+                ImUserInfoResponse imUserInfo = iImService.getImUser(sendUserId);
+                messageList.setHeadPortrait(imUserInfo.getHeadPortrait());
+                messageList.setNickName(imUserInfo.getNickName());
+            }
+        }
+        redisService.redisTemplate.opsForZSet().add(WebSocketConstants.MSG_LIST + userId, messageList, now.getTime());
     }
 
 

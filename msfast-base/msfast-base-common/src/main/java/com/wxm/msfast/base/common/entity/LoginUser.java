@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.common.entity;
 
+import com.wxm.msfast.base.common.enums.BaseUserTypeEnum;
 import lombok.Data;
 
 /**
@@ -12,6 +13,8 @@ import lombok.Data;
 public class LoginUser<T> {
 
     private Integer id;
+
+    private BaseUserTypeEnum userType;
 
     private T info;
 }

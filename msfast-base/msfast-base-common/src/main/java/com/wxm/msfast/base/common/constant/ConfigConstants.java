@@ -68,6 +68,12 @@ public class ConfigConstants {
     @Value("${wxmfast.config.websocket.only-one:false}")
     private Boolean onlyOne;
 
+    @Value("${wxmfast.config.role.username:admin}")
+    private String userName;
+
+    @Value("${wxmfast.config.role.password:123456}")
+    private String passWord;
+
 
     /**
      * @Description: 是否启用redis 默认false
@@ -222,5 +228,13 @@ public class ConfigConstants {
             throw new JrsfException(BaseExceptionEnum.SECRET_ISEMPTY);
         }
         return secret;
+    }
+
+    public static String ROLE_ADMIN_USER_NAME() {
+        return SpringUtils.getBean(ConfigConstants.class).getUserName();
+    }
+
+    public static String ROLE_ADMIN_PASSWORD() {
+        return SpringUtils.getBean(ConfigConstants.class).getPassWord();
     }
 }

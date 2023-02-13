@@ -17,6 +17,7 @@ import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserTypeEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.ISendSmsService;
 import com.wxm.msfast.base.common.service.RedisService;
@@ -205,7 +206,8 @@ public class TokenServiceImpl implements TokenService {
         //用户登陆业务校验
         IAdminAuthorityService adminAuthorityService = SpringUtils.getBean(IAdminAuthorityService.class);
         LoginUser loginUser = adminAuthorityService.adminLogin(request);
-        if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
+
+        if ((ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId()))) {
             //登陆失败
             throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
         }

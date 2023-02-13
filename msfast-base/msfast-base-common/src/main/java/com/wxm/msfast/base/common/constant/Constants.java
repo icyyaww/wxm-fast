@@ -92,4 +92,6 @@ public class Constants {
 
     public static final String BASE_USER_INFO = "BASE_USER_INFO_";
 
+    public static final String MSG_ANSWER = "MSG_ANSWER";
+
 }
