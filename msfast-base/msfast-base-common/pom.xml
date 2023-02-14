@@ -22,7 +22,7 @@
         <druid.spring.boot.starter.version>1.1.13</druid.spring.boot.starter.version>
         <jjwt.version>0.9.1</jjwt.version>
         <hutool.all.version>5.8.3</hutool.all.version>
-        <fastjson2.version>2.0.7</fastjson2.version>
+        <fastjson.version>2.0.23</fastjson.version>
         <commons.beanutils.version>1.9.3</commons.beanutils.version>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
         <swagger.models.version>1.6.9</swagger.models.version>
@@ -117,9 +117,9 @@
             <version>${hutool.all.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-            <version>${fastjson2.version}</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
         <!-- SpringBoot Boot Redis -->
         <dependency>

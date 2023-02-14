@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -47,5 +48,12 @@ public class UserAdminController {
 
         frUserService.examine(request);
         return R.ok();
+    }
+
+    @ApiOperation("用户资料审核详情")
+    @ApiOperationSort(value = 3)
+    @GetMapping("/info/{id}")
+    public R<UserExamineInfoResponse> examineInfo(@PathVariable Integer id) {
+        return R.ok(frUserService.getExamineInfo(id));
     }
 }

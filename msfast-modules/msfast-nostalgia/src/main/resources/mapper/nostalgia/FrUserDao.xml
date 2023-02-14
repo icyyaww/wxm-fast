@@ -141,7 +141,7 @@ select
         fu.nick_name,
         fu.gender,
         fu.city,
-        fu.additional->>'$.waitApprovedStatus' as auth_status,
+        fu.additional->>'$.waitApprovedStatus' as waitApprovedStatus,
         fu.user_type,
         fu.lately_time
         from

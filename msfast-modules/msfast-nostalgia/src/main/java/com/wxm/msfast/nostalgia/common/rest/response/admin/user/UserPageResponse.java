@@ -71,7 +71,7 @@ public class UserPageResponse {
     @ApiModelProperty(value = "用户资料状态 EXAMINE(\"审核中\"),\n" +
             "    PASS(\"通过\"),\n" +
             "    REFUSE(\"拒绝\")")
-    private AuthStatusEnum authStatus;
+    private AuthStatusEnum waitApprovedStatus;
 
     /**
      * 用户类型

@@ -23,6 +23,7 @@ import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
@@ -344,7 +345,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                         msfFileService.deleteFileByUrl(request.getOldUrl());
                     }
 
-                    setUserAuth(frUserEntity,AuthStatusEnum.EXAMINE);
+                    setUserAuth(frUserEntity, AuthStatusEnum.EXAMINE);
                 }
             } else if (PhotoEditTypeEnum.ADD.equals(request.getPhotoEditType())) {
 
@@ -359,7 +360,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     urlList.add(request.getNewUrl());
                     frUserEntity.setWaitApprovedImg(urlList);
                 }
-                setUserAuth(frUserEntity,AuthStatusEnum.EXAMINE);
+                setUserAuth(frUserEntity, AuthStatusEnum.EXAMINE);
             }
 
             this.updateById(frUserEntity);
@@ -538,6 +539,18 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         this.baseMapper.getExaminePage(request);
         PageResult<UserPageResponse> result = new PageResult<>(page);
         return result;
+    }
+
+    @Override
+    public UserExamineInfoResponse getExamineInfo(Integer id) {
+
+        UserExamineInfoResponse response = new UserExamineInfoResponse();
+        FrUserEntity frUserEntity = this.baseMapper.selectById(id);
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, response);
+        }
+
+        return response;
     }
 
 
