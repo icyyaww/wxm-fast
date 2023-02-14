@@ -1,6 +1,6 @@
 package com.wxm.msfast.community.service.impl;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import com.wxm.msfast.community.common.rest.response.matching.MatchSuccessResponse;
 import com.wxm.msfast.community.entity.FrUserEntity;

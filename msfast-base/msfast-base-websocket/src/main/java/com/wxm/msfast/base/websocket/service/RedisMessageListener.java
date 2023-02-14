@@ -1,6 +1,6 @@
 package com.wxm.msfast.base.websocket.service;
 
-import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson.JSON;
 import com.wxm.msfast.base.websocket.common.rest.request.UserSendMessage;
 import com.wxm.msfast.base.websocket.netty.ChannelMap;
 import io.netty.channel.Channel;
