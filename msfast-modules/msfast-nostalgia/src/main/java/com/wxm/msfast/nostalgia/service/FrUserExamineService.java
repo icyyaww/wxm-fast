@@ -1,6 +1,8 @@
 package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
+import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
 import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
 
 
@@ -13,5 +15,6 @@ import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
  */
 public interface FrUserExamineService extends IService<FrUserExamineEntity> {
 
+    FrUserExamineEntity getExamine(Integer usreId, AuthTypeEnum authType, AuthStatusEnum authStatus);
 }
 

@@ -548,6 +548,19 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         FrUserEntity frUserEntity = this.baseMapper.selectById(id);
         if (frUserEntity != null) {
             BeanUtils.copyProperties(frUserEntity, response);
+            if (frUserEntity.getAdditional() != null) {
+                response.setWaitApprovedStatus(frUserEntity.getAdditional().getWaitApprovedStatus());
+                if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAdditional().getWaitApprovedStatus())) {
+                    FrUserExamineEntity frUserExamineEntity = this.frUserExamineService.getExamine(id, AuthTypeEnum.InfoAuth, AuthStatusEnum.REFUSE);
+                    if (frUserExamineEntity != null) {
+                        response.setRemarks(frUserExamineEntity.getRemarks());
+                    }
+
+                }
+            }
+
+            response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+
         }
 
         return response;

@@ -1,9 +1,15 @@
 package com.wxm.msfast.nostalgia.common.rest.response.admin.user;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.*;
+import com.wxm.msfast.nostalgia.common.handle.AdditionalHandler;
+import com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler;
+import com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.AdditionalResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.CharacterTypeResponse;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -75,10 +81,6 @@ public class UserExamineInfoResponse {
     @ApiModelProperty(value = "最近活跃时间")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date latelyTime;
-
-
-    @ApiModelProperty(value = "年龄")
-    private Integer age;
 
     /**
      * 身高
@@ -167,11 +169,8 @@ public class UserExamineInfoResponse {
     private String remarks;
 
 
-
-
     @ApiModelProperty(value = "星座")
     private String constellation;
-
 
     /**
      * 关于我
@@ -195,4 +194,30 @@ public class UserExamineInfoResponse {
 
     @ApiModelProperty(value = "相册")
     private List<String> waitApprovedImg;
+
+    /**
+     * 出生日期
+     */
+    @ApiModelProperty(value = "出生日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
+
+    /**
+     * 相册
+     */
+    @ApiModelProperty(value = "相册")
+    private List<String> imgList;
+
+    /**
+     * 用户资料状态
+     */
+    @ApiModelProperty(value = "用户资料状态")
+    private AuthStatusEnum authStatus;
+
+    /**
+     * 金币余额
+     */
+    @ApiModelProperty(value = "金币余额")
+    private Integer goldBalance;
+
 }
