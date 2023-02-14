@@ -343,7 +343,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     if (CollectionUtil.isEmpty(frUserEntity.getImgList()) || !frUserEntity.getImgList().contains(request.getOldUrl())) {
                         msfFileService.deleteFileByUrl(request.getOldUrl());
                     }
-                    frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+
+                    setUserAuth(frUserEntity,AuthStatusEnum.EXAMINE);
                 }
             } else if (PhotoEditTypeEnum.ADD.equals(request.getPhotoEditType())) {
 
@@ -358,13 +359,24 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     urlList.add(request.getNewUrl());
                     frUserEntity.setWaitApprovedImg(urlList);
                 }
-                frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
+                setUserAuth(frUserEntity,AuthStatusEnum.EXAMINE);
             }
 
             this.updateById(frUserEntity);
 
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void setUserAuth(FrUserEntity frUserEntity, AuthStatusEnum examine) {
+
+        if (frUserEntity.getAdditional() == null) {
+            AdditionalResponse additional = new AdditionalResponse();
+            additional.setWaitApprovedStatus(examine);
+            frUserEntity.setAdditional(additional);
+        } else {
+            frUserEntity.getAdditional().setWaitApprovedStatus(examine);
         }
     }
 
