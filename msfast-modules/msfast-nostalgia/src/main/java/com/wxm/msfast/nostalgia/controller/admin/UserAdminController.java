@@ -6,6 +6,7 @@ import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -55,5 +56,19 @@ public class UserAdminController {
     @GetMapping("/info/{id}")
     public R<UserExamineInfoResponse> examineInfo(@PathVariable Integer id) {
         return R.ok(frUserService.getExamineInfo(id));
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("用户身份审核列表")
+    @ApiOperationSort(value = 4)
+    @GetMapping("/identity/page")
+    public R<PageResult<UserIdentityPageResponse>> identityPage(
+            UserPageRequest request,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(frUserService.identityPage(request, pageIndex, pageSize));
     }
 }

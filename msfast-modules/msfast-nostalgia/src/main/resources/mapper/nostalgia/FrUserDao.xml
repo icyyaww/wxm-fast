@@ -157,4 +157,36 @@ select
         </where>
         order by fu.lately_time desc
     </select>
+
+
+
+    <resultMap id="identityResponse"
+               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse">
+    </resultMap>
+    <select id="getIdentityPage" resultMap="identityResponse"
+            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+        select
+        fu.id,
+        fu.create_time,
+        fu.status,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.gender,
+        fu.city,
+        fu.additional->>'$.identityAuth' as identityAuth,
+        fu.user_type,
+        fu.lately_time
+        from
+        fr_user fu
+        <where>
+            fu.del_flag=0
+            <if test="authStatus!=null">
+                and fu.additional->>'$.identityAuth'=#{authStatus}
+            </if>
+            <if test="userType!=null">
+                and fu.user_type=#{userType}
+            </if>
+        </where>
+        order by fu.lately_time desc
+    </select>
 </mapper>

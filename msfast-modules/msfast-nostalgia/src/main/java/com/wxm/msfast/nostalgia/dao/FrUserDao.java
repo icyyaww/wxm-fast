@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.dao;
 
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.LikeResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse;
@@ -26,4 +27,7 @@ public interface FrUserDao extends BaseMapper<FrUserEntity> {
     LikeResponse getPersonalLike(Integer userId);
 
     List<UserPageResponse> getExaminePage(UserPageRequest request);
+
+    List<UserIdentityPageResponse> getIdentityPage(UserPageRequest request);
+
 }

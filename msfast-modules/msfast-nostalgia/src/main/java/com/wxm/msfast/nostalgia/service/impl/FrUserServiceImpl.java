@@ -24,6 +24,7 @@ import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
@@ -564,6 +565,14 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         }
 
         return response;
+    }
+
+    @Override
+    public PageResult<UserIdentityPageResponse> identityPage(UserPageRequest request, Integer pageIndex, Integer pageSize) {
+        Page<UserIdentityPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.baseMapper.getIdentityPage(request);
+        PageResult<UserIdentityPageResponse> result = new PageResult<>(page);
+        return result;
     }
 
 
