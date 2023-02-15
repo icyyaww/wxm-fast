@@ -14,12 +14,14 @@ import com.wxm.msfast.base.websocket.service.IMessageService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
 import io.netty.channel.*;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.net.SocketAddress;
 
 @Component
+@Slf4j
 public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
 
@@ -27,6 +29,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
 
+        log.info("建立连接");
         SocketAddress socketAddress = ctx.channel().remoteAddress();
         String ip = socketAddress.toString().replaceAll("/", "");
         ip = ip.substring(0, ip.indexOf(":"));
@@ -40,7 +43,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         }
 
         ChannelMap.getOnline().put(ip, ctx.channel());
-        System.out.println("与客户端建立连接, 客户端ip:" + ip + "，通道开启！ 用户连接数量：" + ChannelMap.getManager().size() + " 在线客户端数：" + ChannelMap.getOnline().size());
+        log.info("与客户端建立连接, 客户端ip:" + ip + "，通道开启！ 用户连接数量：" + ChannelMap.getManager().size() + " 在线客户端数：" + ChannelMap.getOnline().size());
 
         IWebSocketService webSocketService = SpringBeanUtils.getBean(IWebSocketService.class);
         if (webSocketService != null) {
@@ -59,7 +62,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         // 移除用户与channel的关联
         ChannelMap.getManager().entrySet().removeIf(p -> p.getValue().equals(ctx.channel()));
         ChannelMap.getOnline().entrySet().removeIf(p -> p.getValue().equals(ctx.channel()));
-        System.out.println("channel关闭监听，用户连接数量：" + ChannelMap.getManager().size() + "在线客户端数：" + ChannelMap.getOnline().size());
+        log.info("channel关闭监听，用户连接数量：" + ChannelMap.getManager().size() + "在线客户端数：" + ChannelMap.getOnline().size());
     }
 
 
@@ -78,7 +81,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         if (message != null && MessageTypeEnum.CONNECT.equals(message.getMessageType())) {
             if (StringUtils.isNotBlank(message.getInfo())) {
                 ChannelMap.put(Integer.valueOf(message.getInfo()), ctx.channel());
-                System.out.println("建立连接完成，关联数量为" + ChannelMap.getManager().size());
+                log.info("建立连接完成，关联数量为" + ChannelMap.getManager().size());
             }
         } else if (message != null && MessageTypeEnum.ALIVE.equals(message.getMessageType())) {
             //心跳检测
@@ -86,8 +89,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         } else if (message != null && MessageTypeEnum.IM_MESSAGE.equals(message.getMessageType())) {
             try {
                 BaseMessageInfo messageInfo = JSON.parseObject(message.getInfo(), BaseMessageInfo.class);
-                IMessageService IMessageService = SpringUtils.getBean(IMessageService.class);
-                IMessageService.send(messageInfo);
+                IMessageService iMessageService = SpringUtils.getBean(IMessageService.class);
+                log.info("发送消息{}",JSON.toJSONString(iMessageService));
+                iMessageService.send(messageInfo);
             } catch (JSONException e) {
                 channelUtil.sendText(ctx.channel(), "info格式错误 例：{'sendUserId':'1','acceptUserId':'2','content':'内容','messageFormat':'mage/text/emote/voice/video','sendName':'名字','sendPortrait':'头像'}");
             }

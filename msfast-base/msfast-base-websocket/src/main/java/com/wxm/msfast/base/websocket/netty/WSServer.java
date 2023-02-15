@@ -7,6 +7,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
  * @Date: 2020/3/10  上午 10:49
  */
 @Component
+@Slf4j
 public class WSServer {
 
     /**
@@ -52,8 +54,9 @@ public class WSServer {
     }
 
     public void start() {
+        log.info("启动前");
         this.future = server.bind(ConfigConstants.WEB_SOCKET_PORT());
-        System.out.println("netty websocket server  启动完毕..端口是" + ConfigConstants.WEB_SOCKET_PORT());
+        log.info("netty websocket server  启动完毕..端口是" + ConfigConstants.WEB_SOCKET_PORT());
     }
 
     public void restart() throws Exception {

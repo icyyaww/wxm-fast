@@ -17,6 +17,7 @@ import com.wxm.msfast.base.websocket.common.rest.response.MessageListResponse;
 import com.wxm.msfast.base.websocket.service.IImService;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.jacoco.agent.rt.internal_43f5073.core.internal.flow.IFrame;
 import org.springframework.beans.BeanUtils;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  * @author: Mr.Wang
  * @create: 2023-01-12 17:23
  **/
-
+@Slf4j
 public class SendRunnable implements Runnable {
 
 
@@ -51,7 +52,7 @@ public class SendRunnable implements Runnable {
 
     @Override
     public void run() {
-
+        log.info("开始发送消息");
         BaseMessageInfoResponse baseMessageInfoResponse = new BaseMessageInfoResponse();
         BeanUtils.copyProperties(messageInfo, baseMessageInfoResponse);
         baseMessageInfoResponse.setMsgNo(UUID.fastUUID().toString());
