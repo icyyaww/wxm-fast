@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.IdentityExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
@@ -70,5 +71,21 @@ public class UserAdminController {
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         return R.ok(frUserService.identityPage(request, pageIndex, pageSize));
+    }
+
+    @ApiOperation("用户身份审核详情")
+    @ApiOperationSort(value = 5)
+    @GetMapping("/identityExamine/{id}")
+    public R<IdentityExamineInfoResponse> identityExamine(@PathVariable Integer id) {
+        return R.ok(frUserService.identityExamine(id));
+    }
+
+    @ApiOperation("用户身份审核")
+    @ApiOperationSort(value = 6)
+    @PutMapping("/identity/examine")
+    public R<Void> identityExamine(@RequestBody UserExamineRequest request) {
+
+        frUserService.identityExamine(request);
+        return R.ok();
     }
 }

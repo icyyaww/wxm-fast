@@ -5,6 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.IdentityExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
@@ -62,5 +63,9 @@ public interface FrUserService extends IService<FrUserEntity> {
     UserExamineInfoResponse getExamineInfo(Integer id);
 
     PageResult<UserIdentityPageResponse> identityPage(UserPageRequest request, Integer pageIndex, Integer pageSize);
+
+    void identityExamine(UserExamineRequest request);
+
+    IdentityExamineInfoResponse identityExamine(Integer id);
 }
 

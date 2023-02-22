@@ -3,6 +3,7 @@ package com.wxm.msfast.nostalgia.service.impl;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
@@ -94,6 +95,18 @@ public class FrUserAuthServiceImpl extends ServiceImpl<FrUserAuthDao, FrUserAuth
             authResponse.setEducationImgList(educationAuth.getImgList());
         }
         return authResponse;
+    }
+
+    @Override
+    public FrUserAuthEntity getUserAuth(Integer userId, AuthTypeEnum authType, AuthStatusEnum authStatus) {
+        Wrapper<FrUserAuthEntity> wrapper = new QueryWrapper<FrUserAuthEntity>().lambda()
+                .eq(FrUserAuthEntity::getAuthType, authType)
+                .eq(FrUserAuthEntity::getUserId, userId)
+                .eq(FrUserAuthEntity::getAuthStatus, authStatus)
+                .orderByDesc(FrUserAuthEntity::getId)
+                .last(" limit 1");
+        FrUserAuthEntity frUserAuthEntity = this.baseMapper.selectOne(wrapper);
+        return frUserAuthEntity;
     }
 
     private FrUserAuthEntity getAuthByType(AuthTypeEnum typeEnum) {

@@ -13,9 +13,7 @@ import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.DateUtils;
-import com.wxm.msfast.base.common.utils.PageResult;
-import com.wxm.msfast.base.common.utils.TokenUtils;
+import com.wxm.msfast.base.common.utils.*;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
@@ -23,19 +21,14 @@ import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.IdentityExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
-import com.wxm.msfast.nostalgia.entity.FrUserEntity;
-import com.wxm.msfast.nostalgia.entity.FrUserExamineEntity;
-import com.wxm.msfast.nostalgia.entity.RecommendConfigEntity;
-import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
-import com.wxm.msfast.nostalgia.service.FrUserExamineService;
-import com.wxm.msfast.nostalgia.service.FrUserService;
-import com.wxm.msfast.nostalgia.service.RecommendConfigService;
-import com.wxm.msfast.nostalgia.service.UserMatchingService;
+import com.wxm.msfast.nostalgia.entity.*;
+import com.wxm.msfast.nostalgia.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -71,7 +64,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     RedissonClient redissonClient;
-
 
     @Override
     public Long countByOpenId(String openId) {
@@ -573,6 +565,67 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         this.baseMapper.getIdentityPage(request);
         PageResult<UserIdentityPageResponse> result = new PageResult<>(page);
         return result;
+    }
+
+    @Override
+    public void identityExamine(UserExamineRequest request) {
+
+        RLock lock = redissonClient.getLock(Constants.ADD_AUTH + request.getUserId());
+        try {
+            lock.lock();
+            FrUserEntity frUserEntity = this.getById(request.getUserId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+
+            FrUserAuthService frUserAuthService = SpringUtils.getBean(FrUserAuthService.class);
+            FrUserAuthEntity frUserAuthEntity = frUserAuthService.getUserAuth(request.getUserId(), AuthTypeEnum.IdentityAuth, AuthStatusEnum.EXAMINE);
+
+            if (frUserAuthEntity != null && frUserAuthEntity.getId() != request.getVersion()) {
+                throw new JrsfException(UserExceptionEnum.USER_VERSION_DIFFERENT_EXCEPTION);
+            }
+
+            if (frUserEntity.getAdditional() == null) {
+                AdditionalResponse additional = new AdditionalResponse();
+                additional.setIdentityAuth(request.getResult());
+                frUserEntity.setAdditional(additional);
+            } else {
+                frUserEntity.getAdditional().setIdentityAuth(request.getResult());
+            }
+            this.updateById(frUserEntity);
+
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public IdentityExamineInfoResponse identityExamine(Integer id) {
+        IdentityExamineInfoResponse response = new IdentityExamineInfoResponse();
+        FrUserEntity frUserEntity = this.baseMapper.selectById(id);
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, response);
+            if (frUserEntity.getAdditional() != null) {
+                if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAdditional().getIdentityAuth())) {
+                    FrUserExamineEntity frUserExamineEntity = this.frUserExamineService.getExamine(id, AuthTypeEnum.IdentityAuth, AuthStatusEnum.REFUSE);
+                    if (frUserExamineEntity != null) {
+                        response.setRemarks(frUserExamineEntity.getRemarks());
+                    }
+                }
+                response.setAuthStatus(frUserEntity.getAdditional().getIdentityAuth());
+            }
+
+            response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+            FrUserAuthService frUserAuthService = SpringUtils.getBean(FrUserAuthService.class);
+            FrUserAuthEntity frUserAuthEntity = frUserAuthService.getUserAuth(id, AuthTypeEnum.IdentityAuth, AuthStatusEnum.EXAMINE);
+            if (frUserAuthEntity != null) {
+                response.setImgList(frUserAuthEntity.getImgList());
+            } else {
+                response.setImgList(null);
+            }
+        }
+
+        return response;
     }
 
 
