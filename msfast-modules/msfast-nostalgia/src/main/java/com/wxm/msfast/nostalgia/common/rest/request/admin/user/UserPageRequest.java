@@ -15,10 +15,7 @@ import lombok.Data;
 @Data
 public class UserPageRequest {
 
-    /**
-     * 用户资料状态
-     */
-    @ApiModelProperty(value = "用户资料状态 EXAMINE(\"审核中\"),\n" +
+    @ApiModelProperty(value = "用户状态 EXAMINE(\"待审核\"),\n" +
             "    PASS(\"通过\"),\n" +
             "    REFUSE(\"拒绝\")")
     private AuthStatusEnum authStatus;

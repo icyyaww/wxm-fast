@@ -21,10 +21,7 @@ import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.IdentityExamineInfoResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
@@ -520,9 +517,21 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
             this.updateById(frUserEntity);
 
+            //添加审核记录
+            addExamine(request, AuthTypeEnum.InfoAuth);
         } finally {
             lock.unlock();
         }
+    }
+
+    private void addExamine(UserExamineRequest request, AuthTypeEnum infoAuth) {
+
+        FrUserExamineEntity frUserExamineEntity = new FrUserExamineEntity();
+        frUserExamineEntity.setAuthStatus(request.getResult());
+        frUserExamineEntity.setUserId(request.getUserId());
+        frUserExamineEntity.setRemarks(request.getRemarks());
+        frUserExamineEntity.setAuthType(infoAuth);
+        this.frUserExamineService.save(frUserExamineEntity);
     }
 
     @Override
@@ -594,6 +603,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             }
             this.updateById(frUserEntity);
 
+            //添加审核记录
+            addExamine(request, AuthTypeEnum.IdentityAuth);
         } finally {
             lock.unlock();
         }
@@ -620,12 +631,87 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             FrUserAuthEntity frUserAuthEntity = frUserAuthService.getUserAuth(id, AuthTypeEnum.IdentityAuth, AuthStatusEnum.EXAMINE);
             if (frUserAuthEntity != null) {
                 response.setImgList(frUserAuthEntity.getImgList());
+                response.setVersion(frUserAuthEntity.getId());
             } else {
                 response.setImgList(null);
+                response.setVersion(0);
             }
         }
 
         return response;
+    }
+
+    @Override
+    public PageResult<UserEducationPageResponse> userEducationPage(UserPageRequest request, Integer pageIndex, Integer pageSize) {
+        Page<UserEducationPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.baseMapper.getUserEducationPage(request);
+        PageResult<UserEducationPageResponse> result = new PageResult<>(page);
+        return result;
+    }
+
+    @Override
+    public EducationExamineInfoResponse educationExamine(Integer id) {
+        EducationExamineInfoResponse response = new EducationExamineInfoResponse();
+        FrUserEntity frUserEntity = this.baseMapper.selectById(id);
+        if (frUserEntity != null) {
+            BeanUtils.copyProperties(frUserEntity, response);
+            if (frUserEntity.getAdditional() != null) {
+                if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAdditional().getEducationAuth())) {
+                    FrUserExamineEntity frUserExamineEntity = this.frUserExamineService.getExamine(id, AuthTypeEnum.EducationAuth, AuthStatusEnum.REFUSE);
+                    if (frUserExamineEntity != null) {
+                        response.setRemarks(frUserExamineEntity.getRemarks());
+                    }
+                }
+                response.setAuthStatus(frUserEntity.getAdditional().getEducationAuth());
+            }
+
+            FrUserAuthService frUserAuthService = SpringUtils.getBean(FrUserAuthService.class);
+            FrUserAuthEntity frUserAuthEntity = frUserAuthService.getUserAuth(id, AuthTypeEnum.EducationAuth, AuthStatusEnum.EXAMINE);
+            if (frUserAuthEntity != null) {
+                response.setImgList(frUserAuthEntity.getImgList());
+                response.setVersion(frUserAuthEntity.getId());
+            } else {
+                response.setImgList(null);
+                response.setVersion(0);
+            }
+            response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+        }
+
+        return response;
+    }
+
+    @Override
+    public void educationExamine(UserExamineRequest request) {
+
+        RLock lock = redissonClient.getLock(Constants.ADD_AUTH + request.getUserId());
+        try {
+            lock.lock();
+            FrUserEntity frUserEntity = this.getById(request.getUserId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+
+            FrUserAuthService frUserAuthService = SpringUtils.getBean(FrUserAuthService.class);
+            FrUserAuthEntity frUserAuthEntity = frUserAuthService.getUserAuth(request.getUserId(), AuthTypeEnum.EducationAuth, AuthStatusEnum.EXAMINE);
+
+            if (frUserAuthEntity != null && frUserAuthEntity.getId() != request.getVersion()) {
+                throw new JrsfException(UserExceptionEnum.USER_VERSION_DIFFERENT_EXCEPTION);
+            }
+
+            if (frUserEntity.getAdditional() == null) {
+                AdditionalResponse additional = new AdditionalResponse();
+                additional.setEducationAuth(request.getResult());
+                frUserEntity.setAdditional(additional);
+            } else {
+                frUserEntity.getAdditional().setEducationAuth(request.getResult());
+            }
+            this.updateById(frUserEntity);
+
+            //添加审核记录
+            addExamine(request, AuthTypeEnum.EducationAuth);
+        } finally {
+            lock.unlock();
+        }
     }
 
 

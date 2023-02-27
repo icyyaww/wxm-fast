@@ -189,4 +189,37 @@ select
         </where>
         order by fu.lately_time desc
     </select>
+
+
+    <resultMap id="educationPage"
+               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserEducationPageResponse">
+    </resultMap>
+    <select id="getUserEducationPage" resultMap="educationPage"
+            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+        select
+        fu.id,
+        fu.create_time,
+        fu.status,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.gender,
+        fu.city,
+        fu.additional->>'$.educationAuth' as educationAuth,
+        fu.user_type,
+        fu.lately_time
+        from
+        fr_user fu
+        <where>
+            fu.del_flag=0
+            <if test="authStatus!=null">
+                and fu.additional->>'$.educationAuth'=#{authStatus}
+            </if>
+            <if test="userType!=null">
+                and fu.user_type=#{userType}
+            </if>
+        </where>
+        order by fu.lately_time desc
+    </select>
+
+
 </mapper>

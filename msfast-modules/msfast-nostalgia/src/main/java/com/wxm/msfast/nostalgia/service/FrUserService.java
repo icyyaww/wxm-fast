@@ -5,10 +5,7 @@ import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.IdentityExamineInfoResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserExamineInfoResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
-import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
@@ -67,5 +64,11 @@ public interface FrUserService extends IService<FrUserEntity> {
     void identityExamine(UserExamineRequest request);
 
     IdentityExamineInfoResponse identityExamine(Integer id);
+
+    PageResult<UserEducationPageResponse> userEducationPage(UserPageRequest request, Integer pageIndex, Integer pageSize);
+
+    EducationExamineInfoResponse educationExamine(Integer id);
+
+    void educationExamine(UserExamineRequest request);
 }
 
