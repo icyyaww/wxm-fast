@@ -65,6 +65,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.websocket.heartbeat-time:30}")
     private int heartBeatTime;
 
+    @Value("${wxmfast.config.websocket.resend-time:600}")
+    private Long resendTime;
+
     @Value("${wxmfast.config.websocket.only-one:false}")
     private Boolean onlyOne;
 
@@ -185,6 +188,17 @@ public class ConfigConstants {
      */
     public static int HEART_BEAT_TIME() {
         return SpringUtils.getBean(ConfigConstants.class).getHeartBeatTime();
+    }
+
+    /**
+     * @Description: 消息重新发送保持时间
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/2/28 下午3:36
+     */
+    public static Long RESEND_TIME() {
+        return SpringUtils.getBean(ConfigConstants.class).getResendTime();
     }
 
     /*

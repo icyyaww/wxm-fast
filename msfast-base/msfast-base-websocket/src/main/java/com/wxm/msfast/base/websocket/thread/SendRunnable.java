@@ -78,7 +78,7 @@ public class SendRunnable implements Runnable {
         channelUtil.sendText(messageInfo.getAcceptUserId(), JSON.toJSONString(baseMessageInfoResponse));
 
         //todo 需要删除
-        redisService.setCacheObject(baseMessageInfoResponse.getMsgNo(), Constants.MSG_ANSWER, Long.parseLong(String.valueOf(ConfigConstants.HEART_BEAT_TIME())), TimeUnit.SECONDS);
+        redisService.setCacheObject(baseMessageInfoResponse.getMsgNo(), Constants.MSG_ANSWER, ConfigConstants.RESEND_TIME(), TimeUnit.SECONDS);
         while (true) {
             try {
                 Thread.sleep(1000);
