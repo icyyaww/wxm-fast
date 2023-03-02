@@ -221,5 +221,59 @@ select
         order by fu.lately_time desc
     </select>
 
+    <resultMap id="userInfoPage"
+               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserInfoPageResponse">
+    </resultMap>
+    <select id="getUserInfoPage" resultMap="userInfoPage"
+            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest">
+        select
+        fu.id,
+        fu.create_time,
+        fu.status,
+        fu.head_portrait,
+        fu.nick_name,
+        fu.gender,
+        fu.city,
+        fu.user_type,
+        fu.lately_time,
+        fu.auth_status
+        from
+        fr_user fu
+        <where>
+            fu.del_flag=0
+            <if test="userType!=null">
+                and fu.user_type=#{userType}
+            </if>
+            <if test="nickName!=null and nickName!=''">
+                and fu.nick_name like '%${nickName}%'
+            </if>
+            <if test="gender!=null">
+                and fu.gender=#{gender}
+            </if>
+            <if test="city!=null and city!=''">
+                and fu.city like '%${city}%'
+            </if>
+            <if test="status!=null">
+                and fu.status=#{status}
+            </if>
+            <if test="authStatus!=null">
+                and fu.auth_status=#{authStatus}
+            </if>
+            <if test="createTimeStart!=null and createTimeStart!=''">
+                <![CDATA[ and DATE_FORMAT(fu.create_time, '%Y-%m-%d %T')>=  DATE_FORMAT(#{createTimeStart}, '%Y-%m-%d 00:00:00') ]]>
+            </if>
+            <if test="createTimeEnd!=null and createTimeEnd!=''">
+                <![CDATA[ and DATE_FORMAT(fu.create_time, '%Y-%m-%d %T')<=  DATE_FORMAT(#{createTimeEnd}, '%Y-%m-%d 23:59:59') ]]>
+            </if>
+            <if test="latelyTimeStart!=null and latelyTimeStart!=''">
+                <![CDATA[ and DATE_FORMAT(fu.lately_time, '%Y-%m-%d %T')>=  DATE_FORMAT(#{latelyTimeStart}, '%Y-%m-%d 00:00:00') ]]>
+            </if>
+            <if test="latelyTimeEnd!=null and latelyTimeEnd!=''">
+                <![CDATA[ and DATE_FORMAT(fu.lately_time, '%Y-%m-%d %T')<=  DATE_FORMAT(#{latelyTimeEnd}, '%Y-%m-%d 23:59:59') ]]>
+            </if>
+        </where>
+        order by fu.lately_time desc
+    </select>
+
 
 </mapper>

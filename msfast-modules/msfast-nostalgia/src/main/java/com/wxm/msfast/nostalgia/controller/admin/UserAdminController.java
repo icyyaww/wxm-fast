@@ -4,6 +4,7 @@ import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
@@ -113,5 +114,19 @@ public class UserAdminController {
     public R<Void> educationExamine(@RequestBody UserExamineRequest request) {
         frUserService.educationExamine(request);
         return R.ok();
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageIndex", value = "页码", defaultValue = "1"),
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestParam, name = "pageSize", value = "数量", defaultValue = "10")
+    })
+    @ApiOperation("用户列表")
+    @ApiOperationSort(value = 10)
+    @GetMapping("/user/page")
+    public R<PageResult<UserInfoPageResponse>> userPage(
+            UserInfoRequest request,
+            @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
+        return R.ok(frUserService.userPage(request, pageIndex, pageSize));
     }
 }

@@ -18,6 +18,7 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
@@ -712,6 +713,14 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public PageResult<UserInfoPageResponse> userPage(UserInfoRequest request, Integer pageIndex, Integer pageSize) {
+        Page<UserInfoPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
+        this.baseMapper.getUserInfoPage(request);
+        PageResult<UserInfoPageResponse> result = new PageResult<>(page);
+        return result;
     }
 
 

@@ -1,6 +1,5 @@
 package com.wxm.msfast.nostalgia.common.exception;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.wxm.msfast.base.common.interfaces.BaseExceptionEnumInterface;
 
 public enum UserExceptionEnum implements BaseExceptionEnumInterface {

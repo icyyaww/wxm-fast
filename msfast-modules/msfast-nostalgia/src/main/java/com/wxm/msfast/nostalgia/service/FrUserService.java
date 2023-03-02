@@ -2,6 +2,7 @@ package com.wxm.msfast.nostalgia.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wxm.msfast.base.common.utils.PageResult;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
@@ -70,5 +71,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     EducationExamineInfoResponse educationExamine(Integer id);
 
     void educationExamine(UserExamineRequest request);
+
+    PageResult<UserInfoPageResponse> userPage(UserInfoRequest request, Integer pageIndex, Integer pageSize);
 }
 
