@@ -98,9 +98,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
         } else {
-            RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
-            try {
-                lock.lock();
                 //已登录
                 FrUserEntity frUserEntity = this.getById(loginUser.getId());
                 Map<String, Object> param = new HashMap<>();
@@ -146,9 +143,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
 
                 return getRecommendUserInfoByParam(param, numSize);
-            } finally {
-                lock.unlock();
-            }
         }
     }
 
