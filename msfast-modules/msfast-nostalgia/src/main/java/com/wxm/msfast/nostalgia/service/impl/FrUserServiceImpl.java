@@ -718,6 +718,13 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Override
     public PageResult<UserInfoPageResponse> userPage(UserInfoRequest request, Integer pageIndex, Integer pageSize) {
+        if (StringUtils.isNotBlank(request.getNickName())) {
+            request.setNickName("%" + request.getNickName() + "%");
+        }
+
+        if (StringUtils.isNotBlank(request.getCity())) {
+            request.setCity("%" + request.getCity() + "%");
+        }
         Page<UserInfoPageResponse> page = PageHelper.startPage(pageIndex, pageSize);
         this.baseMapper.getUserInfoPage(request);
         PageResult<UserInfoPageResponse> result = new PageResult<>(page);

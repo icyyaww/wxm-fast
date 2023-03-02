@@ -245,13 +245,13 @@ select
                 and fu.user_type=#{userType}
             </if>
             <if test="nickName!=null and nickName!=''">
-                and fu.nick_name like '%${nickName}%'
+                and fu.nick_name like #{nickName}
             </if>
             <if test="gender!=null">
                 and fu.gender=#{gender}
             </if>
             <if test="city!=null and city!=''">
-                and fu.city like '%${city}%'
+                and fu.city like #{city}
             </if>
             <if test="status!=null">
                 and fu.status=#{status}
