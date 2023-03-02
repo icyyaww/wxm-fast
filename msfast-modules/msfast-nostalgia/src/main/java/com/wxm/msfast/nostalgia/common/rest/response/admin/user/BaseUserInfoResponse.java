@@ -7,9 +7,7 @@ import com.wxm.msfast.nostalgia.common.enums.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @program: wxm-fast
@@ -20,7 +18,6 @@ import java.util.List;
 
 @Data
 public class BaseUserInfoResponse {
-
 
     /**
      * 主键
@@ -190,6 +187,4 @@ public class BaseUserInfoResponse {
     @ApiModelProperty(value = "金币余额")
     private Integer goldBalance;
 
-    @ApiModelProperty(value = "版本")
-    private Integer version;
 }

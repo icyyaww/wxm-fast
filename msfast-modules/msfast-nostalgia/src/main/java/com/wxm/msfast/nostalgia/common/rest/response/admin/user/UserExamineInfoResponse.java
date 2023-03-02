@@ -38,4 +38,7 @@ public class UserExamineInfoResponse extends BaseUserInfoResponse {
      */
     @ApiModelProperty(value = "用户资料状态")
     private AuthStatusEnum authStatus;
+
+    @ApiModelProperty(value = "版本")
+    private Integer version;
 }

@@ -7,7 +7,6 @@ import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineReques
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
-import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,5 +127,12 @@ public class UserAdminController {
             @RequestParam(value = "pageIndex", required = false, defaultValue = "1") Integer pageIndex,
             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize) {
         return R.ok(frUserService.userPage(request, pageIndex, pageSize));
+    }
+
+    @ApiOperation("用户详情")
+    @ApiOperationSort(value = 11)
+    @GetMapping("/userInfo/{id}")
+    public R<UserAdminInfoResponse> userAdminInfo(@PathVariable Integer id) {
+        return R.ok(frUserService.userAdminInfo(id));
     }
 }

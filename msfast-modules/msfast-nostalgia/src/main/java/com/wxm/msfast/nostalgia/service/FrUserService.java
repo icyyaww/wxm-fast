@@ -8,6 +8,7 @@ import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
 
@@ -73,5 +74,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     void educationExamine(UserExamineRequest request);
 
     PageResult<UserInfoPageResponse> userPage(UserInfoRequest request, Integer pageIndex, Integer pageSize);
+
+    UserAdminInfoResponse userAdminInfo(Integer id);
 }
 

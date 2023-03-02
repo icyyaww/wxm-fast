@@ -24,6 +24,7 @@ import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoResponse;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
 import com.wxm.msfast.nostalgia.service.*;
@@ -99,51 +100,51 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
         } else {
-                //已登录
-                FrUserEntity frUserEntity = this.getById(loginUser.getId());
-                Map<String, Object> param = new HashMap<>();
-                param.put("gender", frUserEntity.getGender().name());
-                param.put("selfId", frUserEntity.getId());
-                Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
-                param.put("size", numSize);
+            //已登录
+            FrUserEntity frUserEntity = this.getById(loginUser.getId());
+            Map<String, Object> param = new HashMap<>();
+            param.put("gender", frUserEntity.getGender().name());
+            param.put("selfId", frUserEntity.getId());
+            Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+            param.put("size", numSize);
 
-                //默认配置信息
-                Calendar calendarStart = Calendar.getInstance();
-                calendarStart.setTime(frUserEntity.getBirthday());
-                calendarStart.add(Calendar.YEAR, -Constants.AGE_DIFFER);
-                param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
-                Calendar calendarEnd = Calendar.getInstance();
-                calendarEnd.setTime(frUserEntity.getBirthday());
-                calendarEnd.add(Calendar.YEAR, Constants.AGE_DIFFER);
-                param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
+            //默认配置信息
+            Calendar calendarStart = Calendar.getInstance();
+            calendarStart.setTime(frUserEntity.getBirthday());
+            calendarStart.add(Calendar.YEAR, -Constants.AGE_DIFFER);
+            param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
+            Calendar calendarEnd = Calendar.getInstance();
+            calendarEnd.setTime(frUserEntity.getBirthday());
+            calendarEnd.add(Calendar.YEAR, Constants.AGE_DIFFER);
+            param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
 
-                if (StringUtils.isNotBlank(frUserEntity.getCity())) {
-                    List<String> city = new ArrayList<>();
-                    city.add(frUserEntity.getCity());
-                    param.put("city", city);
+            if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+                List<String> city = new ArrayList<>();
+                city.add(frUserEntity.getCity());
+                param.put("city", city);
+            }
+
+            //根据配置信息搜索
+            RecommendConfigEntity recommendConfigEntity = this.recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
+            if (recommendConfigEntity != null) {
+                if (CollectionUtil.isNotEmpty(recommendConfigEntity.getCity())) {
+                    param.put("city", recommendConfigEntity.getCity());
                 }
 
-                //根据配置信息搜索
-                RecommendConfigEntity recommendConfigEntity = this.recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
-                if (recommendConfigEntity != null) {
-                    if (CollectionUtil.isNotEmpty(recommendConfigEntity.getCity())) {
-                        param.put("city", recommendConfigEntity.getCity());
-                    }
-
-                    if (recommendConfigEntity.getMinAge() != null) {
-                        Calendar calendarEndConfig = Calendar.getInstance();
-                        calendarEndConfig.add(Calendar.YEAR, -recommendConfigEntity.getMinAge());
-                        param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEndConfig.getTime())));
-                    }
-
-                    if (recommendConfigEntity.getMaxAge() != null) {
-                        Calendar calendarStartConfig = Calendar.getInstance();
-                        calendarStartConfig.add(Calendar.YEAR, -recommendConfigEntity.getMaxAge());
-                        param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
-                    }
+                if (recommendConfigEntity.getMinAge() != null) {
+                    Calendar calendarEndConfig = Calendar.getInstance();
+                    calendarEndConfig.add(Calendar.YEAR, -recommendConfigEntity.getMinAge());
+                    param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEndConfig.getTime())));
                 }
 
-                return getRecommendUserInfoByParam(param, numSize);
+                if (recommendConfigEntity.getMaxAge() != null) {
+                    Calendar calendarStartConfig = Calendar.getInstance();
+                    calendarStartConfig.add(Calendar.YEAR, -recommendConfigEntity.getMaxAge());
+                    param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
+                }
+            }
+
+            return getRecommendUserInfoByParam(param, numSize);
         }
     }
 
@@ -721,6 +722,22 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         this.baseMapper.getUserInfoPage(request);
         PageResult<UserInfoPageResponse> result = new PageResult<>(page);
         return result;
+    }
+
+    @Override
+    public UserAdminInfoResponse userAdminInfo(Integer id) {
+
+        UserAdminInfoResponse response = new UserAdminInfoResponse();
+        FrUserEntity frUserEntity = this.baseMapper.selectById(id);
+        if (frUserEntity == null) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+        if (frUserEntity.getAdditional() != null) {
+            BeanUtils.copyProperties(frUserEntity.getAdditional(), response);
+        }
+        BeanUtils.copyProperties(frUserEntity, response);
+        response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+        return response;
     }
 
 

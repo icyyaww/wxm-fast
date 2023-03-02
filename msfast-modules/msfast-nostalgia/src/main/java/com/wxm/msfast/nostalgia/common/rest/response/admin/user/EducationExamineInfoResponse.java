@@ -27,4 +27,7 @@ public class EducationExamineInfoResponse extends BaseUserInfoResponse {
 
     @ApiModelProperty(value = "备注")
     private String remarks;
+
+    @ApiModelProperty(value = "版本")
+    private Integer version;
 }
