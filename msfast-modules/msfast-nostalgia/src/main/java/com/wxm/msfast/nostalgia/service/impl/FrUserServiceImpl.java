@@ -749,8 +749,20 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
+    @Transactional
     public void updateUser(UserAdminInfoAddRequest request) {
 
+        if (request.getId() != null) {
+            FrUserEntity frUserEntity = this.baseMapper.selectById(request.getId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+
+            if (!UserTypeEnum.Dummy.equals(frUserEntity.getUserType())) {
+                throw new JrsfException(UserExceptionEnum.USER_NOT_DUMMY_EXCEPTION);
+            }
+            msfFileService.deleteImg(frUserEntity.getImgList(), request.getImgList());
+        }
         FrUserEntity frUserEntity = new FrUserEntity();
         BeanUtils.copyProperties(request, frUserEntity);
         frUserEntity.setOpenId("");
@@ -765,6 +777,12 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         additionalResponse.setIdentityAuth(AuthStatusEnum.PASS);
         frUserEntity.setAdditional(additionalResponse);
         saveOrUpdate(frUserEntity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteUser(Integer id) {
+        this.removeById(id);
     }
 
 

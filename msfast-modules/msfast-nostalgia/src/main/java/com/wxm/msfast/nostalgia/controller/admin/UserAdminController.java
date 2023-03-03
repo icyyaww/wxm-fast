@@ -146,4 +146,13 @@ public class UserAdminController {
         frUserService.updateUser(request);
         return R.ok();
     }
+
+    @ApiOperation("删除用户")
+    @ApiOperationSort(value = 13)
+    @DeleteMapping("/delete/user/{id}")
+    public R<Void> deleteUser(@PathVariable Integer id) {
+
+        frUserService.deleteUser(id);
+        return R.ok();
+    }
 }

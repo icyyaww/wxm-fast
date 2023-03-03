@@ -79,5 +79,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     UserAdminInfoResponse userAdminInfo(Integer id);
 
     void updateUser(UserAdminInfoAddRequest request);
+
+    void deleteUser(Integer id);
 }
 

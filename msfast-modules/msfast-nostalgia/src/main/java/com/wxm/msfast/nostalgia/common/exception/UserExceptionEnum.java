@@ -11,7 +11,9 @@ public enum UserExceptionEnum implements BaseExceptionEnumInterface {
     NEW_URL_NOT_EMPTY_EXCEPTION(12005, "新图片地址不可为空"),
     OLD_URL_NOT_EMPTY_EXCEPTION(12006, "旧图片地址不可为空"),
     USER_VERSION_DIFFERENT_EXCEPTION(12007, "用户信息已变更"),
-    USER_AUTH_NOT_PASS_EXCEPTION(12008, "用户资料审核暂未通过");
+    USER_AUTH_NOT_PASS_EXCEPTION(12008, "用户资料审核暂未通过"),
+    USER_NOT_DUMMY_EXCEPTION(12009, "用户不是虚拟用户")
+    ;
 
     private Integer code;
     private String msg;
