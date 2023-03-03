@@ -1,14 +1,11 @@
 package com.wxm.msfast.nostalgia.common.rest.request.admin.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.UserTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @program: wxm-fast

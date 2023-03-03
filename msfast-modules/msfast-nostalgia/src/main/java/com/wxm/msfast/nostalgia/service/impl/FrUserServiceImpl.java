@@ -18,6 +18,7 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserAdminInfoAddRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
@@ -745,6 +746,25 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         BeanUtils.copyProperties(frUserEntity, response);
         response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
         return response;
+    }
+
+    @Override
+    public void updateUser(UserAdminInfoAddRequest request) {
+
+        FrUserEntity frUserEntity = new FrUserEntity();
+        BeanUtils.copyProperties(request, frUserEntity);
+        frUserEntity.setOpenId("");
+        frUserEntity.setSessionKey("");
+        if (CollectionUtil.isNotEmpty(request.getImgList())) {
+            frUserEntity.setHeadPortrait(request.getImgList().get(0));
+        }
+        frUserEntity.setUserType(UserTypeEnum.Dummy);
+        frUserEntity.setAuthStatus(AuthStatusEnum.PASS);
+        AdditionalResponse additionalResponse = new AdditionalResponse();
+        additionalResponse.setEducationAuth(AuthStatusEnum.PASS);
+        additionalResponse.setIdentityAuth(AuthStatusEnum.PASS);
+        frUserEntity.setAdditional(additionalResponse);
+        saveOrUpdate(frUserEntity);
     }
 
 

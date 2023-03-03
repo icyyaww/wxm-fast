@@ -3,9 +3,11 @@ package com.wxm.msfast.nostalgia.controller.admin;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserAdminInfoAddRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.auth.DoubleAuthRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.*;
@@ -134,5 +136,14 @@ public class UserAdminController {
     @GetMapping("/userInfo/{id}")
     public R<UserAdminInfoResponse> userAdminInfo(@PathVariable Integer id) {
         return R.ok(frUserService.userAdminInfo(id));
+    }
+
+    @ApiOperation("添加或编辑用户")
+    @ApiOperationSort(value = 12)
+    @PostMapping("/update")
+    public R<Void> updateUser(@RequestBody UserAdminInfoAddRequest request) {
+
+        frUserService.updateUser(request);
+        return R.ok();
     }
 }
