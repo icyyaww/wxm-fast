@@ -55,11 +55,12 @@ public class SendRunnable implements Runnable {
         log.info("开始发送消息");
         BaseMessageInfoResponse baseMessageInfoResponse = new BaseMessageInfoResponse();
         BeanUtils.copyProperties(messageInfo, baseMessageInfoResponse);
-        baseMessageInfoResponse.setMsgNo(UUID.fastUUID().toString());
+        baseMessageInfoResponse.setMsgNo(UUID.fastUUID().toString().replaceAll("-",""));
 
         //消息持久化
         MessageInfoResponse messageInfoResponse = new MessageInfoResponse();
         BeanUtils.copyProperties(messageInfo, messageInfoResponse);
+        messageInfoResponse.setMsgNo(baseMessageInfoResponse.getMsgNo());
         redisService.redisTemplate.opsForZSet().add(channelUtil.getMessageInfoKey(messageInfo.getSendUserId(), messageInfo.getAcceptUserId()), messageInfoResponse, System.currentTimeMillis());
 
         //修改未读数

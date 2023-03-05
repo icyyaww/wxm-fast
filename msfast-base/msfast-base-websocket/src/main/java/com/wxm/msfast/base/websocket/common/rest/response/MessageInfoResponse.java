@@ -20,4 +20,12 @@ public class MessageInfoResponse {
 
     private String messageFormat;
 
+    private String msgNo;
+
+    private Boolean self;
+
+    private String nickName;
+
+    private String headPortrait;
+
 }

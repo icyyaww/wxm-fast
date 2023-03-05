@@ -101,51 +101,59 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
             return userInfoResponse;
         } else {
-            //已登录
-            FrUserEntity frUserEntity = this.getById(loginUser.getId());
-            Map<String, Object> param = new HashMap<>();
-            param.put("gender", frUserEntity.getGender().name());
-            param.put("selfId", frUserEntity.getId());
-            Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
-            param.put("size", numSize);
 
-            //默认配置信息
-            Calendar calendarStart = Calendar.getInstance();
-            calendarStart.setTime(frUserEntity.getBirthday());
-            calendarStart.add(Calendar.YEAR, -Constants.AGE_DIFFER);
-            param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
-            Calendar calendarEnd = Calendar.getInstance();
-            calendarEnd.setTime(frUserEntity.getBirthday());
-            calendarEnd.add(Calendar.YEAR, Constants.AGE_DIFFER);
-            param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
+            RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
+            try {
+                lock.lock();
+                //已登录
+                FrUserEntity frUserEntity = this.getById(loginUser.getId());
+                Map<String, Object> param = new HashMap<>();
+                param.put("gender", frUserEntity.getGender().name());
+                param.put("selfId", frUserEntity.getId());
+                Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+                param.put("size", numSize);
 
-            if (StringUtils.isNotBlank(frUserEntity.getCity())) {
-                List<String> city = new ArrayList<>();
-                city.add(frUserEntity.getCity());
-                param.put("city", city);
+                //默认配置信息
+                Calendar calendarStart = Calendar.getInstance();
+                calendarStart.setTime(frUserEntity.getBirthday());
+                calendarStart.add(Calendar.YEAR, -Constants.AGE_DIFFER);
+                param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStart.getTime())));
+                Calendar calendarEnd = Calendar.getInstance();
+                calendarEnd.setTime(frUserEntity.getBirthday());
+                calendarEnd.add(Calendar.YEAR, Constants.AGE_DIFFER);
+                param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
+
+                if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+                    List<String> city = new ArrayList<>();
+                    city.add(frUserEntity.getCity());
+                    param.put("city", city);
+                }
+
+                //根据配置信息搜索
+                RecommendConfigEntity recommendConfigEntity = this.recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
+                if (recommendConfigEntity != null) {
+                    if (CollectionUtil.isNotEmpty(recommendConfigEntity.getCity())) {
+                        param.put("city", recommendConfigEntity.getCity());
+                    }
+
+                    if (recommendConfigEntity.getMinAge() != null) {
+                        Calendar calendarEndConfig = Calendar.getInstance();
+                        calendarEndConfig.add(Calendar.YEAR, -recommendConfigEntity.getMinAge());
+                        param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEndConfig.getTime())));
+                    }
+
+                    if (recommendConfigEntity.getMaxAge() != null) {
+                        Calendar calendarStartConfig = Calendar.getInstance();
+                        calendarStartConfig.add(Calendar.YEAR, -recommendConfigEntity.getMaxAge());
+                        param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
+                    }
+                }
+
+                return getRecommendUserInfoByParam(param, numSize);
+            } finally {
+                lock.unlock();
             }
 
-            //根据配置信息搜索
-            RecommendConfigEntity recommendConfigEntity = this.recommendConfigService.getRecommendConfigByUserId(TokenUtils.getOwnerId());
-            if (recommendConfigEntity != null) {
-                if (CollectionUtil.isNotEmpty(recommendConfigEntity.getCity())) {
-                    param.put("city", recommendConfigEntity.getCity());
-                }
-
-                if (recommendConfigEntity.getMinAge() != null) {
-                    Calendar calendarEndConfig = Calendar.getInstance();
-                    calendarEndConfig.add(Calendar.YEAR, -recommendConfigEntity.getMinAge());
-                    param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEndConfig.getTime())));
-                }
-
-                if (recommendConfigEntity.getMaxAge() != null) {
-                    Calendar calendarStartConfig = Calendar.getInstance();
-                    calendarStartConfig.add(Calendar.YEAR, -recommendConfigEntity.getMaxAge());
-                    param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
-                }
-            }
-
-            return getRecommendUserInfoByParam(param, numSize);
         }
     }
 

@@ -16,6 +16,7 @@ import com.wxm.msfast.base.websocket.common.rest.response.MessageListResponse;
 import com.wxm.msfast.base.websocket.service.IImService;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.base.websocket.utils.ChannelUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,34 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
     @Override
     public PageResult<MessageInfoResponse> getMessageInfoRange(Integer sendUserId, Integer pageIndex, Integer pageSize) {
 
-        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), sendUserId), (pageIndex - 1) * pageSize, (pageIndex - 1) * pageSize + pageSize - 1);
+        Integer ownerId = TokenUtils.getOwnerId();
+        Set<MessageInfoResponse> reverseRange = redisService.redisTemplate.opsForZSet().reverseRange(channelUtil.getMessageInfoKey(ownerId, sendUserId), (pageIndex - 1) * pageSize, (pageIndex - 1) * pageSize + pageSize - 1);
         Long total = redisService.redisTemplate.opsForZSet().size(channelUtil.getMessageInfoKey(TokenUtils.getOwnerId(), sendUserId));
+
+        if (CollectionUtil.isNotEmpty(reverseRange)) {
+            ImUserInfoResponse sendUser = null;
+            ImUserInfoResponse selfUser = null;
+            IImService iImService = SpringBeanUtils.getBean(IImService.class);
+            if (iImService != null) {
+                sendUser = iImService.getImUser(sendUserId);
+                selfUser = iImService.getImUser(ownerId);
+            }
+            ImUserInfoResponse finalSelfUser = selfUser;
+            ImUserInfoResponse finalSendUser = sendUser;
+            reverseRange.forEach(model -> {
+                if (ownerId.equals(model.getSendUserId())) {
+                    model.setSelf(true);
+                    if (finalSelfUser != null) {
+                        BeanUtils.copyProperties(finalSelfUser, model);
+                    }
+                } else {
+                    model.setSelf(false);
+                    if (finalSendUser != null) {
+                        BeanUtils.copyProperties(finalSendUser, model);
+                    }
+                }
+            });
+        }
         PageResult<MessageInfoResponse> result = new PageResult<>(total, pageIndex, pageSize, reverseRange);
         updateUnRead(sendUserId);
         return result;

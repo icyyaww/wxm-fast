@@ -1,6 +1,7 @@
 package com.wxm.msfast.nostalgia.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
@@ -101,6 +102,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
             Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
             Integer count = Integer.parseInt(this.matchingNum().toString());
+            System.out.println("请求用户"+JSON.toJSONString(request)+"已经滑了："+count+"个");
             if (num.compareTo(count) <= 0) {
                 throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
             }
@@ -110,6 +112,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                     .eq(UserMatchingEntity::getUserId, userId)
                     .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
             Long matchingCount = this.baseMapper.selectCount(wrapper);
+            System.out.println("请求用户"+JSON.toJSONString(request)+"是否滑了"+matchingCount);
             if (matchingCount == 0) {
                 UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
                 BeanUtils.copyProperties(request, userMatchingEntity);
@@ -159,7 +162,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                     }
 
                 }
-
+                System.out.println("入库："+JSON.toJSONString(userMatchingEntity));
                 this.baseMapper.insert(userMatchingEntity);
             }
         } finally {
