@@ -29,6 +29,7 @@ import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoRespon
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
 import com.wxm.msfast.nostalgia.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -45,6 +46,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service("frUserService")
+@Slf4j
 public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> implements FrUserService {
 
     @Autowired
@@ -79,7 +81,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Override
     public RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request) {
-
+        log.info("查询用户列表开始");
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
         if (loginUser == null) {
@@ -107,6 +109,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
             try {
                 lock.lock();
+                log.info("查询用户列表 上锁");
                 //已登录
                 FrUserEntity frUserEntity = this.getById(loginUser.getId());
                 Map<String, Object> param = new HashMap<>();
@@ -151,6 +154,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
                 RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
                 Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+                log.info("查询用户列表 剩余匹配数：{}",numSize);
                 if (numSize == 0) {
                     return null;
                 }
@@ -160,6 +164,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 return userInfoResponse;
             } finally {
                 lock.unlock();
+                log.info("查询用户列表 解锁");
             }
 
         }

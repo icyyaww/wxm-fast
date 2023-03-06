@@ -28,24 +28,31 @@ import com.wxm.msfast.nostalgia.common.rest.response.front.matching.MatchingResp
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.msfast.nostalgia.dao.UserMatchingDao;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.wxm.msfast.nostalgia.service.UserMatchingService;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Calendar;
 import java.util.Date;
 
 
 @Service("userMatchingService")
+@Slf4j
 public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMatchingEntity> implements UserMatchingService {
 
     @Autowired
@@ -57,6 +64,8 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
     @Autowired
     MsFastMessageService msFastMessageService;
 
+    @Autowired
+    DataSourceTransactionManager transactionManager;
 
     @Override
     public Long matchingNum() {
@@ -82,95 +91,126 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
     }
 
     @Override
-    @Transactional
     public MatchingResponse match(ChoiceRequest request) {
-
-        MatchingResponse matchingResponse = new MatchingResponse(false);
+        log.info("开始匹配 用户id:{}", request.getOtherUser());
+        MatchingResponse matchingResponse;
         RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
         try {
             lock.lock();
-            Integer userId = TokenUtils.getOwnerId();
-            FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
-            FrUserEntity frUserEntity = frUserService.getById(userId);
-            if (frUserEntity == null) {
-                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
-            }
+            matchingResponse = matchUser(request);
+            log.info("查询用户id:{} 已经匹配的个数总数：{} 入库后", request.getOtherUser(), matchingNum());
+        } finally {
+            log.info("查询用户id:{} 已经匹配的个数总数：{} 解锁前", request.getOtherUser(), matchingNum());
+            lock.unlock();
+            log.info("查询用户id:{} 已经匹配的个数总数：{} 解锁", request.getOtherUser(), matchingNum());
+        }
+        return matchingResponse;
+    }
 
-            if (!AuthStatusEnum.PASS.equals(frUserEntity.getAuthStatus())) {
-                throw new JrsfException(UserExceptionEnum.USER_AUTH_NOT_PASS_EXCEPTION);
-            }
+    MatchingResponse matchUser(ChoiceRequest request) {
 
-            Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
-            Integer count = Integer.parseInt(this.matchingNum().toString());
-            if (num.compareTo(count) <= 0) {
-                throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
-            }
+        MatchingResponse matchingResponse = new MatchingResponse(false);
+        log.info("开始匹配上锁 用户id:{}", request.getOtherUser());
+        /*try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
+        Integer userId = TokenUtils.getOwnerId();
+        FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
+        FrUserEntity frUserEntity = frUserService.getById(userId);
+        if (frUserEntity == null) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+
+        if (!AuthStatusEnum.PASS.equals(frUserEntity.getAuthStatus())) {
+            throw new JrsfException(UserExceptionEnum.USER_AUTH_NOT_PASS_EXCEPTION);
+        }
+
+        Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
+        Integer count = Integer.parseInt(this.matchingNum().toString());
+        log.info("查询用户id:{} 历史匹配总数：{}", request.getOtherUser(), count);
+        if (num.compareTo(count) <= 0) {
+            throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
+        }
 
 
-            Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
-                    .eq(UserMatchingEntity::getUserId, userId)
-                    .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
-            Long matchingCount = this.baseMapper.selectCount(wrapper);
-            if (matchingCount == 0) {
-                UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
-                BeanUtils.copyProperties(request, userMatchingEntity);
-                userMatchingEntity.setUserId(userId);
+        Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                .eq(UserMatchingEntity::getUserId, userId)
+                .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
+        Long matchingCount = this.baseMapper.selectCount(wrapper);
+        log.info("查询用户id:{} 已经匹配的个数：{}", request.getOtherUser(), matchingCount);
+        if (matchingCount == 0) {
+            UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
+            BeanUtils.copyProperties(request, userMatchingEntity);
+            userMatchingEntity.setUserId(userId);
 
-                if (userMatchingEntity.getResult()) {
-                    int random = RandomUtil.randomInt(0, 3);
-                    if (frUserEntity != null) {
-                        String gender = GenderEnum.MALE.equals(frUserEntity.getGender()) ? "小哥哥" : "小姐姐";
-                        switch (random) {
-                            case 0:
-                                if (StringUtils.isNotBlank(frUserEntity.getCity())) {
-                                    userMatchingEntity.setDescInfo("一个" + frUserEntity.getCity() + "的" + gender);
-                                }
-                                break;
-                            case 1:
-                                userMatchingEntity.setDescInfo("一个" + DateUtils.getConstellation(frUserEntity.getBirthday()) + "的" + gender);
-                                break;
-                            default:
-                                if (frUserEntity.getBirthday() != null) {
-                                    userMatchingEntity.setDescInfo("一个" + DateUtils.getAgeByBirth(frUserEntity.getBirthday()) + "岁的" + gender);
-                                }
-                        }
-
-                        //判断对方是否也喜欢我了
-                        matchingResponse.setSelfId(frUserEntity.getId());
-                        matchingResponse.setSelfHeadPortrait(frUserEntity.getHeadPortrait());
-                        matchingResponse.setSelfNickName(frUserEntity.getNickName());
-
-                        Wrapper<UserMatchingEntity> wrapperOther = new QueryWrapper<UserMatchingEntity>().lambda()
-                                .eq(UserMatchingEntity::getUserId, request.getOtherUser())
-                                .eq(UserMatchingEntity::getOtherUser, userId)
-                                .eq(UserMatchingEntity::getResult, true);
-                        Long matchingOtherCount = this.baseMapper.selectCount(wrapperOther);
-                        if (matchingOtherCount > 0) {
-                            matchingResponse.setResult(true);
-                            FrUserEntity otherUser = frUserService.getById(request.getOtherUser());
-                            if (otherUser != null) {
-                                matchingResponse.setOtherHeadPortrait(otherUser.getHeadPortrait());
-                                matchingResponse.setOtherId(otherUser.getId());
-                                matchingResponse.setOtherNickName(otherUser.getNickName());
+            if (userMatchingEntity.getResult()) {
+                int random = RandomUtil.randomInt(0, 3);
+                if (frUserEntity != null) {
+                    String gender = GenderEnum.MALE.equals(frUserEntity.getGender()) ? "小哥哥" : "小姐姐";
+                    switch (random) {
+                        case 0:
+                            if (StringUtils.isNotBlank(frUserEntity.getCity())) {
+                                userMatchingEntity.setDescInfo("一个" + frUserEntity.getCity() + "的" + gender);
                             }
-
-                            //添加对话框
-                            addMessage(userId, request.getOtherUser());
-                        }
+                            break;
+                        case 1:
+                            userMatchingEntity.setDescInfo("一个" + DateUtils.getConstellation(frUserEntity.getBirthday()) + "的" + gender);
+                            break;
+                        default:
+                            if (frUserEntity.getBirthday() != null) {
+                                userMatchingEntity.setDescInfo("一个" + DateUtils.getAgeByBirth(frUserEntity.getBirthday()) + "岁的" + gender);
+                            }
                     }
 
+                    //判断对方是否也喜欢我了
+                    matchingResponse.setSelfId(frUserEntity.getId());
+                    matchingResponse.setSelfHeadPortrait(frUserEntity.getHeadPortrait());
+                    matchingResponse.setSelfNickName(frUserEntity.getNickName());
+
+                    Wrapper<UserMatchingEntity> wrapperOther = new QueryWrapper<UserMatchingEntity>().lambda()
+                            .eq(UserMatchingEntity::getUserId, request.getOtherUser())
+                            .eq(UserMatchingEntity::getOtherUser, userId)
+                            .eq(UserMatchingEntity::getResult, true);
+                    Long matchingOtherCount = this.baseMapper.selectCount(wrapperOther);
+                    if (matchingOtherCount > 0) {
+                        matchingResponse.setResult(true);
+                        FrUserEntity otherUser = frUserService.getById(request.getOtherUser());
+                        if (otherUser != null) {
+                            matchingResponse.setOtherHeadPortrait(otherUser.getHeadPortrait());
+                            matchingResponse.setOtherId(otherUser.getId());
+                            matchingResponse.setOtherNickName(otherUser.getNickName());
+                        }
+
+                        //添加对话框
+                        addMessage(userId, request.getOtherUser());
+                    }
                 }
-                this.baseMapper.insert(userMatchingEntity);
+
             }
-        } finally {
-            lock.unlock();
+            //2.获取事务定义
+            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+            //3.设置事务隔离级别，开启新事务
+            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+            //4.获得事务状态，相当于开启事物
+            TransactionStatus transactionStatus = transactionManager.getTransaction(def);
+            try {
+                //insert or update ...
+                log.info("查询用户id:{} 已经匹配的个数：{} 添加匹配", request.getOtherUser(), matchingCount);
+                this.baseMapper.insert(userMatchingEntity);
+                transactionManager.commit(transactionStatus);
+            } catch (Exception e) {
+                transactionManager.rollback(transactionStatus);
+            }
+
+
         }
         return matchingResponse;
     }
 
     @Async
     void addMessage(Integer userId, Integer otherUser) {
-
         BaseMessageInfo baseMessageInfo = new BaseMessageInfo();
         baseMessageInfo.setContent("配对成功");
         baseMessageInfo.setMessageFormat(MessageFormatEnum.text.name());
