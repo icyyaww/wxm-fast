@@ -36,7 +36,7 @@ public class FrUserController {
     @ApiOperationSort(value = 1)
     @GetMapping("/recommendUserInfo")
     @AuthIgnore
-    public R<List<RecommendUserInfoResponse>> recommendUserInfo(RecommendUserRequest request) {
+    public R<RecommendUserInfoResponse> recommendUserInfo(RecommendUserRequest request) {
         return R.ok(frUserService.getRecommendUserInfo(request));
     }
 

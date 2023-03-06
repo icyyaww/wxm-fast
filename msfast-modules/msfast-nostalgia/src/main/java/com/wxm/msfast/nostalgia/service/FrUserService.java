@@ -29,7 +29,7 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     FrUserEntity getFrUserByOpenId(String openId);
 
-    List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request);
+    RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request);
 
     void saveRecommendConfig(FrUserEntity frUserEntity);
 

@@ -78,7 +78,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     }
 
     @Override
-    public List<RecommendUserInfoResponse> getRecommendUserInfo(RecommendUserRequest request) {
+    public RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request) {
 
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
@@ -89,7 +89,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             }
             Map<String, Object> param = new HashMap<>();
             param.put("gender", request.getGender().name());
-            param.put("size", num);
 
             Calendar calendarStart = Calendar.getInstance();
             calendarStart.add(Calendar.YEAR, -(request.getAge() + Constants.AGE_DIFFER));
@@ -98,7 +97,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             Calendar calendarEnd = Calendar.getInstance();
             calendarEnd.add(Calendar.YEAR, -(request.getAge() - Constants.AGE_DIFFER));
             param.put("endDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.endOfYear(calendarEnd.getTime())));
-            List<RecommendUserInfoResponse> userInfoResponse = getRecommendUserInfoByParam(param, num);
+            RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
+            if (userInfoResponse != null) {
+                userInfoResponse.setSurplusNum(num);
+            }
             return userInfoResponse;
         } else {
 
@@ -110,8 +112,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 Map<String, Object> param = new HashMap<>();
                 param.put("gender", frUserEntity.getGender().name());
                 param.put("selfId", frUserEntity.getId());
-                Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
-                param.put("size", numSize);
+
 
                 //默认配置信息
                 Calendar calendarStart = Calendar.getInstance();
@@ -148,8 +149,12 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                         param.put("startDate", DateUtils.dateToStr("yyyy-MM-dd HH:mm:ss", DateUtil.beginOfYear(calendarStartConfig.getTime())));
                     }
                 }
-
-                return getRecommendUserInfoByParam(param, numSize);
+                RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
+                Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+                if (userInfoResponse != null) {
+                    userInfoResponse.setSurplusNum(numSize);
+                }
+                return userInfoResponse;
             } finally {
                 lock.unlock();
             }
@@ -873,22 +878,17 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         return completion.divide(total).multiply(new BigDecimal("100")).setScale(0, RoundingMode.DOWN).intValue();
     }
 
-    private List<RecommendUserInfoResponse> getRecommendUserInfoByParam(Map<String, Object> param, Integer num) {
+    private RecommendUserInfoResponse getRecommendUserInfoByParam(Map<String, Object> param) {
 
-        Integer max = 2;
-        //todo 测试为2 正式时为10
-        if (num > max) {
-            param.put("size", max);
-        }
+        param.put("size", 1);
         List<RecommendUserInfoResponse> list = this.baseMapper.getRecommendUserInfo(param);
-        AtomicReference<Integer> numAt = new AtomicReference<>(num);
         if (CollectionUtil.isNotEmpty(list)) {
             list.forEach(model -> {
                 model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
                 model.setConstellation(DateUtils.getConstellation(model.getBirthday()));
-                model.setSurplusNum(numAt.getAndSet(numAt.get() - 1));
             });
+            return list.get(0);
         }
-        return list;
+        return null;
     }
 }
