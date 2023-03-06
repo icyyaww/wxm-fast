@@ -151,6 +151,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
                 RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
                 Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
+                if (numSize == 0) {
+                    return null;
+                }
                 if (userInfoResponse != null) {
                     userInfoResponse.setSurplusNum(numSize);
                 }
