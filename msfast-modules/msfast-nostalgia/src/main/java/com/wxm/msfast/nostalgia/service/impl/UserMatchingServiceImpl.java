@@ -1,9 +1,9 @@
 package com.wxm.msfast.nostalgia.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
@@ -22,12 +22,16 @@ import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikeMePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.LikePageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.MatchingResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.matching.SuccessPageResponse;
+import com.wxm.msfast.nostalgia.dao.UserMatchingDao;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
+import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
+import com.wxm.msfast.nostalgia.service.UserMatchingService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
@@ -37,22 +41,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wxm.msfast.nostalgia.dao.UserMatchingDao;
-import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
-import com.wxm.msfast.nostalgia.service.UserMatchingService;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.Calendar;
 import java.util.Date;
 
 
 @Service("userMatchingService")
-@Slf4j
 public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMatchingEntity> implements UserMatchingService {
 
     @Autowired
@@ -81,28 +76,27 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
             String yesterStr = calendarLast.get(Calendar.YEAR) + "-" + (calendarLast.get(Calendar.MONTH) + 1) + "-" + calendarLast.get(Calendar.DATE) + " 12:00:00";
             //前一天12点
             Date yesterdayNoon = DateUtils.parseDate(yesterStr);
-            wrapper.apply("create_time>={0} and create_time<{1}", yesterdayNoon, calendar.getTime());
+            wrapper.apply("create_time>0={0} and create_time<{1}", yesterdayNoon, DateUtils.getEndTimeOfDay(calendar.getTime()));
+            //wrapper.apply("create_time>={0} and create_time<{1}", yesterdayNoon, calendar.getTime());
         } else {
             String strTodayNoon = calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DATE) + " 12:00:00";
             Date todayNoon = DateUtils.parseDate(strTodayNoon);
-            wrapper.apply("create_time>={0} and create_time<{1}", todayNoon, calendar.getTime());
+            //wrapper.apply("create_time>={0} and create_time<{1}", todayNoon, calendar.getTime());
+            wrapper.apply("create_time>={0} and create_time<{1}", todayNoon, DateUtils.getEndTimeOfDay(calendar.getTime()));
         }
         return this.baseMapper.selectCount(wrapper);
     }
 
     @Override
+    @Transactional
     public MatchingResponse match(ChoiceRequest request) {
-        log.info("开始匹配 用户id:{}", request.getOtherUser());
         MatchingResponse matchingResponse;
         RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
         try {
             lock.lock();
             matchingResponse = matchUser(request);
-            log.info("查询用户id:{} 已经匹配的个数总数：{} 入库后", request.getOtherUser(), matchingNum());
         } finally {
-            log.info("查询用户id:{} 已经匹配的个数总数：{} 解锁前", request.getOtherUser(), matchingNum());
             lock.unlock();
-            log.info("查询用户id:{} 已经匹配的个数总数：{} 解锁", request.getOtherUser(), matchingNum());
         }
         return matchingResponse;
     }
@@ -110,12 +104,6 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
     MatchingResponse matchUser(ChoiceRequest request) {
 
         MatchingResponse matchingResponse = new MatchingResponse(false);
-        log.info("开始匹配上锁 用户id:{}", request.getOtherUser());
-        /*try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
         Integer userId = TokenUtils.getOwnerId();
         FrUserService frUserService = SpringUtils.getBean(FrUserService.class);
         FrUserEntity frUserEntity = frUserService.getById(userId);
@@ -129,7 +117,6 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
 
         Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
         Integer count = Integer.parseInt(this.matchingNum().toString());
-        log.info("查询用户id:{} 历史匹配总数：{}", request.getOtherUser(), count);
         if (num.compareTo(count) <= 0) {
             throw new JrsfException(UserExceptionEnum.MATCHING_BEYOND_LIMIT_EXCEPTION);
         }
@@ -139,7 +126,6 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                 .eq(UserMatchingEntity::getUserId, userId)
                 .eq(UserMatchingEntity::getOtherUser, request.getOtherUser());
         Long matchingCount = this.baseMapper.selectCount(wrapper);
-        log.info("查询用户id:{} 已经匹配的个数：{}", request.getOtherUser(), matchingCount);
         if (matchingCount == 0) {
             UserMatchingEntity userMatchingEntity = new UserMatchingEntity();
             BeanUtils.copyProperties(request, userMatchingEntity);
@@ -189,22 +175,7 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
                 }
 
             }
-            //2.获取事务定义
-            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-            //3.设置事务隔离级别，开启新事务
-            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-            //4.获得事务状态，相当于开启事物
-            TransactionStatus transactionStatus = transactionManager.getTransaction(def);
-            try {
-                //insert or update ...
-                log.info("查询用户id:{} 已经匹配的个数：{} 添加匹配", request.getOtherUser(), matchingCount);
-                this.baseMapper.insert(userMatchingEntity);
-                transactionManager.commit(transactionStatus);
-            } catch (Exception e) {
-                transactionManager.rollback(transactionStatus);
-            }
-
-
+            this.baseMapper.insert(userMatchingEntity);
         }
         return matchingResponse;
     }

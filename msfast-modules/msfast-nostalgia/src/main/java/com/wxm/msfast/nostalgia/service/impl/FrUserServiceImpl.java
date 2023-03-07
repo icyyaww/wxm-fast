@@ -13,23 +13,25 @@ import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.*;
+import com.wxm.msfast.base.common.utils.DateUtils;
+import com.wxm.msfast.base.common.utils.PageResult;
+import com.wxm.msfast.base.common.utils.SpringUtils;
+import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserAdminInfoAddRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
-import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.OutlineResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
-import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoResponse;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
 import com.wxm.msfast.nostalgia.service.*;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -42,11 +44,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 @Service("frUserService")
-@Slf4j
 public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> implements FrUserService {
 
     @Autowired
@@ -81,7 +81,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Override
     public RecommendUserInfoResponse getRecommendUserInfo(RecommendUserRequest request) {
-        log.info("查询用户列表开始");
+
         LoginUser<LoginResponse> loginUser = TokenUtils.info(LoginResponse.class);
         Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));
         if (loginUser == null) {
@@ -109,14 +109,16 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
             try {
                 lock.lock();
-                log.info("查询用户列表 上锁");
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 //已登录
                 FrUserEntity frUserEntity = this.getById(loginUser.getId());
                 Map<String, Object> param = new HashMap<>();
                 param.put("gender", frUserEntity.getGender().name());
                 param.put("selfId", frUserEntity.getId());
-
-
                 //默认配置信息
                 Calendar calendarStart = Calendar.getInstance();
                 calendarStart.setTime(frUserEntity.getBirthday());
@@ -154,7 +156,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
                 RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
                 Integer numSize = num - Integer.valueOf(userMatchingService.matchingNum().toString());
-                log.info("查询用户列表 剩余匹配数：{}",numSize);
                 if (numSize == 0) {
                     return null;
                 }
@@ -164,7 +165,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 return userInfoResponse;
             } finally {
                 lock.unlock();
-                log.info("查询用户列表 解锁");
             }
 
         }
@@ -803,9 +803,26 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     @Transactional
     public void deleteUser(Integer id) {
+        FrUserEntity frUserEntity = this.baseMapper.selectById(id);
+        if (frUserEntity != null && !UserTypeEnum.Dummy.equals(frUserEntity.getUserType())) {
+            throw new JrsfException(UserExceptionEnum.USER_NOT_DUMMY_EXCEPTION);
+        }
         this.removeById(id);
     }
 
+    @Override
+    public OutlineResponse outline() {
+
+        OutlineResponse outlineResponse = new OutlineResponse();
+
+        //用户总数
+        Wrapper<FrUserEntity> queryWrapper = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal);
+        outlineResponse.setUserCount(count(queryWrapper));
+
+
+        return outlineResponse;
+    }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
         String name = "";

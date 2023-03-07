@@ -1,5 +1,6 @@
 package com.wxm.msfast.nostalgia.common.rest.response.front.matching;
 
+import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -42,4 +43,5 @@ public class MatchingResponse {
      */
     @ApiModelProperty(value = "对方的昵称")
     private String otherNickName;
+
 }

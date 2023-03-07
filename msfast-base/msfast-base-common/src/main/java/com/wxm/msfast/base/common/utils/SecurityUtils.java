@@ -18,6 +18,9 @@ public class SecurityUtils {
      * 根据request获取请求token
      */
     public static String getToken(HttpServletRequest request) {
+        if (request == null) {
+            return null;
+        }
         // 从header获取token标识
         String token = request.getHeader(ConfigConstants.AUTHENTICATION());
         return replaceTokenPrefix(token);
