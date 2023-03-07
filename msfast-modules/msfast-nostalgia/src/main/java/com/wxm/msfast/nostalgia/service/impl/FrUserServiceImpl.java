@@ -109,11 +109,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             RLock lock = redissonClient.getLock(Constants.MATCHING + TokenUtils.getOwnerId());
             try {
                 lock.lock();
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 //已登录
                 FrUserEntity frUserEntity = this.getById(loginUser.getId());
                 Map<String, Object> param = new HashMap<>();

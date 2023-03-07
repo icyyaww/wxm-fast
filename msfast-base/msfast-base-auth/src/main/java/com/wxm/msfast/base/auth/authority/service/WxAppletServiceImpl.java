@@ -30,13 +30,12 @@ public class WxAppletServiceImpl implements WxAppletService {
 
         WxAppletOpenResponse response = new WxAppletOpenResponse();
         //todo 测试数据需要删除
-        response.setOpenId("ofKw_4ylF-leswYTqtf3JD6VExHs");
+      /*  response.setOpenId("ofKw_4ylF-leswYTqtf3JD6VExHs");
         response.setSessionKey("dfg");
         response.setUnionId("hjk");
         if (true) {
             return response;
-        }
-
+        }*/
         if (StringUtils.isNotBlank(code)) {
             String appId = ConfigConstants.WX_APPLET_APPID();
             String secret = ConfigConstants.WX_APPLET_SECRET();
