@@ -141,4 +141,10 @@ public class RecommendUserInfoResponse {
 
     private Date birthday;
 
+    @ApiModelProperty(value = "用户认证状态 IdentityAuth(\"实名认证\"),\n" +
+            "    EducationAuth(\"学历认证\"),\n" +
+            "    DOUBLE(\"双重认证\")")
+    private UserAuthStatusEnum userAuthStatus;
+
+    private AdditionalResponse additional;
 }

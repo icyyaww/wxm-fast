@@ -1,8 +1,8 @@
 package com.wxm.msfast.nostalgia.common.enums;
 
 public enum EmotionalStatus {
-    Single("单身"),
-    Love("恋爱");
+    Single("正在寻觅"),
+    Love("恋爱中");
 
     private String desc;
 

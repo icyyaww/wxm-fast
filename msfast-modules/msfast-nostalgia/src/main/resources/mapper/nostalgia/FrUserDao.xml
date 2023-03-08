@@ -57,6 +57,8 @@
                 typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
         <result property="characterType" column="character_type"
                 typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+        <result property="additional" column="additional"
+                typeHandler="com.wxm.msfast.nostalgia.common.handle.AdditionalHandler"/>
     </resultMap>
 
     <!--首页推荐用户-->
@@ -83,7 +85,8 @@
         fu.character_type,
         fu.birthday,
         (select count(1) from user_matching um where um.del_flag=0 and
-        um.user_id=fu.id and um.other_user=#{selfId} and um.result=true) as mattrue
+        um.user_id=fu.id and um.other_user=#{selfId} and um.result=true) as mattrue,
+        fu.additional
         from
         fr_user fu
         <where>

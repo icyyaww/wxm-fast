@@ -940,6 +940,15 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             list.forEach(model -> {
                 model.setAge(DateUtils.getAgeByBirth(model.getBirthday()));
                 model.setConstellation(DateUtils.getConstellation(model.getBirthday()));
+                if (model.getAdditional() != null) {
+                    if (AuthStatusEnum.PASS.equals(model.getAdditional().getEducationAuth()) && AuthStatusEnum.PASS.equals(model.getAdditional().getIdentityAuth())) {
+                        model.setUserAuthStatus(UserAuthStatusEnum.DOUBLE);
+                    } else if (AuthStatusEnum.PASS.equals(model.getAdditional().getEducationAuth())) {
+                        model.setUserAuthStatus(UserAuthStatusEnum.EducationAuth);
+                    } else if (AuthStatusEnum.PASS.equals(model.getAdditional().getIdentityAuth())) {
+                        model.setUserAuthStatus(UserAuthStatusEnum.IdentityAuth);
+                    }
+                }
             });
             return list.get(0);
         }
