@@ -811,10 +811,42 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         OutlineResponse outlineResponse = new OutlineResponse();
 
         //用户总数
-        Wrapper<FrUserEntity> queryWrapper = new QueryWrapper<FrUserEntity>().lambda()
+        LambdaQueryWrapper<FrUserEntity> queryWrapper = new QueryWrapper<FrUserEntity>().lambda()
                 .eq(FrUserEntity::getUserType, UserTypeEnum.Normal);
         outlineResponse.setUserCount(count(queryWrapper));
 
+        //今天注册
+        Calendar calendar = Calendar.getInstance();
+        LambdaQueryWrapper<FrUserEntity> todayRegisterQuery = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal)
+                .ge(FrUserEntity::getCreateTime, DateUtils.getStartTimeOfDay(calendar.getTime()));
+        outlineResponse.setTodayRegister(count(todayRegisterQuery));
+
+        //今日在线
+        LambdaQueryWrapper<FrUserEntity> todayOnlineQuery = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal)
+                .ge(FrUserEntity::getLatelyTime, DateUtils.getStartTimeOfDay(calendar.getTime()));
+        outlineResponse.setTodayOnline(count(todayOnlineQuery));
+
+        //24小时注册
+        calendar.add(Calendar.HOUR, -24);
+        LambdaQueryWrapper<FrUserEntity> registerQuery = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal)
+                .ge(FrUserEntity::getCreateTime, calendar.getTime());
+        outlineResponse.setRegister24(count(registerQuery));
+
+        //24小时在线
+        LambdaQueryWrapper<FrUserEntity> onlineQuery = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal)
+                .ge(FrUserEntity::getLatelyTime, calendar.getTime());
+        outlineResponse.setOnline24(count(onlineQuery));
+
+        //昨日注册
+        LambdaQueryWrapper<FrUserEntity> registerYeardayQuery = new QueryWrapper<FrUserEntity>().lambda()
+                .eq(FrUserEntity::getUserType, UserTypeEnum.Normal)
+                .ge(FrUserEntity::getCreateTime, DateUtils.getStartTimeOfDay(calendar.getTime()))
+                .le(FrUserEntity::getCreateTime, DateUtils.getEndTimeOfDay(calendar.getTime()));
+        outlineResponse.setYesterdayRegister(count(registerYeardayQuery));
 
         return outlineResponse;
     }

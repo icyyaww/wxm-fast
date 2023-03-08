@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("admin/statistic")
-@Api(tags = "后台-用户管理")
+@Api(tags = "后台-用户统计")
 public class UserStatisticController {
 
     @Autowired

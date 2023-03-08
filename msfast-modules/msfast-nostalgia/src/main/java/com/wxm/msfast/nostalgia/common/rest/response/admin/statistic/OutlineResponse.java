@@ -16,12 +16,6 @@ public class OutlineResponse {
     @ApiModelProperty(value = "用户总数")
     private Long userCount;
 
-    @ApiModelProperty(value = "今日在线用户数")
-    private Long todayOnline;
-
-    @ApiModelProperty(value = "24小时内在线用户数")
-    private Long online24;
-
     @ApiModelProperty(value = "今日注册用户")
     private Long todayRegister;
 
@@ -30,4 +24,12 @@ public class OutlineResponse {
 
     @ApiModelProperty(value = "昨日注册用户")
     private Long yesterdayRegister;
+
+    @ApiModelProperty(value = "今日在线用户数")
+    private Long todayOnline;
+
+    @ApiModelProperty(value = "24小时内在线用户数")
+    private Long online24;
+
+
 }
