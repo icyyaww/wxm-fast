@@ -2,6 +2,7 @@ package com.wxm.msfast.nostalgia.dao;
 
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserEducationPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserInfoPageResponse;
@@ -36,4 +37,8 @@ public interface FrUserDao extends BaseMapper<FrUserEntity> {
     List<UserEducationPageResponse> getUserEducationPage(UserPageRequest request);
 
     List<UserInfoPageResponse> getUserInfoPage(UserInfoRequest request);
+
+    List<ProportionResponse> getGenderPie();
+
+    List<ProportionResponse> getCityBar();
 }

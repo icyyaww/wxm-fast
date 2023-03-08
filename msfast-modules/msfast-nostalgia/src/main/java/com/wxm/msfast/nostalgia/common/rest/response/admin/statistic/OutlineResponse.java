@@ -3,6 +3,8 @@ package com.wxm.msfast.nostalgia.common.rest.response.admin.statistic;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @program: wxm-fast
  * @description:
@@ -31,5 +33,10 @@ public class OutlineResponse {
     @ApiModelProperty(value = "24小时内在线用户数")
     private Long online24;
 
+    @ApiModelProperty(value = "性别饼图")
+    private List<ProportionResponse> genderPie;
+
+    @ApiModelProperty(value = "城市柱状图")
+    private List<ProportionResponse> cityBar;
 
 }

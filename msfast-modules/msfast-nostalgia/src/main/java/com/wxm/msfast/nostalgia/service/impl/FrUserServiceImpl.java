@@ -848,6 +848,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 .le(FrUserEntity::getCreateTime, DateUtils.getEndTimeOfDay(calendar.getTime()));
         outlineResponse.setYesterdayRegister(count(registerYeardayQuery));
 
+        outlineResponse.setGenderPie(this.baseMapper.getGenderPie());
+        outlineResponse.setCityBar(this.baseMapper.getCityBar());
         return outlineResponse;
     }
 

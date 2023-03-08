@@ -159,7 +159,6 @@ select
     </select>
 
 
-
     <resultMap id="identityResponse"
                type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse">
     </resultMap>
@@ -275,5 +274,42 @@ select
         order by fu.lately_time desc
     </select>
 
+    <resultMap id="genderPie"
+               type="com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse">
+    </resultMap>
+    <select id="getGenderPie" resultMap="genderPie">
+       select
+	count(1) as value,
+	case
+		fu.gender when 'MALE' then '男'
+		when 'FEMALE' then '女'
+		else '其他'
+	end as name
+from
+	fr_user fu
+group by
+	fu.gender,
+	fu.del_flag,
+	fu.user_type
+having
+	fu.del_flag = 0
+	and fu.user_type = 'Normal'
+    </select>
+
+    <select id="getCityBar" resultMap="genderPie">
+    select
+	count(1) as value,
+	fu.city as name
+from
+	fr_user fu
+group by
+    fu.city,
+	fu.del_flag,
+	fu.user_type
+having
+	fu.del_flag = 0
+	and fu.user_type = 'Normal'
+order by count(1) desc
+    </select>
 
 </mapper>
