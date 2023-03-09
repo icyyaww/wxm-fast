@@ -85,5 +85,6 @@ public interface FrUserService extends IService<FrUserEntity> {
 
     OutlineResponse outline();
 
+    FrontUserInfoResponse frontUserInfo(Integer id);
 }
 

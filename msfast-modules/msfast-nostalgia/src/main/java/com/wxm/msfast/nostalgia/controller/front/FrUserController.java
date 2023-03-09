@@ -114,4 +114,10 @@ public class FrUserController {
         return R.ok(frUserService.userInfo(id));
     }
 
+    @ApiOperation("前台用户详情")
+    @ApiOperationSort(value = 12)
+    @GetMapping("/front/userInfo/{id}")
+    public R<FrontUserInfoResponse> frontUserInfo(@PathVariable Integer id) {
+        return R.ok(frUserService.frontUserInfo(id));
+    }
 }

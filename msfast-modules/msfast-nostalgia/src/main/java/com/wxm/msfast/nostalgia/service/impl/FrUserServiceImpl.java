@@ -853,6 +853,49 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         return outlineResponse;
     }
 
+    @Override
+    public FrontUserInfoResponse frontUserInfo(Integer id) {
+
+        FrontUserInfoResponse response = new FrontUserInfoResponse();
+        FrUserEntity frUserEntity = this.getById(id);
+        if (frUserEntity == null) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+        }
+        BeanUtils.copyProperties(frUserEntity, response);
+        response.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
+        response.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
+        if (frUserEntity.getAdditional() != null) {
+            if (AuthStatusEnum.PASS.equals(frUserEntity.getAdditional().getEducationAuth()) && AuthStatusEnum.PASS.equals(frUserEntity.getAdditional().getIdentityAuth())) {
+                response.setUserAuthStatus(UserAuthStatusEnum.DOUBLE);
+            } else if (AuthStatusEnum.PASS.equals(frUserEntity.getAdditional().getIdentityAuth())) {
+                response.setUserAuthStatus(UserAuthStatusEnum.IdentityAuth);
+            } else if (AuthStatusEnum.PASS.equals(frUserEntity.getAdditional().getEducationAuth())) {
+                response.setUserAuthStatus(UserAuthStatusEnum.EducationAuth);
+            }
+        }
+        Integer ownerId = TokenUtils.getOwnerId();
+        List<Integer> userIdList = new ArrayList<>();
+
+        userIdList.add(id);
+        userIdList.add(ownerId);
+        Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                .in(UserMatchingEntity::getUserId, userIdList);
+        List<UserMatchingEntity> userMatchingEntityList = this.userMatchingService.getBaseMapper().selectList(wrapper);
+        if (CollectionUtil.isNotEmpty(userMatchingEntityList)) {
+            UserMatchingEntity selfResult= userMatchingEntityList.stream().filter(p->p.getUserId().equals(ownerId)).findFirst().orElse(null);
+            UserMatchingEntity otherResult= userMatchingEntityList.stream().filter(p->p.getUserId().equals(id)).findFirst().orElse(null);
+           /* if (selfResult!=null&&otherResult!=null&&selfResult.getResult()&&otherResult.getResult())
+            {
+                response.setMatchingStatus(MatchingStatusEnum.SUCCESS);
+            }else if ()
+            {
+
+            }*/
+        }
+
+        return response;
+    }
+
     private String getCharacterName(CharacterTypeResponse characterType) {
         String name = "";
         if (characterType != null) {
