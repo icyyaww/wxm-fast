@@ -874,26 +874,40 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             }
         }
         Integer ownerId = TokenUtils.getOwnerId();
-        List<Integer> userIdList = new ArrayList<>();
 
-        userIdList.add(id);
-        userIdList.add(ownerId);
-        Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
-                .in(UserMatchingEntity::getUserId, userIdList);
-        List<UserMatchingEntity> userMatchingEntityList = this.userMatchingService.getBaseMapper().selectList(wrapper);
-        if (CollectionUtil.isNotEmpty(userMatchingEntityList)) {
-            UserMatchingEntity selfResult= userMatchingEntityList.stream().filter(p->p.getUserId().equals(ownerId)).findFirst().orElse(null);
-            UserMatchingEntity otherResult= userMatchingEntityList.stream().filter(p->p.getUserId().equals(id)).findFirst().orElse(null);
-           /* if (selfResult!=null&&otherResult!=null&&selfResult.getResult()&&otherResult.getResult())
-            {
-                response.setMatchingStatus(MatchingStatusEnum.SUCCESS);
-            }else if ()
-            {
-
-            }*/
+        UserMatchingEntity selfResult = getUserMatch(ownerId, id);
+        UserMatchingEntity otherResult = getUserMatch(id, ownerId);
+        if (selfResult != null && otherResult != null && selfResult.getResult() && otherResult.getResult()) {
+            response.setResult(true);
+        } else {
+            response.setResult(false);
+        }
+        if (selfResult != null) {
+            if (selfResult.getResult()) {
+                response.setSelfMatchingStatus(MatchingStatusEnum.LIKE);
+            } else {
+                response.setSelfMatchingStatus(MatchingStatusEnum.NOT_LIKE);
+            }
+        }
+        if (otherResult != null) {
+            if (otherResult.getResult()) {
+                response.setOtherMatchingStatus(MatchingStatusEnum.LIKE_ME);
+            } else {
+                response.setOtherMatchingStatus(MatchingStatusEnum.NOT_LIKE_ME);
+            }
         }
 
+
         return response;
+    }
+
+    private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {
+
+        Wrapper<UserMatchingEntity> selfWrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                .eq(UserMatchingEntity::getUserId, ownerId)
+                .eq(UserMatchingEntity::getOtherUser, id);
+
+        return userMatchingService.getBaseMapper().selectOne(selfWrapper);
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {

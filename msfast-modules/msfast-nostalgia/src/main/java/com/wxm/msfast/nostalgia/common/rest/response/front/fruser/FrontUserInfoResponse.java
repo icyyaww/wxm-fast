@@ -18,6 +18,10 @@ public class FrontUserInfoResponse extends RecommendUserInfoResponse {
             "    NOT_LIKE(\"我不喜欢\"),\n")
     private MatchingStatusEnum selfMatchingStatus;
 
+    @ApiModelProperty(value = "用户匹配选择 LIKE_ME(\"喜欢我的\"),\n" +
+            "    NOT_LIKE_ME(\"对我无感\")")
+    private MatchingStatusEnum otherMatchingStatus;
+
     @ApiModelProperty(value = "匹配成功 展示聊天按钮")
     private Boolean result;
 }
