@@ -315,4 +315,26 @@ having
 order by count(1) desc
     </select>
 
+
+    <select id="getUserRegisterStatistic" resultMap="genderPie"
+            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.statistic.UserRegisterStatisticRequest">
+
+        select
+        count(1) as value,
+        DATE_FORMAT(fu.create_time, '%Y-%m-%d') as name
+        from
+        (select fu.create_time from fr_user fu where
+        fu.del_flag = 0
+        and fu.user_type = 'Normal'
+        <if test="createTimeStart!=null and createTimeStart!=''">
+            <![CDATA[ and DATE_FORMAT(fu.create_time, '%Y-%m-%d %T')>=  DATE_FORMAT(#{createTimeStart}, '%Y-%m-%d 00:00:00') ]]>
+        </if>
+        <if test="createTimeEnd!=null and createTimeEnd!=''">
+            <![CDATA[ and DATE_FORMAT(fu.create_time, '%Y-%m-%d %T')<=  DATE_FORMAT(#{createTimeEnd}, '%Y-%m-%d 23:59:59') ]]>
+        </if>
+        ) fu
+        group by
+        DATE_FORMAT(fu.create_time, '%Y-%m-%d')
+        order by DATE_FORMAT(fu.create_time, '%Y-%m-%d') asc
+    </select>
 </mapper>

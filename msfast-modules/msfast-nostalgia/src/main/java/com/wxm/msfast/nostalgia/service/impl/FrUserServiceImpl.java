@@ -21,12 +21,14 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
+import com.wxm.msfast.nostalgia.common.rest.request.admin.statistic.UserRegisterStatisticRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserAdminInfoAddRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.OutlineResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
@@ -899,6 +901,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
 
         return response;
+    }
+
+    @Override
+    public List<ProportionResponse> userRegister(UserRegisterStatisticRequest request) {
+        return this.baseMapper.getUserRegisterStatistic(request);
     }
 
     private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {
