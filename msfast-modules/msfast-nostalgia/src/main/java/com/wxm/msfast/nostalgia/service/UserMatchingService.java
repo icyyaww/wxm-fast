@@ -35,5 +35,7 @@ public interface UserMatchingService extends IService<UserMatchingEntity> {
     PageResult<SuccessPageResponse> successPage(Integer pageIndex, Integer pageSize);
 
     PageResult<LikePageResponse> likePage(Integer pageIndex, Integer pageSize);
+
+    void cancelMatch(Integer id);
 }
 

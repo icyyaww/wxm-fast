@@ -221,4 +221,15 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
         });
         return result;
     }
+
+    @Override
+    @Transactional
+    public void cancelMatch(Integer id) {
+
+        Wrapper<UserMatchingEntity> wrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                .eq(UserMatchingEntity::getUserId, TokenUtils.getOwnerId())
+                .eq(UserMatchingEntity::getOtherUser, id);
+        this.remove(wrapper);
+
+    }
 }

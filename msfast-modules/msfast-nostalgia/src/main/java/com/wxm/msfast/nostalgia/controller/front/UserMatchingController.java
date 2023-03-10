@@ -74,5 +74,12 @@ public class UserMatchingController {
         return R.ok(userMatchingService.likePage(pageIndex, pageSize));
     }
 
+    @ApiOperation("用户取消匹配")
+    @ApiOperationSort(value = 5)
+    @GetMapping("/cancel/match/{id}")
+    public R<Void> cancelMatch(@PathVariable Integer id) {
+        userMatchingService.cancelMatch(id);
+        return R.ok();
+    }
 
 }

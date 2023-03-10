@@ -905,9 +905,14 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
         Wrapper<UserMatchingEntity> selfWrapper = new QueryWrapper<UserMatchingEntity>().lambda()
                 .eq(UserMatchingEntity::getUserId, ownerId)
-                .eq(UserMatchingEntity::getOtherUser, id);
+                .eq(UserMatchingEntity::getOtherUser, id)
+                .orderByDesc(UserMatchingEntity::getId);
 
-        return userMatchingService.getBaseMapper().selectOne(selfWrapper);
+        List<UserMatchingEntity> userMatchingEntityList = userMatchingService.getBaseMapper().selectList(selfWrapper);
+        if (CollectionUtil.isNotEmpty(userMatchingEntityList)) {
+            return userMatchingEntityList.get(0);
+        }
+        return null;
     }
 
     private String getCharacterName(CharacterTypeResponse characterType) {
