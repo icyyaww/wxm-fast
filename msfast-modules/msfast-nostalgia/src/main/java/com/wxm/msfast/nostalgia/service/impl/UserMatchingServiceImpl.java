@@ -8,6 +8,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
+import com.wxm.msfast.base.common.enums.FrUserStatusEnum;
 import com.wxm.msfast.base.common.enums.GenderEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.utils.DateUtils;
@@ -109,8 +110,8 @@ public class UserMatchingServiceImpl extends ServiceImpl<UserMatchingDao, UserMa
             throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
         }
 
-        if (!AuthStatusEnum.PASS.equals(frUserEntity.getAuthStatus())) {
-            throw new JrsfException(UserExceptionEnum.USER_AUTH_NOT_PASS_EXCEPTION);
+        if (!FrUserStatusEnum.ENABLE.equals(frUserEntity.getStatus())) {
+            throw new JrsfException(BaseUserExceptionEnum.USER_STATUS_ERROR_EXCEPTION);
         }
 
         Integer num = Integer.valueOf(msfConfigService.getValueByCode(SysConfigCodeEnum.recommendTotal.name()));

@@ -291,20 +291,24 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 personalInfo.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
             }
 
-            if (AuthStatusEnum.EXAMINE.equals(frUserEntity.getAuthStatus())) {
-                personalInfo.setRemarks(AuthStatusEnum.EXAMINE.getDesc());
-            } else if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAuthStatus())) {
-                LambdaQueryWrapper<FrUserExamineEntity> queryWrapper = new QueryWrapper<FrUserExamineEntity>().lambda()
-                        .eq(FrUserExamineEntity::getUserId, ownerId)
-                        .eq(FrUserExamineEntity::getAuthType, AuthTypeEnum.InfoAuth)
-                        .eq(FrUserExamineEntity::getAuthStatus, AuthStatusEnum.REFUSE)
-                        .orderByDesc(FrUserExamineEntity::getId)
-                        .last("limit 1");
-                FrUserExamineEntity userExamineEntity = frUserExamineService.getOne(queryWrapper);
-                if (userExamineEntity != null) {
-                    personalInfo.setRemarks(userExamineEntity.getRemarks());
+            if (frUserEntity.getAdditional()!=null)
+            {
+                if (AuthStatusEnum.EXAMINE.equals(frUserEntity.getAdditional().getWaitApprovedStatus())) {
+                    personalInfo.setRemarks(AuthStatusEnum.EXAMINE.getDesc()+",上传个人的真实照片,可提高通过率哦~");
+                } else if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAdditional().getWaitApprovedStatus())) {
+                    LambdaQueryWrapper<FrUserExamineEntity> queryWrapper = new QueryWrapper<FrUserExamineEntity>().lambda()
+                            .eq(FrUserExamineEntity::getUserId, ownerId)
+                            .eq(FrUserExamineEntity::getAuthType, AuthTypeEnum.InfoAuth)
+                            .eq(FrUserExamineEntity::getAuthStatus, AuthStatusEnum.REFUSE)
+                            .orderByDesc(FrUserExamineEntity::getId)
+                            .last("limit 1");
+                    FrUserExamineEntity userExamineEntity = frUserExamineService.getOne(queryWrapper);
+                    if (userExamineEntity != null) {
+                        personalInfo.setRemarks(userExamineEntity.getRemarks());
+                    }
                 }
             }
+
 
 
         }
