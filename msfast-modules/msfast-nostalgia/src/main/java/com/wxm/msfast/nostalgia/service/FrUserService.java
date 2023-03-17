@@ -90,5 +90,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     FrontUserInfoResponse frontUserInfo(Integer id);
 
     List<ProportionResponse> userRegister(UserRegisterStatisticRequest request);
+
+    void deleteFruser();
 }
 

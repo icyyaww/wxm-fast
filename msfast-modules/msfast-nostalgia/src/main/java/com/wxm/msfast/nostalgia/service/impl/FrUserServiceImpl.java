@@ -291,10 +291,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 personalInfo.setConstellation(DateUtils.getConstellation(frUserEntity.getBirthday()));
             }
 
-            if (frUserEntity.getAdditional()!=null)
-            {
+            if (frUserEntity.getAdditional() != null) {
                 if (AuthStatusEnum.EXAMINE.equals(frUserEntity.getAdditional().getWaitApprovedStatus())) {
-                    personalInfo.setRemarks(AuthStatusEnum.EXAMINE.getDesc()+",上传个人的真实照片,可提高通过率哦~");
+                    personalInfo.setRemarks(AuthStatusEnum.EXAMINE.getDesc() + ",上传个人的真实照片,可提高通过率哦~");
                 } else if (AuthStatusEnum.REFUSE.equals(frUserEntity.getAdditional().getWaitApprovedStatus())) {
                     LambdaQueryWrapper<FrUserExamineEntity> queryWrapper = new QueryWrapper<FrUserExamineEntity>().lambda()
                             .eq(FrUserExamineEntity::getUserId, ownerId)
@@ -308,7 +307,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     }
                 }
             }
-
 
 
         }
@@ -910,6 +908,12 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public List<ProportionResponse> userRegister(UserRegisterStatisticRequest request) {
         return this.baseMapper.getUserRegisterStatistic(request);
+    }
+
+    @Transactional
+    @Override
+    public void deleteFruser() {
+        this.removeById(TokenUtils.getOwnerId());
     }
 
     private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {

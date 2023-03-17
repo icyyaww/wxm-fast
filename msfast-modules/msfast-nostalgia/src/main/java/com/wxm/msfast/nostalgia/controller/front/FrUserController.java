@@ -120,4 +120,12 @@ public class FrUserController {
     public R<FrontUserInfoResponse> frontUserInfo(@PathVariable Integer id) {
         return R.ok(frUserService.frontUserInfo(id));
     }
+
+    @ApiOperation("用户注销")
+    @ApiOperationSort(value = 13)
+    @GetMapping("/delete/fruser")
+    public R<Void> deleteFruser() {
+        frUserService.deleteFruser();
+        return R.ok();
+    }
 }
