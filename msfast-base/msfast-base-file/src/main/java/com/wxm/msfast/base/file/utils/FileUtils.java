@@ -236,4 +236,41 @@ public class FileUtils {
         String encode = URLEncoder.encode(s, StandardCharsets.UTF_8.toString());
         return encode.replaceAll("\\+", "%20");
     }
+
+    /**
+     * 判断文件是否为图片
+     */
+    public static boolean isPicture(String fileName) {
+        boolean flag = false;
+        if (StringUtils.isBlank(fileName)) {
+            return false;
+        }
+
+        String suffix = suffix(fileName);
+
+        String[] arr = {"bmp", "dib", "gif", "jfif", "jpe", "jpeg", "jpg", "png", "tif", "tiff", "ico"};
+        for (String item : arr) {
+            if (item.equalsIgnoreCase(suffix)) {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+
+    /**
+     * @Description: 返回文件后后缀
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/4 上午10:48
+     */
+    public static String suffix(String fileName) {
+        if (StringUtils.isNotBlank(fileName)) {
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        }
+        return "";
+    }
+
 }

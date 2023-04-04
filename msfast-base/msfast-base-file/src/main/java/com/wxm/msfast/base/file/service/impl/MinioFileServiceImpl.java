@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.file.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.file.config.MinioConfig;
@@ -9,14 +10,17 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -39,6 +43,7 @@ public class MinioFileServiceImpl implements IFileService {
     @Autowired
     private MsfFileService fileService;
 
+
     /**
      * 本地文件上传接口
      *
@@ -49,17 +54,37 @@ public class MinioFileServiceImpl implements IFileService {
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
 
-        String filePath = FileUploadUtils.extractFilename(file);
+        MultipartFile multipartFile = file;
+        if (ConfigConstants.CONDENSE() && FileUtils.isPicture(file.getOriginalFilename())) {
+            String tempPath = ConfigConstants.FILE_STATIC_PATH() + File.separator + "temp" + File.separator + UUID.fastUUID().toString().replaceAll("-", "") + file.getOriginalFilename();
+            File tempFile = new File(tempPath);
+            mkdirs(tempPath);
+            //文件大于0.5m
+            if (file.getSize() > (1024 * 1024) * 0.5) {
+                Thumbnails.of(file.getInputStream())
+                        // 图片缩放率，不能和size()一起使用
+                        .scale(ConfigConstants.CONDENSE_SCALE())
+                        // 缩略图保存目录,该目录需存在，否则报错
+                        .toFile(tempPath);
+                // 获取输入流
+                FileInputStream input = new FileInputStream(tempFile);
+                // 转为 MultipartFile
+                multipartFile = new MockMultipartFile("file", tempFile.getName(), file.getContentType(), input);
+                FileUtils.deleteFile(tempPath);
+            }
+        }
+
+        String filePath = FileUploadUtils.extractFilename(multipartFile);
         PutObjectArgs args = PutObjectArgs.builder()
                 .bucket(minioConfig.getBucketName())
                 .object(filePath)
-                .stream(file.getInputStream(), file.getSize(), -1)
-                .contentType(file.getContentType())
+                .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
+                .contentType(multipartFile.getContentType())
                 .build();
         client.putObject(args);
         String url = fileService.getPrePath() + filePath;
         //保存文件 此时文件为临时文件 会被定期删除
-        fileService.saveFile(url, filePath, FileUtils.getName(file.getOriginalFilename()));
+        fileService.saveFile(url, filePath, FileUtils.getName(multipartFile.getOriginalFilename()));
         return url;
     }
 

@@ -19,7 +19,6 @@ import com.wxm.msfast.base.websocket.common.enums.MessageFormatEnum;
 import com.wxm.msfast.base.websocket.common.rest.request.BaseMessageInfo;
 import com.wxm.msfast.base.websocket.service.MsFastMessageService;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
-import com.wxm.msfast.nostalgia.common.enums.AuthStatusEnum;
 import com.wxm.msfast.nostalgia.common.enums.SysConfigCodeEnum;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;

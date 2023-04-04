@@ -59,6 +59,12 @@ public class ConfigConstants {
     @Value("${wxmfast.config.file.static-path:}")
     private String fileStaticPath;
 
+    @Value("${wxmfast.config.file.condense:true}")
+    private Boolean condense;
+
+    @Value("${wxmfast.config.file.condense-scale:0.8}")
+    private double condenseScale;
+
     @Value("${wxmfast.config.websocket.port:8888}")
     private int webSocketPort;
 
@@ -166,6 +172,28 @@ public class ConfigConstants {
      **/
     public static String FILE_STATIC_PATH() {
         return SpringUtils.getBean(ConfigConstants.class).getFileStaticPath();
+    }
+
+    /**
+     * @Description: 压缩
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/4 上午10:28
+     */
+    public static Boolean CONDENSE() {
+        return SpringUtils.getBean(ConfigConstants.class).getCondense();
+    }
+
+    /**
+     * @Description: 图片默认缩放比率
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/4 下午3:49
+     */
+    public static double CONDENSE_SCALE() {
+        return SpringUtils.getBean(ConfigConstants.class).getCondenseScale();
     }
 
     /**
