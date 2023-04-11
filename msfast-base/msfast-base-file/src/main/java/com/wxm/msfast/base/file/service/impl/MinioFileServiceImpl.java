@@ -54,38 +54,20 @@ public class MinioFileServiceImpl implements IFileService {
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
 
-        MultipartFile multipartFile = file;
-        if (ConfigConstants.CONDENSE() && FileUtils.isPicture(file.getOriginalFilename())) {
-            String tempPath = ConfigConstants.FILE_STATIC_PATH() + File.separator + "temp" + File.separator + UUID.fastUUID().toString().replaceAll("-", "") + file.getOriginalFilename();
-            File tempFile = new File(tempPath);
-            mkdirs(tempPath);
-            //文件大于0.5m
-            if (file.getSize() > (1024 * 1024) * 0.5) {
-                Thumbnails.of(file.getInputStream())
-                        // 图片缩放率，不能和size()一起使用
-                        .scale(ConfigConstants.CONDENSE_SCALE())
-                        // 缩略图保存目录,该目录需存在，否则报错
-                        .toFile(tempPath);
-                // 获取输入流
-                FileInputStream input = new FileInputStream(tempFile);
-                // 转为 MultipartFile
-                multipartFile = new MockMultipartFile("file", tempFile.getName(), file.getContentType(), input);
-                FileUtils.deleteFile(tempPath);
-            }
-        }
+        return saveFile(file, true);
+    }
 
-        String filePath = FileUploadUtils.extractFilename(multipartFile);
-        PutObjectArgs args = PutObjectArgs.builder()
-                .bucket(minioConfig.getBucketName())
-                .object(filePath)
-                .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
-                .contentType(multipartFile.getContentType())
-                .build();
-        client.putObject(args);
-        String url = fileService.getPrePath() + filePath;
-        //保存文件 此时文件为临时文件 会被定期删除
-        fileService.saveFile(url, filePath, FileUtils.getName(multipartFile.getOriginalFilename()));
-        return url;
+    /**
+     * @param file
+     * @Description: 上传的文件不会被删除
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/11 上午10:15
+     */
+    @Override
+    public String lastingUpload(MultipartFile file) throws Exception {
+        return saveFile(file, false);
     }
 
     /**
@@ -164,5 +146,43 @@ public class MinioFileServiceImpl implements IFileService {
         if (!parent.exists()) {
             parent.mkdirs();
         }
+    }
+
+    private String saveFile(MultipartFile file, Boolean isDelete) throws Exception {
+        MultipartFile multipartFile = file;
+        if (ConfigConstants.CONDENSE() && FileUtils.isPicture(file.getOriginalFilename())) {
+            String tempPath = ConfigConstants.FILE_STATIC_PATH() + File.separator + "temp" + File.separator + UUID.fastUUID().toString().replaceAll("-", "") + file.getOriginalFilename();
+            File tempFile = new File(tempPath);
+            mkdirs(tempPath);
+            //文件大于0.5m
+            if (file.getSize() > (1024 * 1024) * 0.5) {
+                Thumbnails.of(file.getInputStream())
+                        // 图片缩放率，不能和size()一起使用
+                        .scale(ConfigConstants.CONDENSE_SCALE())
+                        // 缩略图保存目录,该目录需存在，否则报错
+                        .toFile(tempPath);
+                // 获取输入流
+                FileInputStream input = new FileInputStream(tempFile);
+                // 转为 MultipartFile
+                multipartFile = new MockMultipartFile("file", tempFile.getName(), file.getContentType(), input);
+                FileUtils.deleteFile(tempPath);
+            }
+        }
+
+        String filePath = FileUploadUtils.extractFilename(multipartFile);
+        PutObjectArgs args = PutObjectArgs.builder()
+                .bucket(minioConfig.getBucketName())
+                .object(filePath)
+                .stream(multipartFile.getInputStream(), multipartFile.getSize(), -1)
+                .contentType(multipartFile.getContentType())
+                .build();
+        client.putObject(args);
+        String url = fileService.getPrePath() + filePath;
+        if (isDelete == null || Boolean.TRUE.equals(isDelete)) {
+            //保存文件 此时文件为临时文件 会被定期删除
+            fileService.saveFile(url, filePath, FileUtils.getName(multipartFile.getOriginalFilename()));
+        }
+
+        return url;
     }
 }

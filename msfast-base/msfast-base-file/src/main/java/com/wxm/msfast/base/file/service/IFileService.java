@@ -24,6 +24,15 @@ public interface IFileService {
     String uploadFile(MultipartFile file) throws Exception;
 
     /**
+     * @Description: 上传的文件不会被删除
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/11 上午10:15
+     */
+    String lastingUpload(MultipartFile file) throws Exception;
+
+    /**
      * @Description: 文件下载
      * @Param:
      * @return:

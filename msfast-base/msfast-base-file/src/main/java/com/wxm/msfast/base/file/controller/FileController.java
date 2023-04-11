@@ -124,4 +124,23 @@ public class FileController {
         return R.ok(sysFileService.staticDelete(path));
     }
 
+    /**
+     * 文件上传请求
+     */
+    @PostMapping("/lasting/upload")
+    @ApiOperation(value = "文件上传")
+    public R<FileResponse> lastingUpload(@RequestPart MultipartFile file) throws Exception {
+
+        try {
+            // 上传并返回访问地址
+            String url = sysFileService.lastingUpload(file);
+            FileResponse sysFile = new FileResponse();
+            sysFile.setName(FileUtils.getName(url));
+            sysFile.setUrl(url);
+            return R.ok(sysFile);
+        } catch (Exception e) {
+            log.error("上传文件失败", e);
+            throw e;
+        }
+    }
 }
