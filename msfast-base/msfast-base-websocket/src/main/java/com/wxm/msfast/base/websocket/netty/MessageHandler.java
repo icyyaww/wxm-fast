@@ -81,6 +81,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<TextWebSocketFra
         if (message != null && MessageTypeEnum.CONNECT.equals(message.getMessageType())) {
             if (StringUtils.isNotBlank(message.getInfo())) {
                 ChannelMap.put(Integer.valueOf(message.getInfo()), ctx.channel());
+                channelUtil.sendText(ctx.channel(), "CONNECT_SUCCESS");
                 log.info("建立连接完成，关联数量为" + ChannelMap.getManager().size());
             }
         } else if (message != null && MessageTypeEnum.ALIVE.equals(message.getMessageType())) {

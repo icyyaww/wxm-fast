@@ -53,7 +53,7 @@ public class FrUserAuthServiceImpl extends ServiceImpl<FrUserAuthDao, FrUserAuth
 
                 FrUserAuthEntity oldAuth = getAuthByType(request.getAuthType());
                 if (oldAuth != null) {
-                    msfFileService.deleteImg(oldAuth.getImgList(), frUserEntity.getImgList());
+                    msfFileService.deleteImg(oldAuth.getImgList(), request.getImgList());
                 }
                 this.save(frUserAuthEntity);
                 if (AuthTypeEnum.EducationAuth.equals(request.getAuthType())) {

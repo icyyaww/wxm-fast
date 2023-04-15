@@ -21,10 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -91,6 +88,7 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
             MessageListResponse messageListResponse = optional.get();
             Double score = redisService.redisTemplate.opsForZSet().score(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), messageListResponse);
             messageListResponse.setUnreadCount(0);
+            deleteList(userId);
             redisService.redisTemplate.opsForZSet().add(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), messageListResponse, score);
         }
 
@@ -115,11 +113,10 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
     public void deleteList(Integer sendUserId) {
 
         Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().range(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), 0, -1);
-        Optional<MessageListResponse> optional = listResponses.stream().filter(p -> p.getSendUserId() != null && p.getSendUserId().equals(sendUserId)).findFirst();
-        if (optional.isPresent()) {
-            MessageListResponse messageListResponse = optional.get();
-            redisService.redisTemplate.opsForZSet().remove(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), messageListResponse);
-        }
+        List<MessageListResponse> optional = listResponses.stream().filter(p -> p.getSendUserId() != null && p.getSendUserId().equals(sendUserId)).collect(Collectors.toList());
+        optional.forEach(model -> {
+            redisService.redisTemplate.opsForZSet().remove(WebSocketConstants.MSG_LIST + TokenUtils.getOwnerId(), model);
+        });
     }
 
     @Override
@@ -154,6 +151,13 @@ public class MsFastMessageServiceImpl implements MsFastMessageService {
                 messageList.setNickName(imUserInfo.getNickName());
             }
         }
+
+        //添加消息前删除之前的列表数据
+        Set<MessageListResponse> listResponses = redisService.redisTemplate.opsForZSet().range(WebSocketConstants.MSG_LIST + userId, 0, -1);
+        List<MessageListResponse> optional = listResponses.stream().filter(p -> p.getSendUserId() != null && p.getSendUserId().equals(sendUserId)).collect(Collectors.toList());
+        optional.forEach(model -> {
+            redisService.redisTemplate.opsForZSet().remove(WebSocketConstants.MSG_LIST + userId, model);
+        });
         redisService.redisTemplate.opsForZSet().add(WebSocketConstants.MSG_LIST + userId, messageList, now.getTime());
     }
 

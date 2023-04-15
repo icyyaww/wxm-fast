@@ -1,9 +1,7 @@
 package com.wxm.msfast.nostalgia.common.rest.request.auth;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.wxm.msfast.base.file.annotation.FileListSave;
 import com.wxm.msfast.nostalgia.common.enums.AuthTypeEnum;
-import com.wxm.msfast.nostalgia.common.handle.UserAuthImgListHandler;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

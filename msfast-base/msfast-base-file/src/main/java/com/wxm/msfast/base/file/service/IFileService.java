@@ -67,4 +67,13 @@ public interface IFileService {
      * @return
      **/
     Boolean staticDelete(String path);
+
+    /*
+     * @Author wanglei
+     * @Description  文件转base64
+     * @Date 16:40 2023/4/9
+     * @Param
+     * @return
+     **/
+    String toBase64(MultipartFile file);
 }

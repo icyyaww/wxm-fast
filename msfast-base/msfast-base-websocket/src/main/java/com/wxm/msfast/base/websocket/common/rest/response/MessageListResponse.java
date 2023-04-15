@@ -2,6 +2,7 @@ package com.wxm.msfast.base.websocket.common.rest.response;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,7 +14,7 @@ import java.util.Objects;
  **/
 
 @Data
-public class MessageListResponse {
+public class MessageListResponse implements Serializable {
 
     private Integer userId;
 
@@ -30,18 +31,5 @@ public class MessageListResponse {
     private String nickName;
 
     private String headPortrait;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MessageListResponse that = (MessageListResponse) o;
-        return userId.equals(that.userId) &&
-                sendUserId.equals(that.sendUserId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, sendUserId);
-    }
+    
 }

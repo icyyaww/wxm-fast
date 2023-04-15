@@ -1,13 +1,10 @@
 package com.wxm.msfast.base.file.controller;
 
-import cn.hutool.core.io.FileUtil;
 import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.base.file.rest.response.FileResponse;
 import com.wxm.msfast.base.file.service.IFileService;
-import com.wxm.msfast.base.file.service.MsfFileService;
-import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -15,15 +12,11 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 文件请求处理
@@ -142,5 +135,14 @@ public class FileController {
             log.error("上传文件失败", e);
             throw e;
         }
+    }
+    /**
+     * 文件转base64
+     */
+    @PostMapping("/toBase64")
+    @ApiOperation(value = "文件转Base64")
+    @AuthIgnore
+    public R<String> toBase64(@RequestPart MultipartFile file) throws Exception {
+        return R.ok(sysFileService.toBase64(file));
     }
 }
