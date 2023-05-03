@@ -84,6 +84,16 @@ public class ConfigConstants {
     private String passWord;
 
 
+    @Value("${wxmfast.config.pay.wxapplet.mchid:}")
+    private String payWxAppletMchid;
+
+    @Value("${wxmfast.config.pay.wxapplet.key:}")
+    private String payWxAppletKey;
+
+    @Value("${wxmfast.config.pay.wxapplet.notify-url:}")
+    private String payWxAppletNotifyUrl;
+
+
     /**
      * @Description: 是否启用redis 默认false
      */
@@ -279,4 +289,18 @@ public class ConfigConstants {
     public static String ROLE_ADMIN_PASSWORD() {
         return SpringUtils.getBean(ConfigConstants.class).getPassWord();
     }
+
+
+    public static String PAY_WX_APPLET_MCHID() {
+        return SpringUtils.getBean(ConfigConstants.class).getPayWxAppletMchid();
+    }
+
+    public static String PAY_WX_APPLET_KEY() {
+        return SpringUtils.getBean(ConfigConstants.class).getPayWxAppletKey();
+    }
+
+    public static String PAY_WX_APPLET_NOTIFY_URL() {
+        return SpringUtils.getBean(ConfigConstants.class).getPayWxAppletNotifyUrl();
+    }
+
 }

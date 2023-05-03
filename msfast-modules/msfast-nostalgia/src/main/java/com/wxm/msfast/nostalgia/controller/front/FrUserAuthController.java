@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("nostalgia/fruserauth")
 @Api(tags = "双重认证")
 public class FrUserAuthController {
+
     @Autowired
     private FrUserAuthService frUserAuthService;
 

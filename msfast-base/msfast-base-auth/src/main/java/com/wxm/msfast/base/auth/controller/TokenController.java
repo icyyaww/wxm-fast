@@ -79,7 +79,6 @@ public class TokenController {
         return R.ok(tokenService.login(viewModel));
     }
 
-    @AuthIgnore
     @DeleteMapping("/logout")
     @ApiOperation(value = "退出登陆")
     @ApiOperationSort(3)

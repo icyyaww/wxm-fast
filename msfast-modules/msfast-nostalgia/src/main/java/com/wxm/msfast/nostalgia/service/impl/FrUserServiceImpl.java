@@ -2,6 +2,7 @@ package com.wxm.msfast.nostalgia.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -31,6 +32,8 @@ import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.OutlineResp
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMenuResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMoneyResponse;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
 import com.wxm.msfast.nostalgia.service.*;
@@ -914,6 +917,20 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Override
     public void deleteFruser() {
         this.removeById(TokenUtils.getOwnerId());
+    }
+
+    @Override
+    public PayMenuResponse payMenu() {
+
+        PayMenuResponse payMenuResponse = new PayMenuResponse();
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        BeanUtils.copyProperties(frUserEntity, payMenuResponse);
+        String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
+        if (StringUtils.isNotBlank(menuValue)) {
+            List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
+            payMenuResponse.setPayMoneyList(moneyResponseList);
+        }
+        return payMenuResponse;
     }
 
     private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {

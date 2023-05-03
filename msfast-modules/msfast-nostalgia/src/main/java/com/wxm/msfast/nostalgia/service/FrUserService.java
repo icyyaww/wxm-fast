@@ -13,6 +13,7 @@ import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionR
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMenuResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
 
@@ -92,5 +93,7 @@ public interface FrUserService extends IService<FrUserEntity> {
     List<ProportionResponse> userRegister(UserRegisterStatisticRequest request);
 
     void deleteFruser();
+
+    PayMenuResponse payMenu();
 }
 
