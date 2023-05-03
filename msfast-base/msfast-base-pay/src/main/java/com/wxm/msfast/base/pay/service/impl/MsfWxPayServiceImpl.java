@@ -1,5 +1,6 @@
 package com.wxm.msfast.base.pay.service.impl;
 
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
@@ -64,6 +65,10 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
         data.put("notify_url", ConfigConstants.PAY_WX_APPLET_NOTIFY_URL());
         data.put("trade_type", "JSAPI");
         data.put("openid", openId);
+
+        //加密
+        //
+        SymmetricCrypto sm4=new SymmetricCrypto("SM4/ECB/PKCS5Padding",ConfigConstants.PAY_WX_APPLET_KEY().getBytes());
         data.put("attach", payOrderData.getAttach());
         Map<String, String> resp = wxpay.unifiedOrder(data);
         if (StringUtils.isNotBlank(resp.get("prepay_id"))) {

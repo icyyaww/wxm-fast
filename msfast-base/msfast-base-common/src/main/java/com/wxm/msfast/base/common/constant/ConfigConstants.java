@@ -93,6 +93,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.pay.wxapplet.notify-url:}")
     private String payWxAppletNotifyUrl;
 
+   /* @Value("${wxmfast.config.:}")
+    private String payWxAppletNotifyUrl;*/
+
 
     /**
      * @Description: 是否启用redis 默认false
