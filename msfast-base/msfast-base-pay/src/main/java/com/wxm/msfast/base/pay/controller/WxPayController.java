@@ -1,7 +1,6 @@
 package com.wxm.msfast.base.pay.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.wxpay.sdk.WXPayUtil;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.ViolationUtils;
@@ -10,7 +9,6 @@ import com.wxm.msfast.base.pay.common.rest.request.OrderSubmitRequest;
 import com.wxm.msfast.base.pay.service.IWxPayService;
 import com.wxm.msfast.base.pay.service.MsfWxPayService;
 import com.wxm.msfast.base.pay.utils.ReflexUtils;
-import com.wxm.msfast.base.pay.utils.wx.sdk.WxNotifyUtil;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +19,6 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.InputStream;
 import java.util.Map;
 
 @RestController
