@@ -47,6 +47,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.auth.wxapplet.secret:}")
     private String wxAppletSecret;
 
+    @Value("${wxmfast.config.auth.sm4-key:1A2B3C4D5E6F7G8H}")
+    private String sm4Key;
+
     @Value("${wxmfast.config.file.max-size:50}")
     private Long fileMaxSize;
 
@@ -92,9 +95,6 @@ public class ConfigConstants {
 
     @Value("${wxmfast.config.pay.wxapplet.notify-url:}")
     private String payWxAppletNotifyUrl;
-
-   /* @Value("${wxmfast.config.:}")
-    private String payWxAppletNotifyUrl;*/
 
 
     /**
@@ -306,4 +306,8 @@ public class ConfigConstants {
         return SpringUtils.getBean(ConfigConstants.class).getPayWxAppletNotifyUrl();
     }
 
+
+    public static String SM4_KEY() {
+        return SpringUtils.getBean(ConfigConstants.class).getSm4Key();
+    }
 }
