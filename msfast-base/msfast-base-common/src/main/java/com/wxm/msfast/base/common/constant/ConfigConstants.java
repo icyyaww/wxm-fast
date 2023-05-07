@@ -47,7 +47,7 @@ public class ConfigConstants {
     @Value("${wxmfast.config.auth.wxapplet.secret:}")
     private String wxAppletSecret;
 
-    @Value("${wxmfast.config.auth.sm4-key:1A2B3C4D5E6F7G8H}")
+    @Value("${wxmfast.config.auth.sm4-key:1A2B3C4D5E6F7G8H12345678}")
     private String sm4Key;
 
     @Value("${wxmfast.config.file.max-size:50}")

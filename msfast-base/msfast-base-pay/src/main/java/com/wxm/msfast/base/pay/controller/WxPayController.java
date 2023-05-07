@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.pay.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wxm.msfast.base.common.annotation.AuthIgnore;
 import com.wxm.msfast.base.common.constant.ParamTypeConstants;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.ViolationUtils;
@@ -50,6 +51,7 @@ public class WxPayController {
 
     //微信小程序回调
     @PostMapping("/wxApplet/notifyUrl")
+    @AuthIgnore
     public String wxNotifyUrl(HttpServletRequest request, HttpServletResponse response) {
 
         return msfWxPayService.wxAppletPayNotifyUrl(request,response);

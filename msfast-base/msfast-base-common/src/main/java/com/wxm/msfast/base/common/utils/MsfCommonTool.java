@@ -57,7 +57,7 @@ public class MsfCommonTool {
         }
         // ipAddress = this.getRequest().getRemoteAddr();
         if ("0:0:0:0:0:0:0:1".equals(ipAddress)) {
-            ipAddress = "本地";
+            ipAddress = "127.0.0.1";
         }
         return ipAddress;
     }

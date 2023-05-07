@@ -1,13 +1,11 @@
 package com.wxm.msfast.base.pay.service.impl;
 
-import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.alibaba.fastjson.JSONObject;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayUtil;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
-import com.wxm.msfast.base.common.utils.MsfCommonTool;
 import com.wxm.msfast.base.common.utils.SM4Util;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.pay.common.rest.request.OrderSubmitRequest;
@@ -67,7 +65,7 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
         data.put("out_trade_no", payOrderData.getOutTradeNo());
 
         data.put("total_fee", String.valueOf(payOrderData.getTotalFee()));
-        data.put("spbill_create_ip", MsfCommonTool.getIpAddress());
+        data.put("spbill_create_ip", "183.228.15.70");
         data.put("notify_url", ConfigConstants.PAY_WX_APPLET_NOTIFY_URL());
         data.put("trade_type", "JSAPI");
         data.put("openid", openId);
@@ -80,11 +78,11 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
         if (StringUtils.isNotBlank(resp.get("prepay_id"))) {
             String prepay_id = resp.get("prepay_id"); //预支付id
             Map<String, String> payMap = new HashMap<String, String>();
-            payMap.put("provider", "wxpay");
+            payMap.put("appId", ConfigConstants.WX_APPLET_APPID());
             payMap.put("timeStamp", String.valueOf(System.currentTimeMillis()));
             payMap.put("nonceStr", WXPayUtil.generateNonceStr());
-            payMap.put("package", "prepay_id=" + prepay_id);
             payMap.put("signType", "MD5");
+            payMap.put("package", "prepay_id=" + prepay_id);
             String paySign = WXPayUtil.generateSignature(payMap, config.getKey());
             payMap.put("paySign", paySign);
             return payMap;
