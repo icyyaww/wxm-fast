@@ -6,6 +6,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.utils.MsfCommonTool;
 import com.wxm.msfast.base.common.utils.SM4Util;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.pay.common.rest.request.OrderSubmitRequest;
@@ -15,6 +16,7 @@ import com.wxm.msfast.base.pay.config.MsfWXConfig;
 import com.wxm.msfast.base.pay.service.IWxPayService;
 import com.wxm.msfast.base.pay.service.MsfWxPayService;
 import com.wxm.msfast.base.pay.utils.wx.sdk.WxNotifyUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -29,6 +31,7 @@ import java.util.Map;
 
 @RefreshScope
 @Service
+@Slf4j
 public class MsfWxPayServiceImpl implements MsfWxPayService {
 
     private static final String wxAppletHost = "https://api.weixin.qq.com/sns/jscode2session";
@@ -65,7 +68,7 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
         data.put("out_trade_no", payOrderData.getOutTradeNo());
 
         data.put("total_fee", String.valueOf(payOrderData.getTotalFee()));
-        data.put("spbill_create_ip", "183.228.15.70");
+        data.put("spbill_create_ip", MsfCommonTool.getIpAddress());
         data.put("notify_url", ConfigConstants.PAY_WX_APPLET_NOTIFY_URL());
         data.put("trade_type", "JSAPI");
         data.put("openid", openId);
@@ -92,12 +95,15 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
 
     @Override
     public String wxAppletPayNotifyUrl(HttpServletRequest request, HttpServletResponse response) {
+
+        log.info("进入支付回调");
         //System.out.println("微信支付成功,微信发送的callback信息,请注意修改订单信息");
         InputStream is = null;
         try {
             is = request.getInputStream();//获取请求的流信息(这里是微信发的xml格式所有只能使用流来读)
             String xml = WxNotifyUtil.inputStream2String(is, "UTF-8");
             Map<String, String> notifyMap = WXPayUtil.xmlToMap(xml);//将微信发的xml转map
+            log.info("回调微信数据{}",JSONObject.toJSONString(notifyMap));
             if (notifyMap.get("return_code").equals("SUCCESS")) {
                 if (notifyMap.get("result_code").equals("SUCCESS")) {
                     String outTradeNo = notifyMap.get("out_trade_no");//商户订单号

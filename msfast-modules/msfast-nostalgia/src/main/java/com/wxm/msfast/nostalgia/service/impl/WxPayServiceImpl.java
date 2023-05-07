@@ -18,6 +18,7 @@ import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import com.wxm.msfast.nostalgia.entity.PayOrderEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import com.wxm.msfast.nostalgia.service.PayOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Slf4j
 public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
 
     @Autowired
@@ -53,7 +55,7 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
                 payOrderData.setBody("思君币");
                 String outTradeNo = MsfCommonTool.UUID();
                 payOrderData.setOutTradeNo(outTradeNo);
-                payOrderData.setTotalFee(payMoneyResponse.getPrice() * 100);
+                payOrderData.setTotalFee(1);//payMoneyResponse.getPrice() * 100);
                 Map<String, Object> attach = new HashMap<>();
                 attach.put("userId", TokenUtils.getOwnerId());
                 payOrderData.setAttach(JSON.toJSONString(attach));
@@ -77,6 +79,7 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
     @Override
     public void notifyUrl(NotifyUrlData request) {
 
+        log.info("回调方法{}", JSONObject.toJSONString(request));
         Wrapper<PayOrderEntity> queryWrapper = new QueryWrapper<PayOrderEntity>().lambda()
                 .eq(PayOrderEntity::getOutTradeNo, request.getOutTradeNo());
         PayOrderEntity payOrderEntity = payOrderService.getBaseMapper().selectOne(queryWrapper);
@@ -85,21 +88,24 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
             String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
             if (StringUtils.isNotBlank(menuValue)) {
                 List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
-                PayMoneyResponse payMoneyResponse = moneyResponseList.stream().filter(p -> p.getPrice() != null && p.getPrice().equals(payOrderEntity.getTotalFee())).findFirst().orElse(null);
+                PayMoneyResponse payMoneyResponse = moneyResponseList.stream().filter(p -> p.getPrice() != null && p.getPrice() == 1).findFirst().orElse(null);
                 if (payMoneyResponse != null) {
-
                     String attach = request.getAttach();
                     JSONObject jsonObject = JSONObject.parseObject(attach);
                     Integer userId = jsonObject.getInteger("userId");
+                    log.info("回调方法,userId:{},金币数量{}", userId, payMoneyResponse.getAmount());
                     FrUserEntity frUserEntity = frUserService.getById(userId);
                     if (frUserEntity != null && frUserEntity.getGoldBalance() != null) {
                         frUserEntity.setGoldBalance(frUserEntity.getGoldBalance() + payMoneyResponse.getAmount());
-                        frUserService.save(frUserEntity);
+                        log.info("回调方法,修改用户信息{}", JSON.toJSONString(frUserEntity));
+                        frUserService.saveOrUpdate(frUserEntity);
                     }
+                } else {
+                    log.info("回调方法,没有查到菜单");
                 }
             }
             payOrderEntity.setStatus(PayOrderStatusEnum.SUCCESS);
-            payOrderService.save(payOrderEntity);
+            payOrderService.saveOrUpdate(payOrderEntity);
         }
     }
 }
