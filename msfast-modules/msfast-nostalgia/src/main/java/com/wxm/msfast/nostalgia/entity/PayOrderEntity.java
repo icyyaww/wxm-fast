@@ -43,4 +43,7 @@ public class PayOrderEntity extends BaseEntity {
     @TableField("status")
     private PayOrderStatusEnum status;
 
+    @TableField("product_no")
+    private Integer productNo;
+
 }

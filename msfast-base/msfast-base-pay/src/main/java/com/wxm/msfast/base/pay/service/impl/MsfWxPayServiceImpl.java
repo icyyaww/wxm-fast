@@ -76,6 +76,8 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
         //加密
         if (StringUtils.isNotBlank(payOrderData.getAttach())) {
             data.put("attach", SM4Util.encryptHex(payOrderData.getAttach()));
+        } else {
+            data.put("attach", SM4Util.encryptHex(payOrderData.getOutTradeNo()));
         }
         Map<String, String> resp = wxpay.unifiedOrder(data);
         if (StringUtils.isNotBlank(resp.get("prepay_id"))) {
@@ -94,7 +96,7 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
     }
 
     @Override
-    public String wxAppletPayNotifyUrl(HttpServletRequest request, HttpServletResponse response) {
+    public String wxPayNotifyUrl(HttpServletRequest request, HttpServletResponse response, String platform) {
 
         log.info("进入支付回调");
         //System.out.println("微信支付成功,微信发送的callback信息,请注意修改订单信息");
@@ -103,7 +105,7 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
             is = request.getInputStream();//获取请求的流信息(这里是微信发的xml格式所有只能使用流来读)
             String xml = WxNotifyUtil.inputStream2String(is, "UTF-8");
             Map<String, String> notifyMap = WXPayUtil.xmlToMap(xml);//将微信发的xml转map
-            log.info("回调微信数据{}",JSONObject.toJSONString(notifyMap));
+            log.info("回调微信数据{}", JSONObject.toJSONString(notifyMap));
             if (notifyMap.get("return_code").equals("SUCCESS")) {
                 if (notifyMap.get("result_code").equals("SUCCESS")) {
                     String outTradeNo = notifyMap.get("out_trade_no");//商户订单号
@@ -118,7 +120,11 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
                     }
 
                     IWxPayService iWxPayService = SpringUtils.getBean(IWxPayService.class);
-                    iWxPayService.notifyUrl(notifyUrlData);
+                    if ("applet".equals(platform)) {
+                        iWxPayService.appletNotifyUrl(notifyUrlData);
+                    } else if ("public".equals(platform)) {
+                        iWxPayService.publicNotifyUrl(notifyUrlData);
+                    }
 
                 }
             }
@@ -128,6 +134,61 @@ public class MsfWxPayServiceImpl implements MsfWxPayService {
             is.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, String> wxPublic(OrderSubmitRequest request) throws Exception {
+        String openId = null;
+        if (StringUtils.isNotBlank(request.getCode())) {
+            String appId = ConfigConstants.WX_PUBLIC_APPID();
+            String secret = ConfigConstants.WX_PUBLIC_SECRET();
+            String result = restTemplate.getForObject(wxAppletHost + "?appid=" + appId + "&secret=" + secret + "&js_code=" + request.getCode() + "&grant_type=authorization_code", String.class);
+            JSONObject jsonObject = JSONObject.parseObject(result);
+            Integer errcode = jsonObject.getInteger("errcode");
+            if (errcode == null) {
+                openId = jsonObject.getString("openid");
+            } else {
+                throw new JrsfException(BaseExceptionEnum.API_ERROR).setMsg(jsonObject.getString("errmsg"));
+            }
+        }
+
+        IWxPayService iWxPayService = SpringUtils.getBean(IWxPayService.class);
+        PayOrderData payOrderData = iWxPayService.wxPublicPay(request);
+
+        MsfWXConfig config = new MsfWXConfig();
+        WXPay wxpay = new WXPay(config);
+
+        Map<String, String> data = new HashMap<String, String>();
+
+        data.put("body", payOrderData.getBody());
+        data.put("out_trade_no", payOrderData.getOutTradeNo());
+
+        data.put("total_fee", String.valueOf(payOrderData.getTotalFee()));
+        data.put("spbill_create_ip", MsfCommonTool.getIpAddress());
+        data.put("notify_url", ConfigConstants.PAY_WX_PUBLIC_NOTIFY_URL());
+        data.put("trade_type", "JSAPI");
+        data.put("openid", openId);
+
+        //加密
+        if (StringUtils.isNotBlank(payOrderData.getAttach())) {
+            data.put("attach", SM4Util.encryptHex(payOrderData.getAttach()));
+        } else {
+            data.put("attach", SM4Util.encryptHex(payOrderData.getOutTradeNo()));
+        }
+        Map<String, String> resp = wxpay.unifiedOrder(data);
+        if (StringUtils.isNotBlank(resp.get("prepay_id"))) {
+            String prepay_id = resp.get("prepay_id"); //预支付id
+            Map<String, String> payMap = new HashMap<String, String>();
+            payMap.put("appId", ConfigConstants.WX_PUBLIC_APPID());
+            payMap.put("timeStamp", String.valueOf(System.currentTimeMillis()));
+            payMap.put("nonceStr", WXPayUtil.generateNonceStr());
+            payMap.put("signType", "MD5");
+            payMap.put("package", "prepay_id=" + prepay_id);
+            String paySign = WXPayUtil.generateSignature(payMap, config.getKey());
+            payMap.put("paySign", paySign);
+            return payMap;
         }
         return null;
     }

@@ -47,6 +47,12 @@ public class ConfigConstants {
     @Value("${wxmfast.config.auth.wxapplet.secret:}")
     private String wxAppletSecret;
 
+    @Value("${wxmfast.config.auth.wxpublic.appId:}")
+    private String wxPublicAppId;
+
+    @Value("${wxmfast.config.auth.wxpublic.secret:}")
+    private String wxPublicSecret;
+
     @Value("${wxmfast.config.auth.sm4-key:1A2B3C4D5E6F7G8H12345678}")
     private String sm4Key;
 
@@ -95,6 +101,9 @@ public class ConfigConstants {
 
     @Value("${wxmfast.config.pay.wxapplet.notify-url:}")
     private String payWxAppletNotifyUrl;
+
+    @Value("${wxmfast.config.pay.wxpublic.notify-url:}")
+    private String payWxPublicNotifyUrl;
 
 
     /**
@@ -285,6 +294,38 @@ public class ConfigConstants {
         return secret;
     }
 
+    /*
+     * @Author wanglei
+     * @Description  微信小程序 appid
+     * @Date 15:15 2022/12/5
+     * @Param
+     * @return
+     **/
+    public static String WX_PUBLIC_APPID() {
+        String appid = SpringUtils.getBean(ConfigConstants.class).getWxPublicAppId();
+        if (StringUtils.isBlank(appid)) {
+            throw new JrsfException(BaseExceptionEnum.APPID_ISEMPTY);
+        }
+        return appid;
+    }
+
+    /*
+     * @Author wanglei
+     * @Description  微信小程序Secret
+     * @Date 15:15 2022/12/5
+     * @Param
+     * @return
+     **/
+    public static String WX_PUBLIC_SECRET() {
+
+        String secret = SpringUtils.getBean(ConfigConstants.class).getWxPublicSecret();
+        if (StringUtils.isBlank(secret)) {
+            throw new JrsfException(BaseExceptionEnum.SECRET_ISEMPTY);
+        }
+        return secret;
+    }
+
+
     public static String ROLE_ADMIN_USER_NAME() {
         return SpringUtils.getBean(ConfigConstants.class).getUserName();
     }
@@ -309,5 +350,10 @@ public class ConfigConstants {
 
     public static String SM4_KEY() {
         return SpringUtils.getBean(ConfigConstants.class).getSm4Key();
+    }
+
+
+    public static String PAY_WX_PUBLIC_NOTIFY_URL() {
+        return SpringUtils.getBean(ConfigConstants.class).getPayWxPublicNotifyUrl();
     }
 }

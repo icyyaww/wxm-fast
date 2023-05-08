@@ -10,4 +10,6 @@ public class PayRequest extends OrderSubmitRequest {
 
     @NotNull
     private Integer productNo;
+
+    private Integer userId;
 }

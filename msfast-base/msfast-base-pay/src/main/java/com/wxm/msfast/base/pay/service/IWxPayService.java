@@ -8,5 +8,9 @@ public interface IWxPayService<T extends OrderSubmitRequest> {
 
     PayOrderData wxAppletPay(T request);
 
-    void notifyUrl(NotifyUrlData request);
+    void appletNotifyUrl(NotifyUrlData request);
+
+    PayOrderData wxPublicPay(T request);
+
+    void publicNotifyUrl(NotifyUrlData request);
 }

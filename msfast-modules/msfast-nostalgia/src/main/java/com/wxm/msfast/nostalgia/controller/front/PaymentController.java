@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,5 +25,12 @@ public class PaymentController {
     @GetMapping("/pay/menu")
     public R<PayMenuResponse> payMenu() {
         return R.ok(frUserService.payMenu());
+    }
+
+    @ApiOperation("支付选择查询-通过code")
+    @ApiOperationSort(value = 2)
+    @GetMapping("/pay/menu/code")
+    public R<PayMenuResponse> payMenuCode(@RequestParam String code) {
+        return R.ok(frUserService.payMenuByCode(code));
     }
 }

@@ -12,7 +12,17 @@ public class IWxPayServiceImpl <T extends OrderSubmitRequest> implements IWxPayS
     }
 
     @Override
-    public void notifyUrl(NotifyUrlData request) {
+    public void appletNotifyUrl(NotifyUrlData request) {
+
+    }
+
+    @Override
+    public PayOrderData wxPublicPay(T request) {
+        return null;
+    }
+
+    @Override
+    public void publicNotifyUrl(NotifyUrlData request) {
 
     }
 }

@@ -34,7 +34,7 @@ public class WxPayController {
     @ApiOperation(value = "小程序支付")
     @ApiOperationSort(1)
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"phone\":\"code 必填\",\"verificationCode\":\"code 必填\"}", required = true)
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
     })
     public R<Map<String, String>> wxAppletPay(@RequestBody @ApiIgnore String viewmodelJson) throws Exception {
 
@@ -54,6 +54,33 @@ public class WxPayController {
     @AuthIgnore
     public String wxNotifyUrl(HttpServletRequest request, HttpServletResponse response) {
 
-        return msfWxPayService.wxAppletPayNotifyUrl(request,response);
+        return msfWxPayService.wxPayNotifyUrl(request, response, "applet");
+    }
+
+    @PostMapping("/wxPublic")
+    @ApiOperation(value = "公众号支付")
+    @ApiOperationSort(2)
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
+    })
+    public R<Map<String, String>> wxPublic(@RequestBody @ApiIgnore String viewmodelJson) throws Exception {
+
+        IWxPayService IAuthorityService = SpringUtils.getBean(IWxPayService.class);
+
+        Class<? extends OrderSubmitRequest> clsViewModel = ReflexUtils.getOrderSubmitRequest(IAuthorityService);
+
+        OrderSubmitRequest viewModel = JSONObject.parseObject(viewmodelJson, clsViewModel);
+
+        //数据校验
+        ViolationUtils.violation(viewModel);
+        return R.ok(msfWxPayService.wxPublic(viewModel));
+    }
+
+    //微信公众号回调
+    @PostMapping("/wxPublic/notifyUrl")
+    @AuthIgnore
+    public String wxPublicNotifyUrl(HttpServletRequest request, HttpServletResponse response) {
+
+        return msfWxPayService.wxPayNotifyUrl(request, response, "public");
     }
 }

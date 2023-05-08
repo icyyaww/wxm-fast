@@ -45,7 +45,6 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
     @Override
     public PayOrderData wxAppletPay(PayRequest request) {
 
-
         String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
         if (StringUtils.isNotBlank(menuValue)) {
             List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
@@ -67,6 +66,7 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
                 payOrderEntity.setTitle(payOrderData.getBody());
                 payOrderEntity.setTotalFee(payMoneyResponse.getPrice());
                 payOrderEntity.setUserId(TokenUtils.getOwnerId());
+                payOrderEntity.setProductNo(request.getProductNo());
                 payOrderService.save(payOrderEntity);
 
                 return payOrderData;
@@ -77,7 +77,11 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
 
     @Transactional
     @Override
-    public void notifyUrl(NotifyUrlData request) {
+    public void appletNotifyUrl(NotifyUrlData request) {
+        notifyOrder(request);
+    }
+
+    private void notifyOrder(NotifyUrlData request) {
 
         log.info("回调方法{}", JSONObject.toJSONString(request));
         Wrapper<PayOrderEntity> queryWrapper = new QueryWrapper<PayOrderEntity>().lambda()
@@ -88,7 +92,7 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
             String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
             if (StringUtils.isNotBlank(menuValue)) {
                 List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
-                PayMoneyResponse payMoneyResponse = moneyResponseList.stream().filter(p -> p.getPrice() != null && p.getPrice() == 1).findFirst().orElse(null);
+                PayMoneyResponse payMoneyResponse = moneyResponseList.stream().filter(p -> p.getPrice() != null && p.getPrice().equals(payOrderEntity.getProductNo())).findFirst().orElse(null);
                 if (payMoneyResponse != null) {
                     String attach = request.getAttach();
                     JSONObject jsonObject = JSONObject.parseObject(attach);
@@ -107,5 +111,42 @@ public class WxPayServiceImpl extends IWxPayServiceImpl<PayRequest> {
             payOrderEntity.setStatus(PayOrderStatusEnum.SUCCESS);
             payOrderService.saveOrUpdate(payOrderEntity);
         }
+    }
+
+    @Override
+    public PayOrderData wxPublicPay(PayRequest request) {
+        String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
+        if (StringUtils.isNotBlank(menuValue)) {
+            List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
+            PayMoneyResponse payMoneyResponse = moneyResponseList.stream().filter(p -> p.getPrice() != null && p.getPrice().equals(request.getProductNo())).findFirst().orElse(null);
+            if (payMoneyResponse != null) {
+                PayOrderData payOrderData = new PayOrderData();
+                payOrderData.setBody("思君币");
+                String outTradeNo = MsfCommonTool.UUID();
+                payOrderData.setOutTradeNo(outTradeNo);
+                payOrderData.setTotalFee(1);//payMoneyResponse.getPrice() * 100);
+                Map<String, Object> attach = new HashMap<>();
+                attach.put("userId", request.getUserId());
+                payOrderData.setAttach(JSON.toJSONString(attach));
+
+                //保存订单
+                PayOrderEntity payOrderEntity = new PayOrderEntity();
+                payOrderEntity.setOutTradeNo(outTradeNo);
+                payOrderEntity.setStatus(PayOrderStatusEnum.PRE_PAY);
+                payOrderEntity.setTitle(payOrderData.getBody());
+                payOrderEntity.setTotalFee(payMoneyResponse.getPrice());
+                payOrderEntity.setUserId(request.getUserId());
+                payOrderEntity.setProductNo(request.getProductNo());
+                payOrderService.save(payOrderEntity);
+
+                return payOrderData;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void publicNotifyUrl(NotifyUrlData request) {
+        notifyOrder(request);
     }
 }

@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.wxm.msfast.base.auth.authority.service.WxAppletService;
+import com.wxm.msfast.base.auth.common.rest.response.WxAppletOpenResponse;
 import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
@@ -71,6 +73,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
 
     @Autowired
     RedissonClient redissonClient;
+
+
+    @Autowired
+    WxAppletService wxAppletService;
+
 
     @Override
     public Long countByOpenId(String openId) {
@@ -931,6 +938,31 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             payMenuResponse.setPayMoneyList(moneyResponseList);
         }
         return payMenuResponse;
+    }
+
+    @Override
+    public PayMenuResponse payMenuByCode(String code) {
+        WxAppletOpenResponse wxAppletOpenResponse = wxAppletService.getOpenIdInfoByCode(code);
+        PayMenuResponse payMenuResponse = new PayMenuResponse();
+        String menuValue = msfConfigService.getValueByCode(SysConfigCodeEnum.payMenuList.name());
+        if (StringUtils.isNotBlank(menuValue)) {
+            List<PayMoneyResponse> moneyResponseList = JSON.parseArray(menuValue, PayMoneyResponse.class);
+            payMenuResponse.setPayMoneyList(moneyResponseList);
+        }
+        if (wxAppletOpenResponse != null && StringUtils.isNotBlank(wxAppletOpenResponse.getUnionId())) {
+            FrUserEntity frUserEntity = getFrUserByUnionId(wxAppletOpenResponse.getUnionId());
+            if (frUserEntity == null) {
+                throw new JrsfException(BaseUserExceptionEnum.USER_NOT_EXIST_EXCEPTION);
+            }
+            BeanUtils.copyProperties(frUserEntity, payMenuResponse);
+        }
+        return payMenuResponse;
+    }
+
+    @Override
+    public FrUserEntity getFrUserByUnionId(String unionId) {
+        Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getUnionId, unionId);
+        return getOne(frUserEntityWrapper);
     }
 
     private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {

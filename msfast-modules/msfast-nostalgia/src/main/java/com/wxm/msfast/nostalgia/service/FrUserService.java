@@ -95,5 +95,9 @@ public interface FrUserService extends IService<FrUserEntity> {
     void deleteFruser();
 
     PayMenuResponse payMenu();
+
+    PayMenuResponse payMenuByCode(String code);
+
+    FrUserEntity getFrUserByUnionId(String unionId);
 }
 
