@@ -35,4 +35,6 @@ public class UserMatchingEntity extends BaseEntity {
     @TableField("desc_info")
     private String descInfo;
 
+    @TableField("is_unlock")
+    private Boolean isUnlock;
 }

@@ -26,4 +26,6 @@ public class LikeMePageResponse {
 
     @ApiModelProperty(value = "描述信息")
     private String descInfo;
+
+    private Boolean isUnlock;
 }

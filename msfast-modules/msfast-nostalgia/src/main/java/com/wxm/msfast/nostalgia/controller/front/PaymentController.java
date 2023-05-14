@@ -1,16 +1,15 @@
 package com.wxm.msfast.nostalgia.controller.front;
 
 import com.wxm.msfast.base.common.web.domain.R;
+import com.wxm.msfast.nostalgia.common.rest.request.payment.SeeLikeMeRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMenuResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.ViewLikeMeResponse;
 import com.wxm.msfast.nostalgia.service.FrUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("nostalgia/payment")
@@ -33,4 +32,21 @@ public class PaymentController {
     public R<PayMenuResponse> payMenuCode(@RequestParam String code) {
         return R.ok(frUserService.payMenuByCode(code));
     }
+
+
+    @ApiOperation("查看解锁价格")
+    @ApiOperationSort(value = 3)
+    @GetMapping("/viewLikeMePrice")
+    public R<ViewLikeMeResponse> viewLikeMePrice() {
+        return R.ok(frUserService.viewLikeMePrice());
+    }
+
+    @ApiOperation("用户解锁喜欢自己")
+    @ApiOperationSort(value = 4)
+    @PostMapping("/unlock/likeme")
+    public R<Void> unlockLikeme(@RequestBody SeeLikeMeRequest request) {
+        frUserService.unlockLikeme(request);
+        return R.ok();
+    }
+
 }

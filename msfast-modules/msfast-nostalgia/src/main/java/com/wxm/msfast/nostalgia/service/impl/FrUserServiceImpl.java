@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -30,12 +31,15 @@ import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineReques
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
+import com.wxm.msfast.nostalgia.common.rest.request.payment.SeeLikeMeRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.OutlineResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMenuResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMoneyResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.ViewLikeMeData;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.ViewLikeMeResponse;
 import com.wxm.msfast.nostalgia.dao.FrUserDao;
 import com.wxm.msfast.nostalgia.entity.*;
 import com.wxm.msfast.nostalgia.service.*;
@@ -963,6 +967,71 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     public FrUserEntity getFrUserByUnionId(String unionId) {
         Wrapper<FrUserEntity> frUserEntityWrapper = new QueryWrapper<FrUserEntity>().lambda().eq(FrUserEntity::getUnionId, unionId);
         return getOne(frUserEntityWrapper);
+    }
+
+    @Override
+    public ViewLikeMeResponse viewLikeMePrice() {
+
+        ViewLikeMeResponse viewLikeMeResponse = new ViewLikeMeResponse();
+        String value = msfConfigService.getValueByCode(SysConfigCodeEnum.viewlikeMe.name());
+        if (StringUtils.isNotBlank(value)) {
+            ViewLikeMeData viewLikeMeData = JSON.parseObject(value, ViewLikeMeData.class);
+            BeanUtils.copyProperties(viewLikeMeData, viewLikeMeResponse);
+        }
+        return viewLikeMeResponse;
+    }
+
+    @Override
+    @Transactional
+    public void unlockLikeme(SeeLikeMeRequest request) {
+
+        ViewLikeMeData viewLikeMeData = JSON.parseObject(msfConfigService.getValueByCode(SysConfigCodeEnum.viewlikeMe.name()), ViewLikeMeData.class);
+        FrUserEntity frUserEntity = this.getById(TokenUtils.getOwnerId());
+        if (request.getUserId() != null) {
+            if (frUserEntity.getGoldBalance().compareTo(viewLikeMeData.getSingle()) < 0) {
+                throw new JrsfException(UserExceptionEnum.BALANCE_LESS);
+            }
+
+            //用户解锁
+            Wrapper<UserMatchingEntity> updateWrapper = new UpdateWrapper<UserMatchingEntity>().lambda()
+                    .eq(UserMatchingEntity::getUserId, request.getUserId())
+                    .eq(UserMatchingEntity::getResult, true)
+                    .eq(UserMatchingEntity::getOtherUser, TokenUtils.getOwnerId())
+                    .set(UserMatchingEntity::getIsUnlock, true);
+            this.userMatchingService.update(updateWrapper);
+            frUserEntity.setGoldBalance(frUserEntity.getGoldBalance() - viewLikeMeData.getSingle());
+            this.updateById(frUserEntity);
+
+        } else {
+            //解锁全部
+            Wrapper<UserMatchingEntity> countWrapper = new QueryWrapper<UserMatchingEntity>().lambda()
+                    .eq(UserMatchingEntity::getResult, true)
+                    .eq(UserMatchingEntity::getOtherUser, TokenUtils.getOwnerId())
+                    .and(wrapper -> wrapper.isNull(UserMatchingEntity::getIsUnlock)
+                            .or().eq(UserMatchingEntity::getIsUnlock,false));
+            Long count = this.userMatchingService.count(countWrapper);
+            double price = (count * viewLikeMeData.getSingle()) * viewLikeMeData.getDiscount();
+            BigDecimal priceDecimal=new BigDecimal(price);
+            Integer priceInt=priceDecimal.intValue();
+            if (priceInt.compareTo(viewLikeMeData.getSingle()) < 0) {
+                throw new JrsfException(UserExceptionEnum.LIKE_ME_LESS_PRICE);
+            }
+
+            if (frUserEntity.getGoldBalance().compareTo(priceInt) < 0) {
+                throw new JrsfException(UserExceptionEnum.BALANCE_LESS);
+            }
+
+            //解锁全部
+            Wrapper<UserMatchingEntity> updateWrapper = new UpdateWrapper<UserMatchingEntity>().lambda()
+                    .eq(UserMatchingEntity::getResult, true)
+                    .eq(UserMatchingEntity::getOtherUser, TokenUtils.getOwnerId())
+                    .set(UserMatchingEntity::getIsUnlock, true);
+            this.userMatchingService.update(updateWrapper);
+            frUserEntity.setGoldBalance(frUserEntity.getGoldBalance() -priceInt);
+            this.updateById(frUserEntity);
+
+        }
+
     }
 
     private UserMatchingEntity getUserMatch(Integer ownerId, Integer id) {

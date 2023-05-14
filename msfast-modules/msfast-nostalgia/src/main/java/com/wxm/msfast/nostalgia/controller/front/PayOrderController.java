@@ -1,4 +1,4 @@
-package com.wxm.msfast.nostalgia.controller;
+package com.wxm.msfast.nostalgia.controller.front;
 
 //import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;

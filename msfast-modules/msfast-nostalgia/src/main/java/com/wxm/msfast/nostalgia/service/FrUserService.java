@@ -8,12 +8,14 @@ import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserExamineRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.payment.SeeLikeMeRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.OutlineResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.admin.user.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.*;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.UserInfoResponse;
 import com.wxm.msfast.nostalgia.common.rest.response.front.payment.PayMenuResponse;
+import com.wxm.msfast.nostalgia.common.rest.response.front.payment.ViewLikeMeResponse;
 import com.wxm.msfast.nostalgia.entity.FrUserEntity;
 import org.springframework.scheduling.annotation.Async;
 
@@ -99,5 +101,9 @@ public interface FrUserService extends IService<FrUserEntity> {
     PayMenuResponse payMenuByCode(String code);
 
     FrUserEntity getFrUserByUnionId(String unionId);
+
+    ViewLikeMeResponse viewLikeMePrice();
+
+    void unlockLikeme(SeeLikeMeRequest request);
 }
 
