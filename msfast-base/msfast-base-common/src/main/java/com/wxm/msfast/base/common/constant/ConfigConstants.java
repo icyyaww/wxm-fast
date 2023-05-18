@@ -105,6 +105,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.pay.wxpublic.notify-url:}")
     private String payWxPublicNotifyUrl;
 
+    @Value("${wxmfast.config.common.enable-swagger:false}")
+    private Boolean enableSwagger;
+
 
     /**
      * @Description: 是否启用redis 默认false
@@ -355,5 +358,9 @@ public class ConfigConstants {
 
     public static String PAY_WX_PUBLIC_NOTIFY_URL() {
         return SpringUtils.getBean(ConfigConstants.class).getPayWxPublicNotifyUrl();
+    }
+
+    public static Boolean ENABLE_SWAGGER() {
+        return SpringUtils.getBean(ConfigConstants.class).getEnableSwagger();
     }
 }

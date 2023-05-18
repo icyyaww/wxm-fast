@@ -40,6 +40,7 @@ public class SwaggerConfig {
                 //包下的类，才生成接口文档
                 .paths(PathSelectors.any())
                 .build()
+                .enable(ConfigConstants.ENABLE_SWAGGER())
                 .globalOperationParameters(newArrayList(new ParameterBuilder()
                         .name(ConfigConstants.AUTHENTICATION())
                         .description("token")
