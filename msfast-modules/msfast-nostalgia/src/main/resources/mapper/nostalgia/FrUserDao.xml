@@ -105,10 +105,12 @@
                 <![CDATA[ and DATE_FORMAT(fu.birthday, '%Y-%m-%d %T')<=  DATE_FORMAT(#{endDate}, '%Y-%m-%d %T') ]]>
             </if>
             <if test="city!=null">
-                and fu.city in
+                and (fu.city in
                 <foreach collection="city" index="index" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
+                or fu.user_type='Dummy')
+
             </if>
         </where>
         order by mattrue desc,fu.lately_time desc

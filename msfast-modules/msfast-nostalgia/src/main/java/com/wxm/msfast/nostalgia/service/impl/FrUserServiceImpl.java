@@ -17,11 +17,13 @@ import com.wxm.msfast.base.auth.service.MsfConfigService;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
+import com.wxm.msfast.base.common.service.BaseCommonService;
 import com.wxm.msfast.base.common.utils.DateUtils;
 import com.wxm.msfast.base.common.utils.PageResult;
 import com.wxm.msfast.base.common.utils.SpringUtils;
 import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.file.service.MsfFileService;
+import com.wxm.msfast.base.websocket.common.constant.WebSocketConstants;
 import com.wxm.msfast.nostalgia.common.constant.Constants;
 import com.wxm.msfast.nostalgia.common.enums.*;
 import com.wxm.msfast.nostalgia.common.exception.UserExceptionEnum;
@@ -82,6 +84,8 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
     @Autowired
     WxAppletService wxAppletService;
 
+    @Autowired
+    BaseCommonService baseCommonService;
 
     @Override
     public Long countByOpenId(String openId) {
@@ -118,6 +122,13 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             RecommendUserInfoResponse userInfoResponse = getRecommendUserInfoByParam(param);
             if (userInfoResponse != null) {
                 userInfoResponse.setSurplusNum(num);
+            } else {
+                Map<String, Object> paramNUll = new HashMap<>();
+                paramNUll.put("gender", request.getGender().name());
+                userInfoResponse = getRecommendUserInfoByParam(paramNUll);
+                if (userInfoResponse != null) {
+                    userInfoResponse.setSurplusNum(num);
+                }
             }
             return userInfoResponse;
         } else {
@@ -389,7 +400,13 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
                 setUserAuth(frUserEntity, AuthStatusEnum.EXAMINE);
             }
-
+            if (CollectionUtil.isNotEmpty(frUserEntity.getWaitApprovedImg())) {
+                frUserEntity.setHeadPortrait(frUserEntity.getWaitApprovedImg().get(0));
+                Map<String, Object> map = new HashMap<>();
+                map.put(WebSocketConstants.HEAD_PORTRAIT, frUserEntity.getHeadPortrait());
+                map.put(WebSocketConstants.NICK_NAME, frUserEntity.getNickName());
+                baseCommonService.updateUser(frUserEntity.getId(), map);
+            }
             this.updateById(frUserEntity);
 
         } finally {
@@ -430,6 +447,10 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 BeanUtils.copyProperties(request, frUserEntity);
                 frUserEntity.setAuthStatus(AuthStatusEnum.EXAMINE);
                 this.updateById(frUserEntity);
+                Map<String, Object> map = new HashMap<>();
+                map.put(WebSocketConstants.HEAD_PORTRAIT, frUserEntity.getHeadPortrait());
+                map.put(WebSocketConstants.NICK_NAME, frUserEntity.getNickName());
+                baseCommonService.updateUser(frUserEntity.getId(), map);
             }
 
         } finally {
@@ -483,7 +504,6 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             userInfoResponse.setAge(DateUtils.getAgeByBirth(frUserEntity.getBirthday()));
         }
         Integer ownerId = TokenUtils.getOwnerId();
-
         Wrapper<UserMatchingEntity> queryWrapper = new QueryWrapper<UserMatchingEntity>()
                 .lambda()
                 .eq(UserMatchingEntity::getUserId, ownerId)
@@ -566,7 +586,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
         FrUserExamineEntity frUserExamineEntity = new FrUserExamineEntity();
         frUserExamineEntity.setAuthStatus(request.getResult());
         frUserExamineEntity.setUserId(request.getUserId());
-        frUserExamineEntity.setRemarks(request.getRemarks());
+        frUserExamineEntity.setRemarks((!AuthStatusEnum.PASS.equals(request.getResult())) ? request.getResult().getDesc() + " " : "" + request.getRemarks());
         frUserExamineEntity.setAuthType(infoAuth);
         this.frUserExamineService.save(frUserExamineEntity);
     }
@@ -892,7 +912,9 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
             }
         }
         Integer ownerId = TokenUtils.getOwnerId();
-
+        if (ownerId == null) {
+            ownerId = 0;
+        }
         UserMatchingEntity selfResult = getUserMatch(ownerId, id);
         UserMatchingEntity otherResult = getUserMatch(id, ownerId);
         if (selfResult != null && otherResult != null && selfResult.getResult() && otherResult.getResult()) {
@@ -1008,11 +1030,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     .eq(UserMatchingEntity::getResult, true)
                     .eq(UserMatchingEntity::getOtherUser, TokenUtils.getOwnerId())
                     .and(wrapper -> wrapper.isNull(UserMatchingEntity::getIsUnlock)
-                            .or().eq(UserMatchingEntity::getIsUnlock,false));
+                            .or().eq(UserMatchingEntity::getIsUnlock, false));
             Long count = this.userMatchingService.count(countWrapper);
             double price = (count * viewLikeMeData.getSingle()) * viewLikeMeData.getDiscount();
-            BigDecimal priceDecimal=new BigDecimal(price);
-            Integer priceInt=priceDecimal.intValue();
+            BigDecimal priceDecimal = new BigDecimal(price);
+            Integer priceInt = priceDecimal.intValue();
             if (priceInt.compareTo(viewLikeMeData.getSingle()) < 0) {
                 throw new JrsfException(UserExceptionEnum.LIKE_ME_LESS_PRICE);
             }
@@ -1027,7 +1049,7 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                     .eq(UserMatchingEntity::getOtherUser, TokenUtils.getOwnerId())
                     .set(UserMatchingEntity::getIsUnlock, true);
             this.userMatchingService.update(updateWrapper);
-            frUserEntity.setGoldBalance(frUserEntity.getGoldBalance() -priceInt);
+            frUserEntity.setGoldBalance(frUserEntity.getGoldBalance() - priceInt);
             this.updateById(frUserEntity);
 
         }

@@ -13,8 +13,6 @@ import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 
 /**
  * 前台用户
@@ -117,6 +115,7 @@ public class FrUserController {
     @ApiOperation("前台用户详情")
     @ApiOperationSort(value = 12)
     @GetMapping("/front/userInfo/{id}")
+    @AuthIgnore
     public R<FrontUserInfoResponse> frontUserInfo(@PathVariable Integer id) {
         return R.ok(frUserService.frontUserInfo(id));
     }
