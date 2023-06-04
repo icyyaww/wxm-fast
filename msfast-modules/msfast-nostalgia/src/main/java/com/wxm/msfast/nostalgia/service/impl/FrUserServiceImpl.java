@@ -183,6 +183,13 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 }
                 if (userInfoResponse != null) {
                     userInfoResponse.setSurplusNum(numSize);
+                } else {
+                    Map<String, Object> paramNUll = new HashMap<>();
+                    paramNUll.put("gender", frUserEntity.getGender().name());
+                    userInfoResponse = getRecommendUserInfoByParam(paramNUll);
+                    if (userInfoResponse != null) {
+                        userInfoResponse.setSurplusNum(num);
+                    }
                 }
                 return userInfoResponse;
             } finally {
