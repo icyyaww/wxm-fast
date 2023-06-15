@@ -1,9 +1,6 @@
 package com.wxm.msfast.base.auth.service;
 
-import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
-import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
-import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
-import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
+import com.wxm.msfast.base.auth.common.rest.request.*;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 
 public interface TokenService<T extends LoginRequest, R extends RegisterRequest> {
@@ -11,6 +8,8 @@ public interface TokenService<T extends LoginRequest, R extends RegisterRequest>
     void register(R request);
 
     LoginUserResponse login(T request);
+
+    LoginUserResponse smsLogin(SmsLoginRequest request);
 
     void logout();
 

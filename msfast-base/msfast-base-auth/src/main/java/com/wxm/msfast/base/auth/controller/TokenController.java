@@ -2,10 +2,7 @@ package com.wxm.msfast.base.auth.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
-import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
-import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
-import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
-import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
+import com.wxm.msfast.base.auth.common.rest.request.*;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.common.validtype.*;
 import com.wxm.msfast.base.auth.service.TokenService;
@@ -79,9 +76,19 @@ public class TokenController {
         return R.ok(tokenService.login(viewModel));
     }
 
+    @AuthIgnore
+    @PostMapping("/sms/login")
+    @ApiOperation(value = "验证码登陆")
+    @ApiOperationSort(3)
+    public R<LoginUserResponse> login(@RequestBody @Valid SmsLoginRequest request) {
+
+        return R.ok(tokenService.smsLogin(request));
+    }
+
+
     @DeleteMapping("/logout")
     @ApiOperation(value = "退出登陆")
-    @ApiOperationSort(3)
+    @ApiOperationSort(4)
     public R<Void> logout() {
         tokenService.logout();
         return R.ok();
@@ -90,7 +97,7 @@ public class TokenController {
     @AuthIgnore
     @ApiOperation(value = "发送短信验证码")
     @PostMapping("/sendsms")
-    @ApiOperationSort(4)
+    @ApiOperationSort(5)
     public R<Void> sendSms(@RequestBody @Valid SendSmsRequest sendSmsRequest) {
         tokenService.sendSms(sendSmsRequest);
         return R.ok();
@@ -99,7 +106,7 @@ public class TokenController {
     @AuthIgnore
     @ApiOperation(value = "校验短信验证码")
     @PostMapping("/checksms")
-    @ApiOperationSort(5)
+    @ApiOperationSort(6)
     public R<Void> checkSms(@RequestBody @Valid CheckSmsRequest checkSmsRequest) {
         tokenService.checkSms(checkSmsRequest);
         return R.ok();
@@ -108,7 +115,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/wxAppletRegister")
     @ApiOperation(value = "微信小程序注册")
-    @ApiOperationSort(6)
+    @ApiOperationSort(7)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
     })
@@ -131,7 +138,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/wxAppletLogin")
     @ApiOperation(value = "微信小程序登陆")
-    @ApiOperationSort(7)
+    @ApiOperationSort(8)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"code\":\"code 必填\"}", required = true)
     })
@@ -152,7 +159,7 @@ public class TokenController {
     @AuthIgnore
     @PostMapping("/admin/login")
     @ApiOperation(value = "后台登陆")
-    @ApiOperationSort(8)
+    @ApiOperationSort(9)
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = ParamTypeConstants.requestBody, name = "body", value = "{\"username\":\"用户名 必填\",\"password\":\"登录密码 必填\"}", required = true)
     })

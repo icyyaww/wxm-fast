@@ -5,10 +5,7 @@ import com.wxm.msfast.base.auth.authority.service.IAdminAuthorityService;
 import com.wxm.msfast.base.auth.authority.service.IAuthorityService;
 import com.wxm.msfast.base.auth.authority.service.WxAppletService;
 import com.wxm.msfast.base.auth.common.enums.MessageType;
-import com.wxm.msfast.base.auth.common.rest.request.CheckSmsRequest;
-import com.wxm.msfast.base.auth.common.rest.request.LoginRequest;
-import com.wxm.msfast.base.auth.common.rest.request.RegisterRequest;
-import com.wxm.msfast.base.auth.common.rest.request.SendSmsRequest;
+import com.wxm.msfast.base.auth.common.rest.request.*;
 import com.wxm.msfast.base.auth.common.rest.response.LoginUserResponse;
 import com.wxm.msfast.base.auth.common.rest.response.WxAppletOpenResponse;
 import com.wxm.msfast.base.auth.service.TokenService;
@@ -17,6 +14,7 @@ import com.wxm.msfast.base.common.constant.ConfigConstants;
 import com.wxm.msfast.base.common.constant.SecurityConstants;
 import com.wxm.msfast.base.common.entity.LoginUser;
 import com.wxm.msfast.base.common.enums.BaseExceptionEnum;
+import com.wxm.msfast.base.common.enums.BaseUserExceptionEnum;
 import com.wxm.msfast.base.common.enums.BaseUserTypeEnum;
 import com.wxm.msfast.base.common.exception.JrsfException;
 import com.wxm.msfast.base.common.service.ISendSmsService;
@@ -84,6 +82,31 @@ public class TokenServiceImpl implements TokenService {
         //用户登陆业务校验
         IAuthorityService iAuthorityService = SpringUtils.getBean(IAuthorityService.class);
         LoginUser loginUser = iAuthorityService.login(request);
+        if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
+            //登陆失败
+            throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);
+        }
+
+        loginUserResponse.setInfo(loginUser.getInfo());
+
+        loginUserResponse.setToken(createToken(loginUser));
+
+        return loginUserResponse;
+    }
+
+    @Override
+    public LoginUserResponse smsLogin(SmsLoginRequest request) {
+
+        LoginUserResponse loginUserResponse = new LoginUserResponse();
+
+        CheckSmsRequest checkSmsRequest = new CheckSmsRequest();
+        checkSmsRequest.setMessageType(MessageType.LOGIN);
+        BeanUtils.copyProperties(request, checkSmsRequest);
+        checkSms(checkSmsRequest);
+
+        //用户登陆业务校验
+        IAuthorityService iAuthorityService = SpringUtils.getBean(IAuthorityService.class);
+        LoginUser loginUser = iAuthorityService.smsLogin(request);
         if (ObjectUtil.isNull(loginUser) || ObjectUtil.isNull(loginUser.getId())) {
             //登陆失败
             throw new JrsfException(BaseExceptionEnum.LOGIN_FAIL_EXCEPTION);

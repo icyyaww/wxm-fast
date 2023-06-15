@@ -121,7 +121,7 @@ public class FileController {
      * 文件上传请求
      */
     @PostMapping("/lasting/upload")
-    @ApiOperation(value = "文件上传")
+    @ApiOperation(value = "文件上传-持久化")
     public R<FileResponse> lastingUpload(@RequestPart MultipartFile file) throws Exception {
 
         try {
