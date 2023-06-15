@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class AdminAuthority implements IAdminAuthorityService {
+
     @Override
     public LoginUser adminLogin(LoginRequest loginRequest) {
 

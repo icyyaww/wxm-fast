@@ -17,4 +17,13 @@ public class NumberUtils {
             return matcher.matches();
         }
     }
+
+    public static String getRandom(int length) {
+        String message = "";
+        for (int i = 0; i < length; i++) {
+            int random = (int) (Math.random() * 10);
+            message += String.valueOf(random);
+        }
+        return message;
+    }
 }
