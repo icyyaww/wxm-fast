@@ -186,9 +186,11 @@ public class FrUserServiceImpl extends ServiceImpl<FrUserDao, FrUserEntity> impl
                 } else {
                     Map<String, Object> paramNUll = new HashMap<>();
                     paramNUll.put("gender", frUserEntity.getGender().name());
+                    paramNUll.put("selfId", frUserEntity.getId());
+                    paramNUll.put("size", 1);
                     userInfoResponse = getRecommendUserInfoByParam(paramNUll);
                     if (userInfoResponse != null) {
-                        userInfoResponse.setSurplusNum(num);
+                        userInfoResponse.setSurplusNum(numSize);
                     }
                 }
                 return userInfoResponse;
