@@ -69,5 +69,8 @@ public interface MsfFileService extends IService<MsfFileEntity> {
 
     @Async
     void deleteImg(List<String> oldImg, List<String> imgList);
+
+    @Async
+    void deleteSaveFile(Object object);
 }
 

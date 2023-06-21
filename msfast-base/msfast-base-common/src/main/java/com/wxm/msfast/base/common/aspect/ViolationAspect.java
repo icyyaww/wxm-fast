@@ -62,7 +62,10 @@ public class ViolationAspect {
                 fieldId.setAccessible(true);
                 Integer fieldValue = null;
                 try {
-                    fieldValue = (Integer) fieldId.get(object);
+                    Object objectId = fieldId.get(object);
+                    if (objectId != null) {
+                        fieldValue = (Integer) objectId;
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }

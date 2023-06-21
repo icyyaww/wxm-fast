@@ -1,6 +1,7 @@
 package com.wxm.msfast.base.file.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ClassUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -19,12 +20,14 @@ import io.minio.MinioClient;
 import io.minio.RemoveObjectArgs;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +39,9 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
 
     @Autowired
     private MinioConfig minioConfig;
+
+    @Autowired
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     @Transactional
@@ -179,6 +185,45 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                     deleteFileByUrl(model);
                 }
             });
+        }
+    }
+
+    @Override
+    public void deleteSaveFile(Object object) {
+
+        Field[] Fields = ClassUtil.getDeclaredFields(object.getClass());
+        for (Field field : Fields) {
+            FileSave fileSave = field.getAnnotation(FileSave.class);
+            if (fileSave != null && StringUtils.isNotBlank(fileSave.table()) && StringUtils.isNotBlank(fileSave.field())) {
+                Field fieldId = ClassUtil.getDeclaredField(object.getClass(), "id");
+                if (fieldId != null) {
+
+                    Integer fieldIdValue = null;
+                    try {
+                        fieldId.setAccessible(true);
+                        Object objectId = fieldId.get(object);
+                        if (objectId != null) {
+                            fieldIdValue = (Integer) objectId;
+                        }
+
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    String urlSql = "select tb." + fileSave.field() + " from " + fileSave.table() + " tb where  tb.id=:id";
+                    HashMap<String, Object> param = new HashMap<>();
+                    param.put("id", fieldIdValue);
+                    List<String> urlList = namedParameterJdbcTemplate.queryForList(urlSql, param, String.class);
+                    field.setAccessible(true);
+                    try {
+                        String newUrl = (String) field.get(object);
+                        if (CollectionUtil.isNotEmpty(urlList) && StringUtils.isNotBlank(urlList.get(0)) && !urlList.get(0).equals(newUrl)) {
+                            deleteFileByUrl(urlList.get(0));
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
     }
 
