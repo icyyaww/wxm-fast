@@ -7,6 +7,7 @@ import com.wxm.msfast.base.common.utils.TokenUtils;
 import com.wxm.msfast.base.common.web.domain.R;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.msfast.nostalgia.common.rest.request.fruser.RecommendUserRequest;
+import com.wxm.msfast.nostalgia.common.rest.request.test.ForeignRequest;
 import com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse;
 import com.wxm.msfast.nostalgia.entity.UserMatchingEntity;
 import com.wxm.msfast.nostalgia.service.FrUserService;
@@ -69,6 +70,14 @@ public class TestController {
         choiceRequest.setOtherUser(userInfoResponse.getId());
         choiceRequest.setResult(true);
         userMatchingService.match(choiceRequest);
+
+        return R.ok();
+    }
+
+    @ApiOperation("外键表")
+    @ApiOperationSort(value = 1)
+    @PostMapping("/foreign")
+    public R<Void> foreign(@RequestBody ForeignRequest request) {
 
         return R.ok();
     }

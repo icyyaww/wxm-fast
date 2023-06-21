@@ -27,7 +27,9 @@ public enum BaseExceptionEnum implements BaseExceptionEnumInterface {
     PASSWORD_ISEMPTY(10019, "密码为空"),
     APPID_ISEMPTY(10020, "appid为空"),
     SECRET_ISEMPTY(10021, "secret为空"),
-    API_ERROR(10022, "调用其他api错误");
+    API_ERROR(10022, "调用其他api错误"),
+    Foreign_Value_Not_Exist(10023, "外键数据不存在");
+
 
     private Integer code;
     private String msg;
