@@ -14,6 +14,7 @@ import com.wxm.msfast.base.file.service.MsfFileService;
 import com.wxm.msfast.base.file.utils.FileUploadUtils;
 import com.wxm.msfast.base.file.utils.FileUtils;
 import io.minio.*;
+import io.minio.errors.ErrorResponseException;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -138,7 +139,12 @@ public class MinioFileServiceImpl implements IFileService {
             //文件下载
             in = client.getObject(GetObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filename).build());
             IOUtils.copy(in, response.getOutputStream());
-        } finally {
+        }
+        catch (ErrorResponseException e)
+        {
+            throw new  JrsfException(FileExceptionEnum.File_NOT_Exists_Exception);
+        }
+        finally {
             if (in != null) {
                 try {
                     in.close();

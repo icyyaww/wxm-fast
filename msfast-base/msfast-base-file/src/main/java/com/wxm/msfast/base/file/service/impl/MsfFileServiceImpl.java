@@ -227,6 +227,14 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
         }
     }
 
+    @Override
+    public String getFileNameByUrl(String url) {
+        if (StringUtils.isNotBlank(url)) {
+            return url.substring(url.indexOf(minioConfig.getBucketName())+minioConfig.getBucketName().length()+1);
+        }
+        return null;
+    }
+
     private void changeTempUrl(String url) {
         if (StringUtils.isBlank(url))
             return;
