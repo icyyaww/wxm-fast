@@ -4,7 +4,7 @@
 <mapper namespace="com.wxm.msfast.community.dao.FrUserFollowDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.community.entity.FrUserFollowEntity" id="frUserFollowMap">
+    <resultMap type="com.wxm.community.entity.FrUserFollowEntity" id="frUserFollowMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
         <result property="createTime" column="create_time"/>

@@ -4,7 +4,7 @@
 <mapper namespace="com.wxm.msfast.community.dao.FrBlogDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.community.entity.FrBlogEntity" id="frBlogMap">
+    <resultMap type="com.wxm.community.entity.FrBlogEntity" id="frBlogMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
         <result property="createTime" column="create_time"/>

@@ -4,7 +4,7 @@
 <mapper namespace="com.wxm.msfast.community.dao.FrUserDao">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.community.entity.FrUserEntity" id="frUserMap">
+    <resultMap type="com.wxm.community.entity.FrUserEntity" id="frUserMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
         <result property="createTime" column="create_time"/>
@@ -25,7 +25,7 @@
     </resultMap>
 
     <!--获取首页动态用户信息-->
-    <resultMap id="dynamicUserResponse" type="com.wxm.msfast.community.common.rest.response.user.DynamicUserResponse">
+    <resultMap id="dynamicUserResponse" type="com.wxm.community.common.rest.response.user.DynamicUserResponse">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="head_portrait" jdbcType="VARCHAR" property="headPortrait"/>
@@ -45,7 +45,7 @@
     </select>
 
 
-    <resultMap id="followPageResponse" type="com.wxm.msfast.community.common.rest.response.user.FollowPageResponse">
+    <resultMap id="followPageResponse" type="com.wxm.community.common.rest.response.user.FollowPageResponse">
     </resultMap>
 
     <!--个人中心 我的关注列表-->

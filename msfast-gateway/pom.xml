@@ -4,10 +4,10 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>msfast-parent</artifactId>
-        <groupId>com.wxm.msfast</groupId>
+        <groupId>com.wxm</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <groupId>com.wxm.msfast</groupId>
+    <groupId>com.wxm</groupId>
     <artifactId>msfast-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>msfast-gateway</name>
@@ -18,7 +18,7 @@
     <dependencies>
         <!--服务必要依赖-->
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-common</artifactId>
             <version>${msfast.base.common.version}</version>
             <exclusions>

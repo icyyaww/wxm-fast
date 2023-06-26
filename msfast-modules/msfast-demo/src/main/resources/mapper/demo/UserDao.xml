@@ -4,7 +4,7 @@
 <mapper namespace="com.wxm.msfast.demo.dao.UserDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.demo.entity.UserEntity" id="userMap">
+    <resultMap type="com.wxm.demo.entity.UserEntity" id="userMap">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="age" column="age"/>

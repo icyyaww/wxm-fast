@@ -1,11 +1,7 @@
 import cn.hutool.core.util.RandomUtil;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.wxm.msfast.MsfastCommunityApplication;
-import com.wxm.msfast.base.auth.entity.MsfConfigEntity;
-import com.wxm.msfast.base.auth.service.MsfConfigService;
-import com.wxm.msfast.community.entity.FrUserEntity;
-import com.wxm.msfast.community.service.FrUserService;
+import com.wxm.MsfastCommunityApplication;
+import com.wxm.base.auth.service.MsfConfigService;
+import com.wxm.community.service.FrUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

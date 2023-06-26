@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>msfast-modules</artifactId>
-        <groupId>com.wxm.msfast</groupId>
+        <groupId>com.wxm</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -16,7 +16,7 @@
     <dependencies>
         <!--服务必要依赖-->
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-common</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
@@ -26,27 +26,27 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-auth</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-file</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-websocket</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-role</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.wxm.msfast</groupId>
+            <groupId>com.wxm</groupId>
             <artifactId>msfast-base-pay</artifactId>
             <version>${msfast.base.common.version}</version>
         </dependency>

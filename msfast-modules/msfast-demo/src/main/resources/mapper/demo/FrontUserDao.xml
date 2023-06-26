@@ -4,7 +4,7 @@
 <mapper namespace="com.wxm.msfast.demo.dao.FrontUserDao">
 
 	<!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.demo.entity.FrontUserEntity" id="frontUserMap">
+    <resultMap type="com.wxm.demo.entity.FrontUserEntity" id="frontUserMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
         <result property="createTime" column="create_time"/>

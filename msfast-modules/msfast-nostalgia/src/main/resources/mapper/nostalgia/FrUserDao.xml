@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.wxm.msfast.nostalgia.dao.FrUserDao">
+<mapper namespace="com.wxm.nostalgia.dao.FrUserDao">
 
     <!-- 可根据自己的需求，是否要使用 -->
-    <resultMap type="com.wxm.msfast.nostalgia.entity.FrUserEntity" id="frUserMap">
+    <resultMap type="com.wxm.nostalgia.entity.FrUserEntity" id="frUserMap">
         <result property="id" column="id"/>
         <result property="creator" column="creator"/>
         <result property="createTime" column="create_time"/>
@@ -35,30 +35,30 @@
         <result property="annualSalary" column="annual_salary"/>
         <result property="weChatNumber" column="we_chat_number"/>
         <result property="imgList" column="img_list"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.UserImageListTypeHandler"/>
         <result property="authStatus" column="auth_status"/>
         <result property="waitApprovedImg" column="wait_approved_img"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.UserImageListTypeHandler"/>
         <result property="goldBalance" column="gold_balance"/>
         <result property="userType" column="user_type"/>
         <result property="sessionKey" column="session_key"/>
         <result property="unionId" column="union_id"/>
         <result property="characterType" column="character_type"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.CharacterTypeHandler"/>
         <result property="latelyTime" column="lately_time"/>
         <result property="additional" column="additional"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.AdditionalHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.AdditionalHandler"/>
     </resultMap>
 
 
     <resultMap id="recommendUserInfo"
-               type="com.wxm.msfast.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse">
+               type="com.wxm.nostalgia.common.rest.response.front.fruser.RecommendUserInfoResponse">
         <result property="imgList" column="img_list"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.UserImageListTypeHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.UserImageListTypeHandler"/>
         <result property="characterType" column="character_type"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.CharacterTypeHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.CharacterTypeHandler"/>
         <result property="additional" column="additional"
-                typeHandler="com.wxm.msfast.nostalgia.common.handle.AdditionalHandler"/>
+                typeHandler="com.wxm.nostalgia.common.handle.AdditionalHandler"/>
     </resultMap>
 
     <!--首页推荐用户-->
@@ -121,7 +121,7 @@
     </select>
 
     <resultMap id="likeResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.front.fruser.LikeResponse">
+               type="com.wxm.nostalgia.common.rest.response.front.fruser.LikeResponse">
     </resultMap>
 
     <select id="getPersonalLike" resultMap="likeResponse" parameterType="int">
@@ -133,11 +133,11 @@ select
 
 
     <resultMap id="userPageResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserPageResponse">
+               type="com.wxm.nostalgia.common.rest.response.admin.user.UserPageResponse">
     </resultMap>
 
     <select id="getExaminePage" resultMap="userPageResponse"
-            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+            parameterType="com.wxm.nostalgia.common.rest.request.admin.user.UserPageRequest">
         select
         fu.id,
         fu.create_time,
@@ -165,10 +165,10 @@ select
 
 
     <resultMap id="identityResponse"
-               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse">
+               type="com.wxm.nostalgia.common.rest.response.admin.user.UserIdentityPageResponse">
     </resultMap>
     <select id="getIdentityPage" resultMap="identityResponse"
-            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+            parameterType="com.wxm.nostalgia.common.rest.request.admin.user.UserPageRequest">
         select
         fu.id,
         fu.create_time,
@@ -196,10 +196,10 @@ select
 
 
     <resultMap id="educationPage"
-               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserEducationPageResponse">
+               type="com.wxm.nostalgia.common.rest.response.admin.user.UserEducationPageResponse">
     </resultMap>
     <select id="getUserEducationPage" resultMap="educationPage"
-            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserPageRequest">
+            parameterType="com.wxm.nostalgia.common.rest.request.admin.user.UserPageRequest">
         select
         fu.id,
         fu.create_time,
@@ -226,10 +226,10 @@ select
     </select>
 
     <resultMap id="userInfoPage"
-               type="com.wxm.msfast.nostalgia.common.rest.response.admin.user.UserInfoPageResponse">
+               type="com.wxm.nostalgia.common.rest.response.admin.user.UserInfoPageResponse">
     </resultMap>
     <select id="getUserInfoPage" resultMap="userInfoPage"
-            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.user.UserInfoRequest">
+            parameterType="com.wxm.nostalgia.common.rest.request.admin.user.UserInfoRequest">
         select
         fu.id,
         fu.create_time,
@@ -280,7 +280,7 @@ select
     </select>
 
     <resultMap id="genderPie"
-               type="com.wxm.msfast.nostalgia.common.rest.response.admin.statistic.ProportionResponse">
+               type="com.wxm.nostalgia.common.rest.response.admin.statistic.ProportionResponse">
     </resultMap>
     <select id="getGenderPie" resultMap="genderPie">
        select
@@ -319,7 +319,7 @@ order by count(1) desc
 
 
     <select id="getUserRegisterStatistic" resultMap="genderPie"
-            parameterType="com.wxm.msfast.nostalgia.common.rest.request.admin.statistic.UserRegisterStatisticRequest">
+            parameterType="com.wxm.nostalgia.common.rest.request.admin.statistic.UserRegisterStatisticRequest">
 
         select
         count(1) as value,
