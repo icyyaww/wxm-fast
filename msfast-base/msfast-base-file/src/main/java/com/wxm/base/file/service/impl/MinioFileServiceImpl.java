@@ -3,7 +3,9 @@ package com.wxm.base.file.service.impl;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.UUID;
 import com.wxm.base.common.constant.ConfigConstants;
+import com.wxm.base.common.enums.BaseExceptionEnum;
 import com.wxm.base.common.exception.JrsfException;
+import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.file.exception.FileExceptionEnum;
 import com.wxm.base.file.service.MsfFileService;
 import com.wxm.base.file.utils.FileUploadUtils;
@@ -125,6 +127,14 @@ public class MinioFileServiceImpl implements IFileService {
      */
     @Override
     public void download(String filename, HttpServletResponse response) throws Exception {
+
+        if (Boolean.TRUE.equals(ConfigConstants.DOWNLOAD_LOGIN())) {
+            Integer ownerId = TokenUtils.getOwnerId();
+            if (ownerId == null) {
+                throw new JrsfException(BaseExceptionEnum.NO_LOGIN_EXCEPTION);
+            }
+        }
+
         InputStream in = null;
         try {
             //获取对象信息
@@ -135,12 +145,9 @@ public class MinioFileServiceImpl implements IFileService {
             //文件下载
             in = client.getObject(GetObjectArgs.builder().bucket(minioConfig.getBucketName()).object(filename).build());
             IOUtils.copy(in, response.getOutputStream());
-        }
-        catch (ErrorResponseException e)
-        {
-            throw new  JrsfException(FileExceptionEnum.File_NOT_Exists_Exception);
-        }
-        finally {
+        } catch (ErrorResponseException e) {
+            throw new JrsfException(FileExceptionEnum.File_NOT_Exists_Exception);
+        } finally {
             if (in != null) {
                 try {
                     in.close();

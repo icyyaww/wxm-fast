@@ -74,6 +74,9 @@ public class ConfigConstants {
     @Value("${wxmfast.config.file.condense-scale:0.8}")
     private double condenseScale;
 
+    @Value("${wxmfast.config.file.download-login:true}")
+    private Boolean downloadLogin;
+
     @Value("${wxmfast.config.websocket.port:8888}")
     private int webSocketPort;
 
@@ -219,6 +222,18 @@ public class ConfigConstants {
      */
     public static double CONDENSE_SCALE() {
         return SpringUtils.getBean(ConfigConstants.class).getCondenseScale();
+    }
+
+
+    /**
+     * @Description: 下载是否需要登陆
+     * @Param:
+     * @return:
+     * @Author: Mr.Wang
+     * @Date: 2023/4/4 上午10:28
+     */
+    public static Boolean DOWNLOAD_LOGIN() {
+        return SpringUtils.getBean(ConfigConstants.class).getDownloadLogin();
     }
 
     /**
