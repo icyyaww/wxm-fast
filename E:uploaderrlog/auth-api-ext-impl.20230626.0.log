@@ -1,0 +1,6 @@
+2023-06-26 17:32:07.607 [background-preinit] INFO  org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.0.Final
+2023-06-26 17:32:08.342 [main] WARN  c.a.cloud.nacos.client.NacosPropertySourceBuilder - Ignore the empty nacos configuration and get it based on dataId[null.properties] & group[DEFAULT_GROUP]
+2023-06-26 17:32:08.343 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - Located property source: [BootstrapPropertySource {name='bootstrapProperties-null.properties,DEFAULT_GROUP'}, BootstrapPropertySource {name='bootstrapProperties-datasource.yaml,dev'}, BootstrapPropertySource {name='bootstrapProperties-application.yml,dev'}]
+2023-06-26 17:32:08.352 [main] INFO  com.wxm.MsfastNostalgiaApplication - No active profile set, falling back to default profiles: default
+2023-06-26 17:32:08.948 [Thread-6] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Start destroying common HttpClient
+2023-06-26 17:32:08.949 [Thread-6] WARN  com.alibaba.nacos.common.http.HttpClientBeanHolder - [HttpClientBeanHolder] Destruction of the end

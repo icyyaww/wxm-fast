@@ -1,7 +1,7 @@
 package ${package}.${moduleName}.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import BaseEntity;
+import com.wxm.base.common.entity.BaseEntity;
 import lombok.Data;
 
 #if(${hasBigDecimal})
