@@ -5,8 +5,11 @@ import cn.hutool.core.lang.UUID;
 import com.wxm.base.common.constant.ConfigConstants;
 import com.wxm.base.common.enums.BaseExceptionEnum;
 import com.wxm.base.common.exception.JrsfException;
+import com.wxm.base.common.utils.SpringBeanUtils;
+import com.wxm.base.common.utils.SpringUtils;
 import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.file.exception.FileExceptionEnum;
+import com.wxm.base.file.service.IMsfFileService;
 import com.wxm.base.file.service.MsfFileService;
 import com.wxm.base.file.utils.FileUploadUtils;
 import com.wxm.base.file.config.MinioConfig;
@@ -135,6 +138,11 @@ public class MinioFileServiceImpl implements IFileService {
             }
         }
 
+        IMsfFileService iMsfFileService = SpringBeanUtils.getBean(IMsfFileService.class);
+        if (iMsfFileService != null) {
+            iMsfFileService.before(filename);
+        }
+
         InputStream in = null;
         try {
             //获取对象信息
@@ -156,6 +164,8 @@ public class MinioFileServiceImpl implements IFileService {
                 }
             }
         }
+
+        iMsfFileService.after(filename);
     }
 
     /**

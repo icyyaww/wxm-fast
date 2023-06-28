@@ -1,5 +1,6 @@
 package com.wxm.base.file.aspect;
 
+import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.common.web.domain.R;
 import com.wxm.base.file.service.MsfFileService;
 import org.aspectj.lang.JoinPoint;
@@ -41,7 +42,7 @@ public class FileAspect {
     }
 
     void deleteDiscardFile(Object object) {
-        fileService.deleteSaveFile(object);
+        fileService.deleteSaveFile(object, TokenUtils.getOwnerId());
     }
 
     // 后置通知

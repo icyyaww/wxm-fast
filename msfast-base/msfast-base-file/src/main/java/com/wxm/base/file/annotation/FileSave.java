@@ -19,4 +19,6 @@ public @interface FileSave {
     String table() default "";
 
     String field() default "";
+
+    boolean tokenId() default false;
 }

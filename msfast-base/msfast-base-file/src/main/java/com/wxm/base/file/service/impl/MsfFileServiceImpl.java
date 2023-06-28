@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.base.common.constant.ConfigConstants;
 import com.wxm.base.common.utils.ThreadUtil;
+import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.file.service.MsfFileService;
 import com.wxm.base.file.annotation.FileListSave;
 import com.wxm.base.file.annotation.FileSave;
@@ -189,26 +190,32 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     }
 
     @Override
-    public void deleteSaveFile(Object object) {
+    public void deleteSaveFile(Object object, Integer ownerId) {
 
         Field[] Fields = ClassUtil.getDeclaredFields(object.getClass());
         for (Field field : Fields) {
             FileSave fileSave = field.getAnnotation(FileSave.class);
             if (fileSave != null && StringUtils.isNotBlank(fileSave.table()) && StringUtils.isNotBlank(fileSave.field())) {
                 Field fieldId = ClassUtil.getDeclaredField(object.getClass(), "id");
-                if (fieldId != null) {
+
+                if (fieldId != null || fileSave.tokenId()) {
 
                     Integer fieldIdValue = null;
-                    try {
-                        fieldId.setAccessible(true);
-                        Object objectId = fieldId.get(object);
-                        if (objectId != null) {
-                            fieldIdValue = (Integer) objectId;
-                        }
+                    if (fileSave.tokenId()) {
+                        fieldIdValue = ownerId;
+                    } else {
+                        try {
+                            fieldId.setAccessible(true);
+                            Object objectId = fieldId.get(object);
+                            if (objectId != null) {
+                                fieldIdValue = (Integer) objectId;
+                            }
 
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                     }
+
                     String urlSql = "select tb." + fileSave.field() + " from " + fileSave.table() + " tb where  tb.id=:id";
                     HashMap<String, Object> param = new HashMap<>();
                     param.put("id", fieldIdValue);
@@ -230,7 +237,7 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Override
     public String getFileNameByUrl(String url) {
         if (StringUtils.isNotBlank(url)) {
-            return url.substring(url.indexOf(minioConfig.getBucketName())+minioConfig.getBucketName().length()+1);
+            return url.substring(url.indexOf(minioConfig.getBucketName()) + minioConfig.getBucketName().length() + 1);
         }
         return null;
     }
