@@ -1,6 +1,7 @@
 package com.wxm.nostalgia.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.wxm.base.common.entity.BaseEntity;
 import com.wxm.base.common.enums.FrUserStatusEnum;
 import com.wxm.base.common.enums.GenderEnum;
@@ -10,7 +11,6 @@ import com.wxm.nostalgia.common.handle.CharacterTypeHandler;
 import com.wxm.nostalgia.common.handle.UserImageListTypeHandler;
 import com.wxm.nostalgia.common.rest.response.front.fruser.AdditionalResponse;
 import com.wxm.nostalgia.common.rest.response.front.fruser.CharacterTypeResponse;
-import com.wxm.nostalgia.common.enums.*;
 import lombok.Data;
 
 import java.util.Date;

@@ -74,5 +74,8 @@ public interface MsfFileService extends IService<MsfFileEntity> {
     void deleteSaveFile(Object object,Integer ownerId);
 
     String getFileNameByUrl(String url);
+
+    @Async
+    void deleteFileByRichText(String richText);
 }
 

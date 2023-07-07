@@ -31,6 +31,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("msfFileService")
 public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> implements MsfFileService {
@@ -240,6 +242,24 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
             return url.substring(url.indexOf(minioConfig.getBucketName()) + minioConfig.getBucketName().length() + 1);
         }
         return null;
+    }
+
+    @Override
+    public void deleteFileByRichText(String richText) {
+
+        //提取图片地址
+        String regex = "(((https|http)?:)?//?[^'\"<>]+?\\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher m = pattern.matcher(richText);
+        while (m.find()) {
+            //获取数字子串
+            String num = m.group(1);
+            System.out.println(num+"\n");
+            if (num.contains(minioConfig.getBucketName())) {
+                deleteFileByUrl(num);
+            }
+        }
+
     }
 
     private void changeTempUrl(String url) {

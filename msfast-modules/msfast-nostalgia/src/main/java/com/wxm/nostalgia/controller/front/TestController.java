@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wxm.base.common.annotation.AuthIgnore;
 import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.common.web.domain.R;
+import com.wxm.base.file.service.MsfFileService;
 import com.wxm.nostalgia.common.rest.request.fruser.ChoiceRequest;
 import com.wxm.nostalgia.common.rest.request.fruser.RecommendUserRequest;
 import com.wxm.nostalgia.common.rest.request.test.ForeignRequest;
@@ -18,6 +19,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiOperationSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @program: wxm-fast
@@ -39,6 +43,9 @@ public class TestController {
 
     @Autowired
     TestService testService;
+
+    @Autowired
+    MsfFileService msfFileService;
 
     @ApiOperation("重置匹配结果")
     @ApiOperationSort(value = 1)
@@ -82,4 +89,12 @@ public class TestController {
         return R.ok();
     }
 
+    @ApiOperation("提取字符串")
+    @ApiOperationSort(value = 1)
+    @GetMapping("/tiqu")
+    public R tiqu() {
+
+        msfFileService.deleteFileByRichText("11");
+        return R.ok();
+    }
 }
