@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wxm.base.common.constant.ConfigConstants;
 import com.wxm.base.common.utils.ThreadUtil;
-import com.wxm.base.common.utils.TokenUtils;
 import com.wxm.base.file.service.MsfFileService;
 import com.wxm.base.file.annotation.FileListSave;
 import com.wxm.base.file.annotation.FileSave;
@@ -28,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -87,7 +87,9 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                     try {
                         Object urlObject = field.get(object);
                         if (urlObject != null && urlObject instanceof String) {
-                            changeTempUrl(urlObject.toString());
+                            getFileListByText(urlObject.toString()).forEach(model -> {
+                                changeTempUrl(model);
+                            });
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -196,6 +198,8 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
 
         Field[] Fields = ClassUtil.getDeclaredFields(object.getClass());
         for (Field field : Fields) {
+
+            //图片地址
             FileSave fileSave = field.getAnnotation(FileSave.class);
             if (fileSave != null && StringUtils.isNotBlank(fileSave.table()) && StringUtils.isNotBlank(fileSave.field())) {
                 Field fieldId = ClassUtil.getDeclaredField(object.getClass(), "id");
@@ -225,8 +229,10 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
                     field.setAccessible(true);
                     try {
                         String newUrl = (String) field.get(object);
-                        if (CollectionUtil.isNotEmpty(urlList) && StringUtils.isNotBlank(urlList.get(0)) && !urlList.get(0).equals(newUrl)) {
-                            deleteFileByUrl(urlList.get(0));
+                        if (CollectionUtil.isNotEmpty(urlList)) {
+                            List<String> oldFileList = getFileListByText(urlList.get(0));
+                            List<String> newFileList = getFileListByText(newUrl);
+                            deleteImg(oldFileList, newFileList);
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -247,6 +253,15 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
     @Override
     public void deleteFileByRichText(String richText) {
 
+        getFileListByText(richText).forEach(model -> {
+            deleteFileByUrl(model);
+        });
+    }
+
+    public List<String> getFileListByText(String richText) {
+
+        List<String> imgList = new ArrayList<>();
+
         //提取图片地址
         String regex = "(((https|http)?:)?//?[^'\"<>]+?\\.(jpg|jpeg|gif|png|JPG|JPEG|GIF|PNG))";
         Pattern pattern = Pattern.compile(regex);
@@ -254,12 +269,12 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
         while (m.find()) {
             //获取数字子串
             String num = m.group(1);
-            System.out.println(num+"\n");
             if (num.contains(minioConfig.getBucketName())) {
-                deleteFileByUrl(num);
+                imgList.add(num);
             }
         }
 
+        return imgList;
     }
 
     private void changeTempUrl(String url) {

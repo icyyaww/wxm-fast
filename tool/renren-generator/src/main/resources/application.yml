@@ -7,7 +7,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     #MySQL配置
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://81.69.247.192:3306/fast-photo?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://81.69.247.192:3306/fast-reservation?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     username: root
     password: Mo5497071966@
     #oracle配置
