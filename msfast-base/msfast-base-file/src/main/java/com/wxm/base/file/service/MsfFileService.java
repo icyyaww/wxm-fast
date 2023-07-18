@@ -71,11 +71,13 @@ public interface MsfFileService extends IService<MsfFileEntity> {
     void deleteImg(List<String> oldImg, List<String> imgList);
 
     @Async
-    void deleteSaveFile(Object object,Integer ownerId);
+    void deleteSaveFile(Object object, Integer ownerId);
 
     String getFileNameByUrl(String url);
 
     @Async
     void deleteFileByRichText(String richText);
+
+    String imageToBase64(String url);
 }
 

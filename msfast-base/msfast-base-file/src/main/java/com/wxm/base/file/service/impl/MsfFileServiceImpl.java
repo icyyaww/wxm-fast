@@ -25,8 +25,14 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.misc.BASE64Encoder;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -256,6 +262,71 @@ public class MsfFileServiceImpl extends ServiceImpl<MsfFileDao, MsfFileEntity> i
         getFileListByText(richText).forEach(model -> {
             deleteFileByUrl(model);
         });
+    }
+
+    @Override
+    public String imageToBase64(String imgUrl) {
+        String suffix = imgUrl.substring(imgUrl.lastIndexOf(".") + 1);
+
+        URL url = null;
+        InputStream is = null;
+        ByteArrayOutputStream outStream = null;
+        HttpURLConnection httpUrl = null;
+        try {
+            url = new URL(imgUrl);
+            httpUrl = (HttpURLConnection) url.openConnection();
+            httpUrl.connect();
+            httpUrl.getInputStream();
+            is = httpUrl.getInputStream();
+            outStream = new ByteArrayOutputStream();
+            //创建一个Buffer字符串
+            byte[] buffer = new byte[1024];
+            //每次读取的字符串长度，如果为-1，代表全部读取完毕
+            int len = 0;
+            //使用一个输入流从buffer里把数据读取出来
+            while ((len = is.read(buffer)) != -1) {
+                //用输出流往buffer里写入数据，中间参数代表从哪个位置开始读，len代表读取的长度
+                outStream.write(buffer, 0, len);
+            }
+            // 对字节数组Base64编码
+            return encode(outStream.toByteArray(), suffix);
+        } catch (Exception e) {
+
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (httpUrl != null) {
+                httpUrl.disconnect();
+            }
+        }
+        return imgUrl;
+    }
+
+
+    public static String encode(byte[] image, String suffix) {
+        BASE64Encoder decoder = new BASE64Encoder();
+        String encodeStr = decoder.encode(image);
+        encodeStr = "data:image/" + suffix + ";base64," + encodeStr;
+        return replaceEnter(encodeStr);
+    }
+
+    public static String replaceEnter(String str) {
+        String reg = "[\n-\r]";
+        Pattern p = Pattern.compile(reg);
+        Matcher m = p.matcher(str);
+        return m.replaceAll("");
     }
 
     public List<String> getFileListByText(String richText) {
